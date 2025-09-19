@@ -1,0 +1,221 @@
+/* Imports */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color:#10332F ;
+    color: wheat;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-logo {
+    font-family: 'Lucida Handwriting', cursive;
+    font-size: 1.8rem;
+    color: #FFFBE6;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    display: block;
+    opacity: 0;
+    animation: logomove 1.5s forwards;
+}
+@keyframes logomove {
+    0% {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+}
+
+.nav-tagline {
+    font-size: 0.85rem;
+    color: 	#F4C873;
+}
+
+/* Hamburger Icon */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.menu-line {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 4px 0;
+}
+
+/* Dropdown Menu*/
+.dropdown-menu {
+    display: flex;
+    gap: 20px;
+}
+
+.dropdown-menu a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.dropdown-menu a:hover {
+    background-color: #444;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+/* Main Content Styles*/
+.content {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.tiffin-plan {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.tiffin-plan h2 {
+    color: #ff6b6b;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.plan-details {
+    margin: 30px 0;
+    padding: 20px;
+    background-color: #10332F;
+    border-radius: 8px;
+    border-left: 5px solid #ff6b6b;
+}
+
+.plan-details h2 {
+    color: #F4C873;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.plan-details p {
+    margin-bottom: 15px;
+    color: #fdedce;
+}
+
+.plan-details ul {
+    list-style-position: inside;
+    text-align: left;
+    margin: 15px 0;
+    padding-left: 20px;
+}
+
+.plan-details li {
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.book-now {
+    background-color:#10332F ;
+    color:#E4C873 ;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.book-now:hover {
+    background-color:#0d443e ;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+    }
+
+    .dropdown-menu {
+        display: none;
+        flex-direction: column;
+        background-color: #10332F;
+        position: absolute;
+        top: 100%;
+        right: 20px;
+        width: 200px;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .dropdown-menu.active {
+        display: flex;
+    }
+
+    .dropdown-menu a {
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .tiffin-plan {
+        padding: 20px;
+    }
+
+    .plan-details {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-logo {
+        font-size: 1.5rem;
+    }
+
+    .nav-tagline {
+        font-size: 0.7rem;
+    }
+
+    .tiffin-plan h2 {
+        font-size: 1.5rem;
+    }
+
+    .book-now {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+    }
+}

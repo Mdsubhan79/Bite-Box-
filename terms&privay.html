@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bite Box - Terms & Privacy</title>
+         <link rel="icon" type="image/x-icon" href="Bite Box.png">
+
+    <style>
+        
+        :root {
+            --primary-color: #10332F;
+            --secondary-color:#F4C873 ;
+            --dark-color: #333;
+            --light-color: #f9f9f9;
+            --white: #fff;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: var(--light-color);
+        }
+        
+        header {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            display: block;
+    opacity: 0;
+    animation: logomove 1.5s forwards;
+}
+@keyframes logomove {
+    0% {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+        
+        }
+        
+        .logo a {
+            color: #FFFBE6;
+            text-decoration: none;
+            font-family: 'Lucida Handwriting', cursive;
+        }
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.menu-line {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 4px 0;
+
+}
+
+/* Dropdown Menu*/
+.dropdown-menu {
+    display: flex;
+    gap: 20px;
+}
+
+.dropdown-menu a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.dropdown-menu a:hover {
+    background-color: #444;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+
+@media (max-width: 768px) {
+    .dropdown-menu {
+        flex-direction: column;
+        background: rgba(0, 49, 34, 0.95);
+        position: absolute;
+        top: 65px;
+        right: 20px;
+        width: 200px;
+        padding: 10px;
+        border-radius: 10px;
+        display: none;
+        z-index: 1000;
+    }
+
+    .dropdown-menu.show-menu {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+}
+
+        
+        nav a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            margin: 2rem 0 1rem;
+        }
+        
+        h3 {
+            color: var(--dark-color);
+            margin: 1.5rem 0 0.5rem;
+        }
+        
+        .section {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        p, ul {
+            margin-bottom: 1rem;
+        }
+        
+        ul {
+            padding-left: 1.5rem;
+        }
+        
+        .contact-info {
+            margin-top: 1.5rem;
+        }
+        
+        .contact-info i {
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        footer {
+            background: var(--dark-color);
+            color: var(--white);
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        footer {
+            background-color: #222;
+            color: white;
+            padding: 40px 20px 20px;
+            margin-top: 50px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .footer-section h3 {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+        #footerAboutTitle{
+            font-family: 'Lucida Handwriting', cursive;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-section ul li i {
+            margin-right: 8px;
+        }
+
+        .footer-section ul li a {
+            color: #ccc;
+            text-decoration: none;
+        }
+
+        .footer-section ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .social-links a {
+            color: white;
+            margin-right: 10px;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #ff6b6b;
+        }
+
+        footer form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        footer input[type="email"] {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        footer button {
+            background-color: #ff6b6b;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        footer button:hover {
+            background-color: #e05555;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                width: 90%;
+                margin: 20px auto;
+            }
+            
+            .footer-section {
+                text-align: center;
+            }
+        }
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background-color: #ff5252;
+            transform: translateX(-3px);
+        }
+        /* Toggle sections */
+        .toggle-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .toggle-btn {
+            background: var(--primary-color);
+            color:#F4C873 ;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 600;
+            flex: 1;
+            text-align: center;
+            box-shadow: 0 0 0 2px #F4C873;
+        }
+        
+        .toggle-btn:hover {
+            background: #092b27;
+        }
+        
+        .toggle-btn.active {
+            background: 	#F4C873;
+            color: #092b27;
+            
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .toggle-container {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        
+        @media (max-width: 350px) {
+    header {
+        flex-direction: column;
+        padding: 0.5rem;
+        text-align: center;
+    }
+
+    .logo h1 {
+        font-size: 1.2rem;
+    }
+
+    .menu-toggle .menu-line {
+        width: 20px;
+        height: 2px;
+    }
+
+    .dropdown-menu {
+        right: 15px;
+        width: 180px;
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+
+    .container {
+        padding: 1rem 0.5rem;
+    }
+
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    .toggle-btn {
+        padding: 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    .section {
+        padding: 1rem;
+        font-size: 0.85rem;
+    }
+
+    footer {
+        padding: 20px 10px;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    footer input[type="email"],
+    footer button {
+        font-size: 0.85rem;
+    }
+
+    .back-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        bottom: 15px;
+        left: 15px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1><a href="index.html">Bite Box</a></h1>
+        </div>
+        <nav>
+            <div class="menu-toggle" id="menuToggle">
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+        
+        </div>
+         
+        <div class="dropdown-menu" id="dropdownMenu">
+            <a href="index.html">Home</a>
+            <a href="veg.html">Veg</a>
+            <a href="non-veg.html">Non Veg</a>
+            <a href="tiffin.html">Tiffin Service</a>
+            <a href="aboutus.html">About Us</a>
+            <a href="contactus.html">Contact Us</a>
+            <a href="terms&privay.html">Terms & Policy</a>
+             
+        </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Terms & Conditions and Privacy Policy</h1>
+        
+        <div class="toggle-container">
+            <button id="termsBtn" class="toggle-btn active" onclick="showSection('terms')">Terms & Conditions</button>
+            <button id="policyBtn" class="toggle-btn" onclick="showSection('privacy')">Privacy Policy</button>
+        </div>
+        
+        <section id="terms" class="section">
+            <h2>Terms & Conditions</h2>
+            
+            <h3>1. General Terms</h3>
+            <p>Welcome to Bite Box! By accessing or using our website and services, you agree to comply with and be bound by these terms and conditions. Please read them carefully before placing an order.</p>
+            
+            <h3>2. Ordering & Payment</h3>
+            <ul>
+                <li>All orders placed on Bite Box are subject to product availability.</li>
+                <li>We currently accept <strong>cash on delivery (hand-to-hand payment)</strong> only.</li>
+                <li>Prices are subject to change without prior notice.</li>
+                <li>Customers must provide accurate delivery details (address, contact number) to avoid delays.</li>
+                <li>For tiffin services, monthly subscriptions must be paid in advance via cash payment.</li>
+            </ul>
+            
+            <h3>3. Delivery Policy</h3>
+            <ul>
+                <li>Delivery times are estimates and may vary based on location and demand.</li>
+                <li>We deliver within our specified service areas only.</li>
+                <li>For tiffin services, delivery times will be agreed upon at the time of subscription.</li>
+                <li>If you're not available at the time of delivery, we will attempt to contact you to arrange an alternative time.</li>
+            </ul>
+            
+            <h3>4. Cancellation & Refunds</h3>
+            <ul>
+                <li>Food orders can be cancelled up to 30 minutes before the scheduled delivery time.</li>
+                <li>Tiffin service subscriptions require 12 hours notice for cancellation or changes.</li>
+                <li>If an item is unavailable, we will notify you and offer a replacement or refund.</li>
+                <li>Refunds (if applicable) will be processed in cash upon return of the product or during next delivery for tiffin services.</li>
+            </ul>
+            
+            <h3>5. Food Quality & Safety</h3>
+            <ul>
+                <li>We maintain the highest standards of food hygiene and safety.</li>
+                <li>Please inform us immediately if you have any food allergies or dietary restrictions.</li>
+                <li>We reserve the right to refuse service if we believe a customer has health conditions that may be affected by our food.</li>
+            </ul>
+            
+            <h3>6. User Responsibilities</h3>
+            <ul>
+                <li>You must be at least 18 years old to place an order.</li>
+                <li>Any misuse of the website (fraud, false orders) will result in legal action.</li>
+                <li>We reserve the right to refuse service to anyone for any reason.</li>
+            </ul>
+            
+            <h3>7. Changes to Terms</h3>
+            <p>Bite Box may update these terms at any time. Continued use of the website means you accept the changes.</p>
+        </section>
+        
+        <section id="privacy" class="section hidden">
+            <h2>Privacy Policy</h2>
+            <p>At Bite Box, we respect your privacy and are committed to protecting your personal information.</p>
+            
+            <h3>1. Information We Collect</h3>
+            <ul>
+                <li><strong>Personal Data:</strong> Name, phone number, delivery address, and payment details (if applicable).</li>
+                <li><strong>Tiffin Service Data:</strong> Dietary preferences, regular delivery schedule, special instructions.</li>
+                <li><strong>Non-Personal Data:</strong> Browser type, IP address, and cookies for website analytics.</li>
+            </ul>
+            
+            <h3>2. How We Use Your Data</h3>
+            <ul>
+                <li>To process and deliver your orders.</li>
+                <li>To manage your tiffin service subscription and preferences.</li>
+                <li>To improve our services and customer experience.</li>
+                <li>To send order updates and promotional offers (if you opt-in).</li>
+                <li>To contact you regarding your orders or account.</li>
+            </ul>
+            
+            <h3>3. Data Security</h3>
+            <ul>
+                <li>We do not store credit/debit card details (as we accept only cash payments).</li>
+                <li>Your personal information is kept confidential and will not be sold to third parties.</li>
+                <li>Access to customer data is restricted to authorized personnel only.</li>
+            </ul>
+            
+            <h3>4. Cookies & Tracking</h3>
+            <ul>
+                <li>Our website may use cookies to enhance user experience.</li>
+                <li>You can disable cookies in your browser settings, but some features may not work properly.</li>
+                <li>We use analytics to understand how our website is used and to improve our services.</li>
+            </ul>
+            
+            <h3>5. Third-Party Services</h3>
+            <ul>
+                <li>We may use third-party delivery partners, who will only access necessary delivery information.</li>
+                <li>Our website may contain links to third-party sites; we are not responsible for their privacy practices.</li>
+            </ul>
+            
+            <h3>6. Your Rights</h3>
+            <ul>
+                <li>You can request access to your personal data we hold.</li>
+                <li>You can request correction of inaccurate data.</li>
+                <li>You can request deletion of your data, subject to legal requirements.</li>
+                <li>You can opt-out of marketing communications at any time.</li>
+            </ul>
+            
+            <h3>7. Policy Updates</h3>
+            <p>We may update this policy periodically. Check this page for the latest version.</p>
+        </section>
+        
+        <section class="section contact-info">
+            <h2>Contact Us</h2>
+            <p>For any questions regarding our Terms & Conditions or Privacy Policy, please contact:</p>
+            <ul>
+                <li><i class="fas fa-envelope"></i> Email: <a href="mailto:Official.bitebox@gmail.com">Official.bitebox@gmail.com</a></li>
+                <li><i class="fas fa-phone"></i> Phone: <a href="tel:+91 9627024287">+91 9627024287</a></li>
+                <li><i class="fas fa-map-marker-alt"></i> Address:Clement Town, Dehradun</li>
+            </ul>
+            <p><strong>Last Updated: may 2025</strong></p>
+        </section>
+    </div>
+
+     <footer id="mainFooter">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Bite Box</h3>
+        <p id="footerAboutText" data-translate="footerAboutText">
+          Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.
+        </p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-section">
+        <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
+        <ul>
+          <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
+          <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
+          <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
+          <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
+          <li><a href="Aboutus.html" id="footerAboutusLink" data-translate="footerAoutusLink">About Us</a></li>
+          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
+          <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3 id="footerContactTitle" data-translate="footerContactTitle">Contact Info</h3>
+        <ul>
+          <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress" data-translate="footerAddress">Clement Town, Dehradun</span></li>
+          <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91 9627024287</span></li>
+          <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.bitebox@gmail.com</span></li>
+          <li><i class="fas fa-clock"></i> <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3 id="footerNewsletterTitle" data-translate="footerNewsletterTitle">Newsletter</h3>
+        <p id="footerNewsletterText" data-translate="footerNewsletterText">Subscribe for updates and special offers!</p>
+        <form id="newsletterForm">
+          <input type="email" id="newsletterEmail" placeholder="Enter your email" data-translate-placeholder="newsletterPlaceholder" required>
+          <button type="submit" id="newsletterSubmit" data-translate="subscribeBtn">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      <p id="copyrightText" data-translate="copyrightText">&copy; 2025 Bite Box. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+    <a>
+        <button onclick="goback()" class="back-btn"> <i class="fas fa-arrow-left"></i><span id="backTextVeg" data-translate="backToMain">Back to Main</span></button>
+    </a>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.getElementById('terms').classList.add('hidden');
+            document.getElementById('privacy').classList.add('hidden');
+            
+            // Remove active class from all buttons
+            document.getElementById('termsBtn').classList.remove('active');
+            document.getElementById('policyBtn').classList.remove('active');
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.remove('hidden');
+            
+            // Add active class to clicked button
+            if (sectionId === 'terms') {
+                document.getElementById('termsBtn').classList.add('active');
+            } else {
+                document.getElementById('policyBtn').classList.add('active');
+            }
+        }
+
+        // Initialize with Terms section visible
+        document.addEventListener('DOMContentLoaded', function() {
+            showSection('terms');
+        });
+
+        // Back button functionality
+        function goback() {
+            window.history.back();
+        }
+
+        // Font Awesome fallback
+        if (!document.querySelector('.fa')) {
+            const faScript = document.createElement('script');
+            faScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js';
+            document.head.appendChild(faScript);
+        }
+    </script>
+    <script>
+  const menuToggle = document.getElementById('menuToggle');
+  const dropdownMenu = document.getElementById('dropdownMenu');
+
+  menuToggle.addEventListener('click', () => {
+    dropdownMenu.classList.toggle('show-menu');
+  });
+</script>
+<script>
+  document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent actual form submission
+    const emailInput = document.getElementById('newsletterEmail');
+    const email = emailInput.value.trim();
+
+    if (email === '') {
+      alert('Please enter your email.');
+      return;
+    }
+
+    // Simple email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    alert('Thank you for subscribing!');
+    emailInput.value = ''; // Clear input field
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bite Box - Tiffin Service Booking</title>
+         <link rel="icon" type="image/x-icon" href="Bite Box.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+        /* Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
+            background: 	#10332F;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            font-family: 'Lucida Handwriting', cursive;
+        }
+
+        .tagline {
+            font-size: 18px;
+            color: #fff8e1;
+        }
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.menu-line {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 4px 0;
+}
+
+/* Dropdown Menu*/
+.dropdown-menu {
+    display: flex;
+    gap: 20px;
+}
+
+.dropdown-menu a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.dropdown-menu a:hover {
+    background-color: #444;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+
+@media (max-width: 768px) {
+    .dropdown-menu {
+        flex-direction: column;
+        background: rgba(6, 53, 39, 0.95);
+        position: absolute;
+        top: 11rem;
+        right: 20px;
+        width: 200px;
+        padding: 10px;
+        border-radius: 10px;
+        display: none;
+        z-index: 1000;
+    }
+
+    .dropdown-menu.show-menu {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+}
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .booking-container {
+            background:#10332F;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 20px;
+            border: 1px solid #F4C873;
+        }
+
+        .booking-container h2 {
+            color: #F4C873;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .booking-container h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #F4C873;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #fddc9a;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #ff6b6b;
+        }
+
+        .submit-btn {
+            background:#F4C873 ;
+            color: #10332F;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            margin: 30px auto 0;
+            width: 200px;
+            text-align: center;
+        }
+
+        .submit-btn:hover {
+            background: #dfab44;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 228, 107, 0.4);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal h3 {
+            color: #ff6b6b;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .modal p {
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .modal-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-btn:hover {
+            background: #ff5252;
+        }
+
+        /* Footer */
+        footer {
+    background-color: #222;
+    color: white;
+    padding: 40px 20px 20px;
+    margin-top: 50px;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.footer-section h3 {
+    color: #ff6b6b;
+    margin-bottom: 10px;
+}
+#footerAboutTitle{
+  font-family: 'Lucida Handwriting', cursive;
+}
+
+
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 8px;
+}
+
+.footer-section ul li i {
+    margin-right: 8px;
+}
+
+.footer-section ul li a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+.footer-section ul li a:hover {
+    text-decoration: underline;
+}
+
+.social-links a {
+    color: white;
+    margin-right: 10px;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #ff6b6b;
+}
+
+footer form {
+    display: flex;
+    flex-direction: column;
+}
+
+footer input[type="email"] {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+footer button {
+    background-color: #ff6b6b;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+footer button:hover {
+    background-color: #e05555;
+}
+
+.copyright {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 0.9rem;
+    color: #bbb;
+}
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            .hamburger-menu {
+                margin-top: 11px;
+            }
+
+            .dropdown-menu {
+                right: 50%;
+                transform: translateX(50%);
+            }
+
+            .footer-section {
+                text-align: center;
+            }
+
+            .social-icons {
+                justify-content: center;
+            }
+        }
+         .back-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.back-btn:hover {
+    background-color: #ff5252;
+    transform: translateX(-3px);
+}
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .logo {
+        margin-bottom: 15px;
+    }
+
+    .hamburger-menu {
+        margin-top: 15px;
+    }
+
+    .dropdown-menu {
+        right: 50%;
+        transform: translateX(50%);
+    }
+
+    .footer-section {
+        text-align: center;
+    }
+
+    .social-icons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 250px) {
+   
+    .header {
+        padding: 10px 0;
+    }
+    
+    .header-container {
+        padding: 0 10px;
+    }
+    
+    .logo h1 {
+        font-size: 18px;
+        margin-bottom: 3px;
+    }
+    
+    .tagline {
+        font-size: 12px;
+    }
+    
+    .menu-line {
+        width: 20px;
+        height: 2px;
+    }
+
+  
+    .main-container {
+        margin: 20px auto;
+        padding: 0 10px;
+    }
+    
+    .booking-container {
+        padding: 15px;
+        margin-top: 10px;
+    }
+    
+    .booking-container h2 {
+        font-size: 16px;
+        margin-bottom: 15px;
+        padding-bottom: 5px;
+    }
+    
+    .booking-container h2::after {
+        width: 50px;
+        height: 2px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 6px 8px;
+        font-size: 12px;
+        border-width: 1px;
+    }
+    
+    .submit-btn {
+        padding: 8px 15px;
+        font-size: 14px;
+        width: 160px;
+        margin: 20px auto 0;
+    }
+
+    
+    .modal-content {
+        padding: 15px;
+    }
+    
+    .modal h3 {
+        font-size: 16px;
+    }
+    
+    .modal p {
+        font-size: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .modal-btn {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+
+  
+    footer {
+        padding: 20px 10px 10px;
+    }
+    
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .footer-section h3 {
+        font-size: 14px;
+    }
+    
+    .footer-section p,
+    .footer-section ul li {
+        font-size: 12px;
+    }
+    
+    .social-links a {
+        font-size: 1rem;
+    }
+    
+    footer input[type="email"] {
+        padding: 8px;
+    }
+    
+    footer button {
+        padding: 8px;
+    }
+    
+    .copyright {
+        margin-top: 20px;
+        font-size: 0.8rem;
+    }
+
+    .back-btn {
+        bottom: 10px;
+        left: 10px;
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+    
+    .dropdown-menu {
+        width: 160px;
+        right: 10px;
+        top: 5rem;
+        padding: 8px;
+    }
+    
+    .dropdown-menu a {
+        font-size: 11px;
+        padding: 4px 0;
+    }
+}
+</style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <h1>Bite Box</h1>
+                <span class="tagline">Home-style meals, delivered with love</span>
+            </div>
+             <div class="menu-toggle" id="menuToggle">
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+        
+        </div>
+         
+        <div class="dropdown-menu" id="dropdownMenu">
+            <a href="index.html">Home</a>
+            <a href="veg.html">Veg</a>
+            <a href="non-veg.html">Non Veg</a>
+            <a href="tiffin.html">Tiffin Service</a>
+            <a href="aboutus.html">About Us</a>
+            <a href="contactus.html">Contact Us</a>
+            <a href="terms&privay.html">Terms & Policy</a>
+             
+        </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="booking-container">
+            <h2>Enter Details to Book Your Tiffin Service</h2>
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="fatherName">Father's Name</label>
+                    <input type="text" id="fatherName" name="fatherName">
+                </div>
+                <div class="form-group">
+                    <label for="profession">Profession</label>
+                    <input type="text" id="profession" name="profession">
+                </div>
+                <div class="form-group">
+                    <label for="address">Delivery Address (For agent verification)</label>
+                    <textarea id="address" name="address" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="state">State</label>
+                    <select id="state" name="state" required>
+                        <option value="">Select State</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="West Bengal">West Bengal</option>
+                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Punjab">Punjab</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">Book Service</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content">
+            <h3>Booking Confirmed!</h3>
+            <p>Thank you for choosing Bite Box! Our delivery agent will visit your address within 24 hours to confirm your order details and collect payment. Fresh, home-style meals will be delivered to your doorstep as per your schedule.</p>
+            <button class="modal-btn" id="modalCloseBtn">Got It!</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+       <footer id="mainFooter">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Bite Box</h3>
+        <p id="footerAboutText" data-translate="footerAboutText">
+          Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.
+        </p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-section">
+        <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
+        <ul>
+          <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
+          <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
+          <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
+          <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
+          <li><a href="aboutus.html" id="footerAboutusLink" data-translate="footerAboutusLink">About Us</a></li>
+          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
+          <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
+          
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3 id="footerContactTitle" data-translate="footerContactTitle">Contact Info</h3>
+        <ul>
+          <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress" data-translate="footerAddress">Clement Town, Dehradun</span></li>
+          <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91 9627024287</span></li>
+          <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.bitebox@gmail.com</span></li>
+          <li><i class="fas fa-clock"></i> <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3 id="footerNewsletterTitle" data-translate="footerNewsletterTitle">Newsletter</h3>
+        <p id="footerNewsletterText" data-translate="footerNewsletterText">Subscribe for updates and special offers!</p>
+        <form id="newsletterForm">
+          <input type="email" id="newsletterEmail" placeholder="Enter your email" data-translate-placeholder="newsletterPlaceholder" required>
+          <button type="submit" id="newsletterSubmit" data-translate="subscribeBtn">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      <p id="copyrightText" data-translate="copyrightText">&copy; 2023 Bite Box. All Rights Reserved.</p>
+    </div>
+  </footer>
+ <a>
+  <button onclick="goback()" class="back-btn"> <i class="fas fa-arrow-left"></i><span id="backTextVeg" data-translate="backToMain">Back to Main</span></button>
+    
+    </a>
+    <script>
+        function goback(){
+            window.history.back();
+        }
+    </script>
+    <script>
+
+        // Form Submission
+        const bookingForm = document.getElementById('bookingForm');
+        const confirmationModal = document.getElementById('confirmationModal');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+
+        bookingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Validate form
+            const fullName = document.getElementById('fullName').value;
+            const address = document.getElementById('address').value;
+            const phone = document.getElementById('phone').value;
+            const city = document.getElementById('city').value;
+            const state = document.getElementById('state').value;
+            
+            if (!fullName || !address || !phone || !city || !state) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Show confirmation modal
+            confirmationModal.style.display = 'flex';
+            
+            // In a real application, you would send the data to your server here
+            // For example:
+            /*
+            fetch('your-server-endpoint', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    fullName: fullName,
+                    fatherName: document.getElementById('fatherName').value,
+                    profession: document.getElementById('profession').value,
+                    address: address,
+                    phone: phone,
+                    email: document.getElementById('email').value,
+                    city: city,
+                    state: state
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                confirmationModal.style.display = 'flex';
+            })
+            .catch(error => {
+                alert('There was an error submitting your booking. Please try again.');
+            });
+            */
+        });
+
+        // Close modal
+        modalCloseBtn.addEventListener('click', () => {
+            confirmationModal.style.display = 'none';
+            bookingForm.reset();
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === confirmationModal) {
+                confirmationModal.style.display = 'none';
+                bookingForm.reset();
+            }
+        });
+    </script>
+    <script>
+  const menuToggle = document.getElementById('menuToggle');
+  const dropdownMenu = document.getElementById('dropdownMenu');
+
+  menuToggle.addEventListener('click', () => {
+    dropdownMenu.classList.toggle('show-menu');
+  });
+</script>
+    <script>
+  document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent actual form submission
+    const emailInput = document.getElementById('newsletterEmail');
+    const email = emailInput.value.trim();
+
+    if (email === '') {
+      alert('Please enter your email.');
+      return;
+    }
+
+    // Simple email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    alert('Thank you for subscribing!');
+    emailInput.value = ''; // Clear input field
+  });
+</script>
+
+</body>
+</html>

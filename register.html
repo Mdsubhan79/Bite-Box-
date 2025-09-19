@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bite Box - Register</title>
+         <link rel="icon" type="image/x-icon" href="Bite Box.png">
+    <style>
+        /* Google Fonts - Poppins (Foodie Style) */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: url('thali9.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .register-container {
+            background: #10332F;
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 400px;
+            text-align: center;
+            border: 1px solid #003b12;
+            margin: auto;
+        }
+
+        .logo {
+            margin-bottom: 20px;
+            white-space: nowrap;
+    display: block;
+    opacity: 0;
+    animation: logomove 1.5s forwards;
+}
+@keyframes logomove {
+    0% {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+        }
+
+        .logo img {
+            width: 100px;
+            height: auto;
+        }
+
+        .logo h1 {
+            font-family: 'Lucida Handwriting', cursive;
+            color: #FFFBE6;
+            font-size: 28px;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        .register-form input {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .register-form input:focus {
+            border-color: #ff6b6b;
+        }
+
+        .password-field {
+            position: relative;
+        }
+
+        .password-field input {
+            padding-right: 40px;
+        }
+
+        .password-field .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #777;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 12px;
+            background:  #E4C873;
+            color: #10332F;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .register-btn:hover {
+            background: #F4D35E;
+            transform: translateY(-2px);
+        }
+
+        .login-link {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .social-register {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .divider {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            color: #777;
+        }
+
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .divider::before {
+            margin-right: 10px;
+        }
+
+        .divider::after {
+            margin-left: 10px;
+        }
+
+        .error-message {
+            color: #ff0000;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .terms {
+            margin: 15px 0;
+            font-size: 12px;
+            color: #777;
+        }
+
+        .terms a {
+            color: #ff6b6b;
+            text-decoration: none;
+        }
+
+        /* Footer Styles */
+footer {
+    background-color: #222;
+    color: white;
+    padding: 40px 20px 20px;
+    margin-top: 50px;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.footer-section h3 {
+    color: #ff6b6b;
+    margin-bottom: 10px;
+}
+#footerAboutTitle{
+  font-family: 'Lucida Handwriting', cursive;
+}
+
+
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 8px;
+}
+
+.footer-section ul li i {
+    margin-right: 8px;
+}
+
+.footer-section ul li a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+.footer-section ul li a:hover {
+    text-decoration: underline;
+}
+
+.social-links a {
+    color: white;
+    margin-right: 10px;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #ff6b6b;
+}
+
+footer form {
+    display: flex;
+    flex-direction: column;
+}
+
+footer input[type="email"] {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+footer button {
+    background-color: #ff6b6b;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+footer button:hover {
+    background-color: #e05555;
+}
+
+.copyright {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 0.9rem;
+    color: #bbb;
+}
+
+        @media (max-width: 768px) {
+            .login-container {
+                width: 90%;
+                margin: 20px auto;
+            }
+            
+            .footer-section {
+                text-align: center;
+            }
+        }
+        .back-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.back-btn:hover {
+    background-color: #ff5252;
+    transform: translateX(-3px);
+}
+
+/* media register*/
+
+@media (max-width: 400px) {
+    .register-container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .logo h1 {
+        font-size: 22px;
+    }
+
+    .logo h2 {
+        font-size: 16px;
+    }
+
+    .register-form input {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .register-btn {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .terms {
+        font-size: 10px;
+    }
+
+    .login-link {
+        font-size: 12px;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .footer-section ul li {
+        font-size: 14px;
+    }
+
+    .footer-section h3 {
+        font-size: 16px;
+    }
+
+    footer input[type="email"],
+    footer button {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .back-btn {
+        font-size: 12px;
+        padding: 8px 12px;
+        bottom: 10px;
+        left: 10px;
+    }
+
+    .social-register {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .social-btn {
+        width: 35px;
+        height: 35px;
+    }
+
+    .social-btn i {
+        font-size: 16px;
+    }
+}
+
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="register-container">
+        <!-- Logo & Brand Name -->
+        <div class="logo">
+            <h2>Welcome To</h2>
+            <h1>Bite Box</h1>
+        </div>
+
+        <!-- Register Form -->
+        <form class="register-form">
+            <input type="text" placeholder="Full Name" required>
+            <input type="email" placeholder="Email Address" required>
+            
+            <div class="password-field">
+                <input type="password" placeholder="Password" required>
+                <span class="toggle-password">👁</span>
+            </div>
+
+            <div class="password-field">
+                <input type="password" placeholder="Confirm Password" required>
+                <span class="toggle-password">👁</span>
+            </div>
+
+            <div class="terms">
+                <input type="checkbox" id="terms" required>
+                <label for="terms">I agree to the <a href="terms&privay.html">Terms & Conditions</a> and <a href="terms&privay.html">Privacy Policy</a></label>
+            </div>
+
+            <!-- Register Button -->
+            <button type="submit" class="register-btn">Create Account</button>
+
+            <!-- Error Message (Hidden by Default) -->
+            <div class="error-message" id="error-message">
+                Passwords do not match. Please try again.
+            </div>
+        </form>
+
+        <!-- Divider -->
+        <div class="divider">or</div>
+
+        <!-- Social Register -->
+        <div class="social-register">
+            <div class="social-btn">
+                 <a href="#"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            <div class="social-btn">
+                 <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+            <div class="social-btn">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+            </div>
+            <div class="social-btn">
+                 <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+
+        <!-- Login Link -->
+        <div class="login-link">
+            Already have an account? <a href="login.html">Log In</a>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+         <footer id="mainFooter">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Bite Box</h3>
+        <p id="footerAboutText" data-translate="footerAboutText">
+          Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.
+        </p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-section">
+        <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
+        <ul>
+          <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
+          <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
+          <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
+          <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
+          <li><a href="Aboutus.html" id="footerAboutusLink" data-translate="footerAoutusLink">About Us</a></li>
+          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
+          <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3 id="footerContactTitle" data-translate="footerContactTitle">Contact Info</h3>
+        <ul>
+          <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress" data-translate="footerAddress">Clement Town, Dehradun</span></li>
+          <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91 9627024287</span></li>
+          <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.bitebox@gmail.com</span></li>
+          <li><i class="fas fa-clock"></i> <span id="footerHours" data-translate="footerHours">7:00 AM - 10:00 PM</span></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3 id="footerNewsletterTitle" data-translate="footerNewsletterTitle">Newsletter</h3>
+        <p id="footerNewsletterText" data-translate="footerNewsletterText">Subscribe for updates and special offers!</p>
+        <form id="newsletterForm">
+          <input type="email" id="newsletterEmail" placeholder="Enter your email" data-translate-placeholder="newsletterPlaceholder" required>
+          <button type="submit" id="newsletterSubmit" data-translate="subscribeBtn">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      <p id="copyrightText" data-translate="copyrightText">&copy; 2023 Bite Box. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+    <!-- Simple JavaScript for Toggle Password & Password Match Check -->
+    <script>
+        // Toggle Password Visibility
+        const togglePassword = document.querySelectorAll('.toggle-password');
+        togglePassword.forEach(eye => {
+            eye.addEventListener('click', function() {
+                const passwordField = this.parentElement.querySelector('input');
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    this.textContent = '🙈';
+                } else {
+                    passwordField.type = 'password';
+                    this.textContent = '👁';
+                }
+            });
+        });
+
+        // Password Match Check
+        document.querySelector('.register-form').addEventListener('submit', function(e) {
+            const password = document.querySelector('.password-field input').value;
+            const confirmPassword = document.querySelectorAll('.password-field input')[1].value;
+            const errorMessage = document.getElementById('error-message');
+
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                errorMessage.style.display = 'block';
+            } else {
+                errorMessage.style.display = 'none';
+                // Proceed with registration (backend needed)
+                alert('Account created successfully!');
+            }
+        });
+    </script>
+    <a>
+        
+    <button onclick="goback()" class="back-btn"> <i class="fas fa-arrow-left"></i><span id="backTextVeg" data-translate="backToMain">Back to Main</span></button>
+    
+    </a>
+    <script>
+        function goback(){
+            window.history.back();
+        }
+    </script>
+    
+  </div>
+
+  <script>
+  document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent actual form submission
+    const emailInput = document.getElementById('newsletterEmail');
+    const email = emailInput.value.trim();
+
+    if (email === '') {
+      alert('Please enter your email.');
+      return;
+    }
+
+    // Simple email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    alert('Thank you for subscribing!');
+    emailInput.value = ''; // Clear input field
+  });
+</script>
+
+</body>
+</html>

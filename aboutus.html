@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Bite Box - Where Every Bite is a Flavor Bomb!</title>
+   <link rel="icon" type="image/x-icon" href="Bite Box.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #FFFBE6;
+      line-height: 1.6;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      background: #10332F;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-family: 'Lucida Handwriting', cursive;
+      color: 	#FFFBE6;
+      white-space: nowrap;
+    display: block;
+    opacity: 0;
+    animation: logomove 1.5s forwards;
+}
+@keyframes logomove {
+    0% {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    }
+
+    .logo p {
+      margin: 0;
+      font-style: italic;
+      color: #F4C873;
+    }
+
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      position: relative;
+      z-index: 1000;
+    }
+
+    .menu-line {
+      width: 25px;
+      height: 3px;
+      background-color: white;
+      margin: 4px 0;
+      transition: all 0.3s ease;
+    }
+
+    .dropdown-menu {
+      display: flex;
+      gap: 20px;
+    }
+
+    .dropdown-menu a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 5px 10px;
+      transition: all 0.3s ease;
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #444;
+      border-radius: 5px;
+    }
+
+    /* Main Content Sections */
+    section {
+      padding: 2rem;
+      margin: 1rem auto;
+      max-width: 1200px;
+      background: #10332F;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #F4C873;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #7a5200;
+      padding-bottom: 0.5rem;
+    }
+
+    h3 {
+      color: #10332F;
+      margin: 1.5rem 0 1rem;
+    }
+    .plan p{
+      color: #10332F;
+    
+    }
+    .pp{
+      color: #FFFBE6;
+      font-weight: bold;
+    }
+    /* Tiffin Service */
+    .tiffin-service {
+      text-align: center;
+      background:#10332F;
+    }
+
+    .plans {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .plan {
+      background: #ffdd99;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 250px;
+      transition: transform 0.3s ease;
+    }
+
+    .plan:hover {
+      transform: translateY(-5px);
+    }
+
+    .btn {
+      background: #E4C873 ;
+      color: rgb(0, 0, 0);
+      border: none;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 1rem;
+    }
+
+    .btn:hover {
+      background: #dfbb51 ;
+    }
+
+    /* Menu Section */
+    .menu-tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tab-btn {
+      padding: 0.5rem 1.5rem;
+      border: none;
+      background: #E4C873;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+      background: #155f57;
+      color: white;
+    }
+
+    .menu-content {
+      display: none;
+    }
+
+    .menu-content.active {
+      display: block;
+    }
+
+    .menu-content ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .menu-content ul li {
+      padding: 0.8rem 0;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .menu-content ul li:last-child {
+      border-bottom: none;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #222;
+      color: white;
+      padding: 40px 20px 20px;
+      margin-top: 50px;
+    }
+
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .footer-section h3 {
+      color: #ff6b6b;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+
+    #footerAboutTitle {
+      font-family: 'Lucida Handwriting', cursive;
+    }
+
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-section ul li i {
+      margin-right: 8px;
+      width: 20px;
+      text-align: center;
+    }
+
+    .footer-section ul li a {
+      color: #ccc;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-section ul li a:hover {
+      color: #ff6b6b;
+    }
+
+    .social-links {
+      margin-top: 15px;
+    }
+
+    .social-links a {
+      color: white;
+      margin-right: 15px;
+      font-size: 1.2rem;
+      transition: color 0.3s ease;
+    }
+
+    .social-links a:hover {
+      color: #ff6b6b;
+    }
+
+    footer form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    footer input[type="email"] {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    footer button {
+      background-color: #ff6b6b;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    footer button:hover {
+      background-color: #e05555;
+    }
+
+    .copyright {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #444;
+      font-size: 0.9rem;
+      color: #bbb;
+    }
+
+    .back-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      z-index: 99;
+    }
+
+    .back-btn:hover {
+      background-color: #ff5252;
+      transform: translateX(-3px);
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: flex;
+      }
+
+      .dropdown-menu {
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: #111;
+        width: 200px;
+        display: none;
+        padding: 1rem;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+      }
+
+      .dropdown-menu.show {
+        display: flex;
+      }
+
+      .plans {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .plan {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .footer-section {
+        text-align: center;
+      }
+
+      .social-links {
+        justify-content: center;
+      }
+    }
+
+    /*media*/
+.tiffin-service {
+  text-align: center;
+  background: #10332F;
+  padding: 15px;
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  margin: 20px auto;
+  max-width: 800px;
+}
+
+.plan {
+  background: #ffdd99;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 250px;
+}
+
+.plan:hover {
+  transform: translateY(-5px);
+}
+
+.plan h3 {
+  color: #10332F;
+  font-size: 1.1rem;
+  margin: 0 0 10px 0;
+}
+
+.plan p {
+  color: #10332F;
+  font-size: 0.9rem;
+  margin: 5px 0;
+  line-height: 1.4;
+}
+
+.plan small {
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.btn {
+  background: #E4C873;
+  color: rgb(0, 0, 0);
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 15px;
+}
+
+/* Media Query for 250px and up */
+@media (min-width: 250px) {
+  .plans {
+    grid-template-columns: 1fr;
+  }
+  
+  .plan {
+    max-width: 220px;
+    padding: 12px;
+  }
+  
+  .plan h3 {
+    font-size: 1rem;
+  }
+  
+  .plan p {
+    font-size: 0.8rem;
+  }
+  
+  .btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Media Query for 400px and up */
+@media (min-width: 400px) {
+  .plans {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Media Query for 600px and up */
+@media (min-width: 600px) {
+  .plans {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .plan {
+    max-width: 250px;
+  }
+}
+
+/* Media Query for 768px and up - matches your existing breakpoint */
+@media (min-width: 768px) {
+  .plans {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .plan {
+    width: 250px;
+    margin: 0 10px;
+  }
+}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <h1>Bite Box</h1>
+      <p>Where Every Bite is a Flavor Bomb!</p>
+    </div>
+    <nav>
+      <div class="menu-toggle" id="menuToggle">
+        <div class="menu-line"></div>
+        <div class="menu-line"></div>
+        <div class="menu-line"></div>
+      </div>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <a href="index.html">Home</a>
+        <a href="veg.html">Veg</a>
+        <a href="non-veg.html">Non Veg</a>
+        <a href="tiffin.html">Tiffin Service</a>
+        <a href="aboutus.html">About Us</a>
+        <a href="contactus.html">Contact Us</a>
+        <a href="terms&privay.html">Terms & Policy</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- About Section -->
+  <section class="about">
+    <h2>About Bite Box</h2>
+    <p>Welcome to <strong>Bite Box</strong>—your ultimate destination for explosive flavors and irresistible meals! We believe that food should be an adventure, and every bite should pack a punch.</p>
+    
+    <h3>Our Story</h3>
+    <p>Born from a passion for bold flavors and home-style cooking, Bite Box started with a simple mission: to turn every meal into a <strong>flavor bomb</strong>. What began as a small kitchen experiment has now blossomed into a beloved food service that delivers happiness in every bite.</p>
+    
+    <h3>Our Philosophy</h3>
+    <p>We combine traditional recipes with innovative techniques to create dishes that are both familiar and exciting. Our chefs carefully select each ingredient to ensure maximum flavor in every dish we serve.</p>
+  </section>
+
+  <!-- Tiffin Service Section -->
+  <section class="tiffin-service">
+    <h2>Our Tiffin Service</h2>
+    <p class="pp">Too busy to cook? Our <strong>tiffin service</strong> delivers fresh, homely meals right to your doorstep! Perfect for anyone who appreciates good food without the hassle.</p>
+<div class="plans">
+  <div class="plan">
+    <input type="radio" name="tiffinPlan" value="Basic" id="planBasic">
+    <label for="planBasic"><h3>Basic Plan</h3></label>
+    <p>1 Meal/Day (Lunch or Dinner)</p>
+    <p>₹1700/Month</p>
+    <p><small>**Perfect for light eaters**</small></p>
+  </div>
+  <div class="plan">
+    <input type="radio" name="tiffinPlan" value="Standard" id="planStandard">
+    <label for="planStandard"><h3>Standard Plan</h3></label>
+    <p>2 Meals/Day (Lunch + Dinner)</p>
+    <p>₹2800/Month</p>
+    <p><small>**Best Choice**</small></p>
+  </div>
+  <div class="plan">
+    <input type="radio" name="tiffinPlan" value="Premium" id="planPremium">
+    <label for="planPremium"><h3>Premium Plan</h3></label>
+    <p>3 Meals/day (Breakfast + Lunch + Dinner)</p>
+    <p>₹3200/Month</p>
+    <p><small>**Great value for regular customers**</small></p>
+  </div>
+</div>
+
+    <button id="subscribeBtn" class="btn">Subscribe Now!</button>
+  </section>
+
+  <!-- Menu Section -->
+  <section class="menu">
+    <h2>Our Menu Highlights</h2>
+    <div class="menu-tabs">
+      <button class="tab-btn active" data-tab="veg">Veg</button>
+      <button class="tab-btn" data-tab="nonveg">Non-Veg</button>
+    </div>
+    <div id="veg" class="menu-content active">
+      <h3>Vegetarian Delights</h3>
+      <ul>
+        <li><span>Paneer Tikka Masala + Jeera Rice</span> <span>₹180</span></li>
+        <li><span>Dal Makhani + Butter Naan</span> <span>₹150</span></li>
+        <li><span>Veg Biryani + Raita</span> <span>₹160</span></li>
+        <li><span>Malai Kofta + Naan</span> <span>₹170</span></li>
+      </ul>
+    </div>
+    <div id="nonveg" class="menu-content">
+      <h3>Non-Veg Specials</h3>
+      <ul>
+        <li><span>Butter Chicken + Garlic Naan</span> <span>₹220</span></li>
+        <li><span>Mutton Rogan Josh + Rice</span> <span>₹250</span></li>
+        <li><span>Chicken Biryani + Mirchi Ka Salan</span> <span>₹200</span></li>
+        <li><span>Fish Curry + Steamed Rice</span> <span>₹230</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="mainFooter">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3 id="footerAboutTitle">About Bite Box</h3>
+        <p id="footerAboutText">
+          Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.
+        </p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-section">
+        <h3 id="footerLinksTitle">Quick Links</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="veg.html">Vegetarian</a></li>
+          <li><a href="non-veg.html">Non-Vegetarian</a></li>
+          <li><a href="tiffin.html">Tiffin Service</a></li>
+          <li><a href="aboutus.html">About Us</a></li>
+          <li><a href="contactus.html">Contact Us</a></li>
+          <li><a href="terms&privay.html">Terms & Policy</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3 id="footerContactTitle">Contact Info</h3>
+        <ul>
+          <li><i class="fas fa-map-marker-alt"></i> Clement Town, Dehradun</li>
+          <li><i class="fas fa-phone"></i> +91 9627024287</li>
+          <li><i class="fas fa-envelope"></i> Official.bitebox@gmail.com</li>
+          <li><i class="fas fa-clock"></i> 07:00 AM - 10:00 PM</li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3 id="footerNewsletterTitle">Newsletter</h3>
+        <p id="footerNewsletterText">Subscribe for updates and special offers!</p>
+        <form id="newsletterForm">
+          <input type="email" id="newsletterEmail" placeholder="Enter your email" required>
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      <p>&copy; 2025 Bite Box. All Rights Reserved.</p>
+    </div>
+  </footer>
+ 
+  <a href="index.html" class="back-btn">
+    <i class="fas fa-arrow-left"></i>
+    <span>Back to Main</span>
+  </a>
+
+  <script>
+    // Mobile Menu Toggle
+    document.addEventListener("DOMContentLoaded", () => {
+      const menuToggle = document.getElementById("menuToggle");
+      const dropdownMenu = document.getElementById("dropdownMenu");
+
+      menuToggle.addEventListener("click", () => {
+        dropdownMenu.classList.toggle("show");
+      });
+
+      // Menu Tab Functionality
+      const tabBtns = document.querySelectorAll(".tab-btn");
+      const menuContents = document.querySelectorAll(".menu-content");
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          // Remove active class from all buttons and contents
+          tabBtns.forEach(b => b.classList.remove("active"));
+          menuContents.forEach(c => c.classList.remove("active"));
+          
+          // Add active class to clicked button and corresponding content
+          btn.classList.add("active");
+          const tabId = btn.getAttribute("data-tab");
+          document.getElementById(tabId).classList.add("active");
+        });
+      });
+
+      // Newsletter Form Submission
+      const newsletterForm = document.getElementById("newsletterForm");
+      if (newsletterForm) {
+        newsletterForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const email = document.getElementById("newsletterEmail").value;
+          alert(`Thank you for subscribing with ${email}! We'll keep you updated.`);
+          newsletterForm.reset();
+        });
+      }
+    });
+  </script>
+  <script>
+    // Tiffin Plan Subscribe Button
+const subscribeBtn = document.getElementById("subscribeBtn");
+subscribeBtn.addEventListener("click", () => {
+  const selectedPlan = document.querySelector('input[name="tiffinPlan"]:checked');
+  if (!selectedPlan) {
+    alert("Please select your tiffin service plan before subscribing.");
+  } else {
+    alert(`Thank you for choosing the ${selectedPlan.value} Plan! Redirecting to subscription page.`);
+   window.location.href = `tiffin.html?plan=${selectedPlan.value.toLowerCase()}`;
+
+  }
+});
+
+  </script>
+  <script>
+  document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent actual form submission
+    const emailInput = document.getElementById('newsletterEmail');
+    const email = emailInput.value.trim();
+
+    if (email === '') {
+      alert('Please enter your email.');
+      return;
+    }
+
+    // Simple email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    alert('Thank you for subscribing!');
+    emailInput.value = ''; // Clear input field
+  });
+</script>
+
+</body>
+</html>

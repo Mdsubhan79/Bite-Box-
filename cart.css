@@ -1,0 +1,460 @@
+/* General Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color:#10332F ;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Navigation Styles */
+.navbar {
+   background:#10332F;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-logo {
+  font-family: 'Lucida Handwriting', cursive ;
+    color: #FFFBE6;
+    font-size: 2rem;
+    white-space: nowrap;
+    display: block;
+    opacity: 0;
+    animation: logomove 1.5s forwards;
+}
+@keyframes logomove {
+    0% {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.nav-tagline {
+  color: #F4C873;
+  margin: 5px 0 0;
+  font-size: 1.2rem;
+  font-style: italic;
+}
+
+/* Dropdown menu styling */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 70px; /* Adjust based on your navbar height */
+  right: 0;
+  z-index: 101;
+  background-color: #10332F;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  min-width: 150px;
+  flex-direction: column; /* Important for vertical stacking */
+}
+
+/* Ensure dropdown becomes visible */
+.dropdown-menu.active {
+  display: flex;
+}
+
+/* Links inside dropdown */
+.dropdown-menu a {
+  display: block; /* Ensures full-width clickable block */
+  padding: 10px 15px;
+  text-decoration: none;
+  color:#F4C873;
+  white-space: nowrap;
+  transition: background 0.3s ease;
+}
+
+/* Hover effect */
+.dropdown-menu a:hover {
+background-color: #756666c5;
+}
+
+/* Hamburger menu lines */
+.menu-line {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  margin: 3px 0;
+  transition: all 0.3s ease;
+}
+
+
+.dropdown-menu a:hover {
+  background-color: #727272ad;
+}
+
+
+
+.cart-countt {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #ff6b6b;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+}
+
+
+/* Cart Container Styles */
+.cart-container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #13443d;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.cart-title {
+  color: #F4C873;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  border-bottom: 2px solid #F4C873;
+  padding-bottom: 15px;
+}
+
+/* Cart Items Styles */
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #F4C873;
+}
+
+.item-info {
+  display: flex;
+  color: #F4C873;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+}
+
+.item-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.item-details {
+  flex: 1;
+}
+
+.item-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.item-price {
+  color: #F4C873;
+  font-weight: 700;
+}
+
+.quantity-control {
+  display: flex;
+  color: #F4C873;
+  align-items: center;
+  gap: 10px;
+}
+
+.quantity-btn {
+  background-color: #F4C873;
+  color: #10332F;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.quantity-btn:hover {
+  background-color: #fcc861;
+  color: #0e413b;
+}
+
+.quantity {
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Empty Cart Styles */
+.empty-cart {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.empty-cart h3 {
+  color: #F4C873;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.empty-cart p {
+  color: #f1d69e;
+  margin-bottom: 20px;
+}
+.cart-countt {
+  display: none;
+}
+
+/* Price Summary Styles */
+.price-summary {
+  background-color: #10332F;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 30px;
+  color: #F4C873;
+}
+
+.summary-title {
+  color: #F4C873;
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #F4C873;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.total-row {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #F4C873;
+}
+
+/* Button Styles */
+.checkout-btn {
+  display: block;
+  width: 100%;
+  background-color: #F4C873;
+  color: #10332F;
+  border: none;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(255,107,107,0.3);
+}
+
+.checkout-btn:hover {
+  background-color: #f7ba41;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(255, 253, 107, 0.4);
+}
+
+/* Show dropdown as horizontal links on wider screens */
+@media (min-width: 768px) {
+  .dropdown-menu {
+    display: flex !important;
+    gap: 20px;
+    position: static;
+    flex-direction: row;
+    background: none;
+    box-shadow: none;
+  }
+
+  .dropdown-menu a {
+    color: #F4C873;
+    text-decoration: none;
+  }
+
+  .menu-toggle {
+    display: none;
+  }
+}
+
+/* On small screens, show dropdown in vertical stack */
+@media (max-width: 767px) {
+  .dropdown-menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 70px;
+    right: 0;
+    background-color: #10332F;
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .dropdown-menu.show {
+    display: flex;
+  }
+
+  .menu-toggle {
+    display: block;
+    cursor: pointer;
+  }
+}
+
+
+/*media*/
+
+/* ========= Mobile First Media Query ========= */
+@media (max-width: 480px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .nav-logo {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 5px;
+  }
+
+  .nav-tagline {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .dropdown-menu {
+    width: 60%;
+    left: 0;
+    font-size: 11px;
+    margin-top: 4rem;
+  }
+
+  .cart-container {
+    padding: 15px 10px;
+    margin: 20px 10px;
+  }
+
+  .cart-title {
+    font-size: 1.5rem;
+    padding-bottom: 10px;
+  }
+
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .item-image {
+    width: 40px;
+    height: 60px;
+  }
+
+  .item-name {
+    font-size: 1rem;
+  }
+
+  .item-price {
+    font-size: 0.95rem;
+  }
+
+  .quantity-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+
+  .checkout-btn {
+    font-size: 1rem;
+    padding: 12px;
+  }
+
+  .price-summary {
+    padding: 15px;
+  }
+
+  .summary-title {
+    font-size: 1.2rem;
+  }
+
+  .price-row span {
+    font-size: 0.95rem;
+  }
+
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .footer-section h3 {
+    font-size: 1.1rem;
+  }
+
+  .footer-section ul li,
+  .footer-section p,
+  .footer-section input,
+  .footer-section button {
+    font-size: 0.9rem;
+  }
+
+  .back-btn {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    left: 10px;
+    bottom: 10px;
+  }
+}
+
+/* ====== Tablet and medium screens ====== */
+@media (min-width: 481px) and (max-width: 767px) {
+  .cart-container {
+    padding: 20px;
+  }
+
+  .cart-item {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .item-info {
+    flex: 1 1 100%;
+  }
+
+  .quantity-control {
+    margin-top: 10px;
+  }
+
+  .checkout-btn {
+    font-size: 1.05rem;
+  }
+
+  .footer-container {
+    grid-template-columns: 1fr 1fr;
+    text-align: center;
+  }
+}
