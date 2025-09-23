@@ -34,7 +34,7 @@
         .header-container {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
@@ -43,6 +43,10 @@
         .logo {
             display: flex;
             flex-direction: column;
+            align-items: flex-start;
+            font-family: 'Dancing Script', cursive;
+            color: #F4C873;
+
             
         }
 
@@ -61,6 +65,7 @@
 .menu-toggle {
     display: none;
     flex-direction: column;
+    align-items: flex-end;
     cursor: pointer;
 }
 
@@ -75,11 +80,13 @@
 .dropdown-menu {
     display: flex;
     gap: 20px;
+   
 }
 
 .dropdown-menu a {
     color: white;
     text-decoration: none;
+   
     font-weight: 500;
 }
 
@@ -93,10 +100,10 @@
 @media (max-width: 768px) {
     .dropdown-menu {
         flex-direction: column;
-        background: rgba(6, 53, 39, 0.95);
+        background: #10332F;
         position: absolute;
-        top: 11rem;
-        right: 20px;
+        top: 10.4rem;
+
         width: 200px;
         padding: 10px;
         border-radius: 10px;
@@ -112,8 +119,6 @@
         display: flex;
     }
 }
-
-        /* Main Content */
         .main-container {
             max-width: 1200px;
             margin: 40px auto;
@@ -200,7 +205,6 @@
             box-shadow: 0 5px 15px rgba(255, 228, 107, 0.4);
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -352,35 +356,9 @@ footer button:hover {
     color: #bbb;
 }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .logo {
-                margin-bottom: 15px;
-            }
-
-            .hamburger-menu {
-                margin-top: 11px;
-            }
-
-            .dropdown-menu {
-                right: 50%;
-                transform: translateX(50%);
-            }
-
-            .footer-section {
-                text-align: center;
-            }
-
-            .social-icons {
-                justify-content: center;
-            }
-        }
-         .back-btn {
+       
+       
+    .back-btn {
     position: fixed;
     bottom: 20px;
     left: 20px;
@@ -404,7 +382,7 @@ footer button:hover {
 @media (max-width: 768px) {
     .header-container {
         flex-direction: column;
-        text-align: center;
+        
     }
 
     .logo {
@@ -416,8 +394,8 @@ footer button:hover {
     }
 
     .dropdown-menu {
-        right: 50%;
-        transform: translateX(50%);
+        right: 5px;
+        transform: none;
     }
 
     .footer-section {
@@ -564,7 +542,7 @@ footer button:hover {
     .dropdown-menu {
         width: 160px;
         right: 10px;
-        top: 5rem;
+        top: 8rem;
         padding: 8px;
     }
     
@@ -640,16 +618,8 @@ footer button:hover {
                     <label for="state">State</label>
                     <select id="state" name="state" required>
                         <option value="">Select State</option>
-                        <option value="Delhi">Delhi</option>
-                        <option value="Maharashtra">Maharashtra</option>
-                        <option value="Karnataka">Karnataka</option>
-                        <option value="Tamil Nadu">Tamil Nadu</option>
-                        <option value="West Bengal">West Bengal</option>
-                        <option value="Uttar Pradesh">Uttar Pradesh</option>
-                        <option value="Gujarat">Gujarat</option>
-                        <option value="Rajasthan">Rajasthan</option>
-                        <option value="Punjab">Punjab</option>
-                        <option value="Other">Other</option>
+                        <option value="Delhi">Uttrakhand</option>
+                        
                     </select>
                 </div>
                 <button type="submit" class="submit-btn">Book Service</button>
@@ -667,7 +637,7 @@ footer button:hover {
     </div>
 
     <!-- Footer -->
-       <footer id="mainFooter">
+<footer id="mainFooter">
     <div class="footer-container">
       <div class="footer-section">
         <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Bite Box</h3>
@@ -681,30 +651,41 @@ footer button:hover {
           <a href="#"><i class="fab fa-whatsapp"></i></a>
         </div>
       </div>
-      
-      <div class="footer-section">
-        <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
-        <ul>
-          <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
-          <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
-          <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
-          <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
-          <li><a href="aboutus.html" id="footerAboutusLink" data-translate="footerAboutusLink">About Us</a></li>
-          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
-          <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
-          
-        </ul>
-      </div>
-      
-      <div class="footer-section">
+       <div class="footer-section">
         <h3 id="footerContactTitle" data-translate="footerContactTitle">Contact Info</h3>
         <ul>
           <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress" data-translate="footerAddress">Clement Town, Dehradun</span></li>
           <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91 9627024287</span></li>
           <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.bitebox@gmail.com</span></li>
-          <li><i class="fas fa-clock"></i> <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span></li>
+           <li>
+  <i class="fas fa-clock"></i> 
+  <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span> 
+  <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span>
+</li>
         </ul>
       </div>
+      
+      <div class="footer-section">
+        <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
+        <ul>
+          <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
+          <li><a href="services.html" id="footerServicesLink" data-translate="footerServicesLink">Our Services</a></li>
+          <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
+          <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
+          <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
+          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
+          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+          <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
+          <li><a href="catering.html" id="footerCateringServicesLink" data-translate="footerCateringServicesLink">Catering Services</a></li>
+          <li><a href="highprotien.html" id="footerHighprotienLink" data-translate="footerHighProtienLink">High-Protein Meals</a></li>
+          <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
+          <li><a href="login.html" id="footerLoginLink" data-translate="footerLoginLink">Login</a></li>
+          <li><a href="register.html" id="footerRegisterLink" data-translate="footerRegisterLink">Register</a></li>
+        </ul>
+      </div>
+      
+     
       
       <div class="footer-section">
         <h3 id="footerNewsletterTitle" data-translate="footerNewsletterTitle">Newsletter</h3>
@@ -717,7 +698,7 @@ footer button:hover {
     </div>
     
     <div class="copyright">
-      <p id="copyrightText" data-translate="copyrightText">&copy; 2023 Bite Box. All Rights Reserved.</p>
+      <p id="copyrightText" data-translate="copyrightText">&copy; 2025 Bite Box. All Rights Reserved.</p>
     </div>
   </footer>
  <a>
@@ -824,8 +805,24 @@ footer button:hover {
     }
 
     alert('Thank you for subscribing!');
-    emailInput.value = ''; // Clear input field
+    emailInput.value = '';
   });
+</script>
+<script>
+  function updateOpenStatus() {
+    const now = new Date();
+    const hour = now.getHours();
+
+    
+    const isOpen = hour >= 7 && hour < 22;
+
+    const statusElement = document.getElementById("openStatus");
+    statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
+    statusElement.style.color = isOpen ? "green" : "red";
+  }
+
+  
+  updateOpenStatus();
 </script>
 
 </body>

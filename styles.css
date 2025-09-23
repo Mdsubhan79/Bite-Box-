@@ -17,6 +17,7 @@ body {
   height: 100%;
   background: url(thali8.jpg) no-repeat center center / cover;
   filter: blur(0px);
+  background-color: #1a1a1a;
   z-index: -1;
 }
 
@@ -93,12 +94,12 @@ h1 {
 #tagline {
   font-size: 2em;
   margin: 10px 0 40px;
-  color: #060f00;
+  margin-bottom: 0.9rem;
   font-family: 'Times New Roman', Times, serif;
   overflow: hidden;
   white-space: nowrap;
   text-align: center;
-  text-shadow: 2px 2px 7px rgb(10, 44, 6);
+  text-shadow: 2px 2px 7px rgb(92, 55, 8);
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 4);
   width: 0;
   animation:
@@ -220,7 +221,7 @@ h1 {
   }
 
   #tagline {
-    font-size: 1.2em;
+    font-size: 1.4em;
     white-space: normal;
 
   }
@@ -243,7 +244,7 @@ h1 {
   }
 
   #tagline {
-    font-size: 1.5em;
+    font-size: 1.6em;
   }
 
   .preference-select button {
@@ -278,7 +279,7 @@ h1 {
   }
 
   #tagline {
-    font-size: 0.9em;
+    font-size: 1em;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;

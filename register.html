@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bite Box - Register</title>
-         <link rel="icon" type="image/x-icon" href="Bite Box.png">
+    <link rel="icon" type="image/x-icon" href="Bite Box.png">
+    <link rel="preload" as="image" href="thali9.jpg">
     <style>
-        /* Google Fonts - Poppins (Foodie Style) */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
         * {
@@ -22,6 +22,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            background-color: #222;
         }
 
         .register-container {
@@ -322,7 +323,7 @@ footer button:hover {
     transform: translateX(-3px);
 }
 
-/* media register*/
+
 
 @media (max-width: 400px) {
     .register-container {
@@ -362,7 +363,7 @@ footer button:hover {
     }
 
     .footer-section ul li {
-        font-size: 14px;
+        font-size: 11px;
     }
 
     .footer-section h3 {
@@ -403,13 +404,13 @@ footer button:hover {
 </head>
 <body>
     <div class="register-container">
-        <!-- Logo & Brand Name -->
+        \
         <div class="logo">
             <h2>Welcome To</h2>
             <h1>Bite Box</h1>
         </div>
 
-        <!-- Register Form -->
+      \
         <form class="register-form">
             <input type="text" placeholder="Full Name" required>
             <input type="email" placeholder="Email Address" required>
@@ -429,19 +430,19 @@ footer button:hover {
                 <label for="terms">I agree to the <a href="terms&privay.html">Terms & Conditions</a> and <a href="terms&privay.html">Privacy Policy</a></label>
             </div>
 
-            <!-- Register Button -->
+            
             <button type="submit" class="register-btn">Create Account</button>
 
-            <!-- Error Message (Hidden by Default) -->
+            
             <div class="error-message" id="error-message">
                 Passwords do not match. Please try again.
             </div>
         </form>
 
-        <!-- Divider -->
+        
         <div class="divider">or</div>
 
-        <!-- Social Register -->
+       
         <div class="social-register">
             <div class="social-btn">
                  <a href="#"><i class="fab fa-whatsapp"></i></a>
@@ -457,14 +458,14 @@ footer button:hover {
             </div>
         </div>
 
-        <!-- Login Link -->
+       
         <div class="login-link">
             Already have an account? <a href="login.html">Log In</a>
         </div>
     </div>
 
-    <!-- Footer Section -->
-         <footer id="mainFooter">
+    <!-- Footer -->
+   <footer id="mainFooter">
     <div class="footer-container">
       <div class="footer-section">
         <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Bite Box</h3>
@@ -478,29 +479,41 @@ footer button:hover {
           <a href="#"><i class="fab fa-whatsapp"></i></a>
         </div>
       </div>
-      
-      <div class="footer-section">
-        <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
-        <ul>
-          <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
-          <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
-          <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
-          <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
-          <li><a href="Aboutus.html" id="footerAboutusLink" data-translate="footerAoutusLink">About Us</a></li>
-          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
-          <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
-        </ul>
-      </div>
-      
-      <div class="footer-section">
+       <div class="footer-section">
         <h3 id="footerContactTitle" data-translate="footerContactTitle">Contact Info</h3>
         <ul>
           <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress" data-translate="footerAddress">Clement Town, Dehradun</span></li>
           <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91 9627024287</span></li>
           <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.bitebox@gmail.com</span></li>
-          <li><i class="fas fa-clock"></i> <span id="footerHours" data-translate="footerHours">7:00 AM - 10:00 PM</span></li>
+           <li>
+  <i class="fas fa-clock"></i> 
+  <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span> 
+  <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span>
+</li>
         </ul>
       </div>
+      
+      <div class="footer-section">
+        <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
+        <ul>
+          <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
+          <li><a href="services.html" id="footerServicesLink" data-translate="footerServicesLink">Our Services</a></li>
+          <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
+          <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
+          <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
+          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
+          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+          <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
+          <li><a href="catering.html" id="footerCateringServicesLink" data-translate="footerCateringServicesLink">Catering Services</a></li>
+          <li><a href="highprotien.html" id="footerHighprotienLink" data-translate="footerHighProtienLink">High-Protein Meals</a></li>
+          <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
+          <li><a href="login.html" id="footerLoginLink" data-translate="footerLoginLink">Login</a></li>
+          <li><a href="register.html" id="footerRegisterLink" data-translate="footerRegisterLink">Register</a></li>
+        </ul>
+      </div>
+      
+     
       
       <div class="footer-section">
         <h3 id="footerNewsletterTitle" data-translate="footerNewsletterTitle">Newsletter</h3>
@@ -513,11 +526,10 @@ footer button:hover {
     </div>
     
     <div class="copyright">
-      <p id="copyrightText" data-translate="copyrightText">&copy; 2023 Bite Box. All Rights Reserved.</p>
+      <p id="copyrightText" data-translate="copyrightText">&copy; 2025 Bite Box. All Rights Reserved.</p>
     </div>
   </footer>
 
-    <!-- Simple JavaScript for Toggle Password & Password Match Check -->
     <script>
         // Toggle Password Visibility
         const togglePassword = document.querySelectorAll('.toggle-password');
@@ -565,7 +577,7 @@ footer button:hover {
 
   <script>
   document.getElementById('newsletterForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevent actual form submission
+    e.preventDefault(); 
     const emailInput = document.getElementById('newsletterEmail');
     const email = emailInput.value.trim();
 
@@ -574,7 +586,7 @@ footer button:hover {
       return;
     }
 
-    // Simple email validation regex
+   
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       alert('Please enter a valid email address.');
@@ -582,8 +594,24 @@ footer button:hover {
     }
 
     alert('Thank you for subscribing!');
-    emailInput.value = ''; // Clear input field
+    emailInput.value = ''; 
   });
+</script>
+<script>
+  function updateOpenStatus() {
+    const now = new Date();
+    const hour = now.getHours();
+
+    
+    const isOpen = hour >= 7 && hour < 22;
+
+    const statusElement = document.getElementById("openStatus");
+    statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
+    statusElement.style.color = isOpen ? "green" : "red";
+  }
+
+  
+  updateOpenStatus();
 </script>
 
 </body>

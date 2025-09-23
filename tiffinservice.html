@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Our Tiffin Service </title>
+   <link rel="icon" type="image/x-icon" href="Bite Box.png">
+   <link rel="stylesheet" href="veg.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: #fff;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+  background-color: #0c2f2c;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  position: relative;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.nav-logo {
+  font-family: 'Lucida Handwriting', cursive;
+  font-size: 1.8rem;
+  color: #fff;
+  text-decoration: none;
+}
+
+.nav-tagline {
+  font-family: 'Cursive', sans-serif;
+  font-size: 0.9rem;
+  color: #f7c948;
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+/* Hamburger icon */
+.menu-toggle {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.menu-line {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+}
+
+
+    .dropdown-menu {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 90%;
+      right: 0.5rem;
+      background-color: #0c2f2c;
+      padding: 1rem;
+      border-radius: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      z-index: 100;
+    }
+
+    .dropdown-menu a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #1e4642;
+    }
+
+    .dropdown-menu a:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown-menu.active {
+      display: flex;
+    }
+
+    @media (min-width: 768px) {
+      .menu-toggle {
+        display: none;
+      }
+
+      .dropdown-menu {
+        display: flex !important;
+        position: static;
+        flex-direction: row;
+        gap: 1.5rem;
+        background: none;
+        box-shadow: none;
+        padding: 0;
+      }
+
+      .dropdown-menu a {
+        border-bottom: none;
+        padding: 0;
+      }
+    }
+
+    footer {
+      background-color: #222;
+      color: white;
+      padding: 40px 20px 20px;
+      margin-top: 50px;
+    }
+
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .footer-section h3 {
+      color: #ff6b6b;
+      margin-bottom: 10px;
+    }
+
+    #footerAboutTitle {
+      font-family: 'Lucida Handwriting', cursive;
+    }
+
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 8px;
+    }
+
+    .footer-section ul li i {
+      margin-right: 8px;
+    }
+
+    .footer-section ul li a {
+      color: #ccc;
+      text-decoration: none;
+    }
+
+    .footer-section ul li a:hover {
+      text-decoration: underline;
+    }
+
+    .social-links a {
+      color: white;
+      margin-right: 10px;
+      font-size: 1.2rem;
+      transition: color 0.3s ease;
+    }
+
+    .social-links a:hover {
+      color: #ff6b6b;
+    }
+
+    footer form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    footer input[type="email"] {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    footer button {
+      background-color: #ff6b6b;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    footer button:hover {
+      background-color: #e05555;
+    }
+
+    .copyright {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.9rem;
+      color: #bbb;
+    }
+
+    @media (max-width: 768px) {
+      .footer-section {
+        text-align: center;
+      }
+
+      .service-button {
+        width: 90%;
+        font-size: 1rem;
+      }
+    }
+
+    .back-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background-color: #ff5252;
+      transform: translateX(-3px);
+    }
+
+
+
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo-container">
+      <a href="index.html" class="nav-logo">Bite Box</a>
+      <div class="nav-tagline">Where Every Bite is a Flavor Bomb</div>
+    </div>
+    <div class="menu-toggle" id="menuToggle">
+      <div class="menu-line"></div>
+      <div class="menu-line"></div>
+      <div class="menu-line"></div>
+    </div>
+    <div class="dropdown-menu" id="dropdownMenu">
+      <a href="index.html">Home</a>
+      <a href="veg.html">Vegetarian</a>
+      <a href="non-veg.html">Non-Vegetarian</a>
+      <a href="tiffin.html">Tiffin Service</a>
+      <a href="aboutus.html">About Us</a>
+      <a href="contactus.html">Contact Us</a>
+      <a href="terms&privay.html">Terms & Policy</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Signup</a>
+    </div>
+  </nav>
+
+
+    <div class="container">
+    <div class="tiffin-banner veg-banner">
+      <h2  id="vegTiffinTitle" data-translate="vegTiffinTitle"><span class="bite"> Bite Box </span>Tiffin Service</h2>
+      <div class="membership-cards">
+        <div class="card">
+          <h3 id="vegBasicPlan" data-translate="vegBasicPlan">Basic Plan</h3>
+          <p id="vegBasicDesc" data-translate="vegBasicDesc">1 meal/day  (Lunch)or(Dinner)</p>
+          <p>₹1700/month</p>
+          <button class="subscribe-btn" onclick="window.location.href='tiffin.html?plan=basic'" id="vegSubscribeBasic" data-translate="subscribeBtn">Subscribe</button>
+        </div>
+        <div class="card">
+          <h3 id="vegStandardPlan" data-translate="vegStandardPlan">Standard Plan</h3>
+          <p id="vegStandardDesc" data-translate="vegStandardDesc">2 meals/day (Lunch + Dinner)</p>
+          <p>₹2800/month</p>
+          <button class="subscribe-btn" onclick="window.location.href='tiffin.html?plan=standard'" id="vegSubscribeStandard" data-translate="subscribeBtn">Subscribe</button>
+        </div>
+        <div class="card premium">
+          <h3 id="vegPremiumPlan" data-translate="vegPremiumPlan">Premium Plan</h3>
+          <p id="vegPremiumDesc" data-translate="vegPremiumDesc">3 meals/day (Breakfast + Lunch + Dinner)</p>
+          <p>₹3200/month</p>
+          <button class="subscribe-btn" onclick="window.location.href='tiffin.html?plan=premium'" id="vegSubscribePremium" data-translate="subscribeBtn">Subscribe</button>
+        </div>
+      </div>
+    </div>
+
+  <!-- Footer -->
+  <footer id="mainFooter">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3 id="footerAboutTitle">About Bite Box</h3>
+        <p>Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.</p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="veg.html">Vegetarian</a></li>
+          <li><a href="non-veg.html">Non-Vegetarian</a></li>
+          <li><a href="tiffin.html">Tiffin Service</a></li>
+          <li><a href="aboutus.html">About Us</a></li>
+          <li><a href="contactus.html">Contact Us</a></li>
+          <li><a href="terms&privay.html">Terms & Policy</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h3>Contact Info</h3>
+        <ul>
+          <li><i class="fas fa-map-marker-alt"></i> Clement Town, Dehradun</li>
+          <li><i class="fas fa-phone"></i> +91 9627024287</li>
+          <li><i class="fas fa-envelope"></i> Official.bitebox@gmail.com</li>
+          <li><i class="fas fa-clock"></i> 07:00 AM - 10:00 PM <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h3>Newsletter</h3>
+        <p>Subscribe for updates and special offers!</p>
+        <form id="newsletterForm">
+          <input type="email" id="newsletterEmail" placeholder="Enter your email" required>
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <div class="copyright">
+      <p>&copy; 2025 Bite Box. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+
+
+  <!-- Back Button -->
+  <button onclick="goback()" class="back-btn">
+    <i class="fas fa-arrow-left"></i> Back to Main
+  </button>
+
+ <script>
+        function goback(){
+            window.history.back();
+        }
+    </script>
+  <script>
+
+
+    document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('newsletterEmail').value.trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+      alert('Thank you for subscribing!');
+      document.getElementById('newsletterEmail').value = '';
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const menuToggle = document.getElementById("menuToggle");
+      const dropdownMenu = document.getElementById("dropdownMenu");
+      menuToggle.addEventListener("click", () => {
+        dropdownMenu.classList.toggle("active");
+      });
+
+      const now = new Date();
+      const hour = now.getHours();
+      const isOpen = hour >= 7 && hour < 22;
+      const statusElement = document.getElementById("openStatus");
+      statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
+      statusElement.style.color = isOpen ? "green" : "red";
+    });
+  </script>
+
+</body>
+</html>

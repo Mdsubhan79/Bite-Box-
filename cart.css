@@ -1,4 +1,4 @@
-/* General Styles */
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
@@ -8,7 +8,7 @@ body {
   line-height: 1.6;
 }
 
-/* Navigation Styles */
+
 .navbar {
    background:#10332F;
   color: white;
@@ -52,11 +52,11 @@ body {
   font-style: italic;
 }
 
-/* Dropdown menu styling */
+
 .dropdown-menu {
   display: none;
   position: absolute;
-  top: 70px; /* Adjust based on your navbar height */
+  top: 70px;
   right: 0;
   z-index: 101;
   background-color: #10332F;
@@ -64,35 +64,36 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 0;
   min-width: 150px;
-  flex-direction: column; /* Important for vertical stacking */
+  flex-direction: column;
 }
 
-/* Ensure dropdown becomes visible */
+
 .dropdown-menu.active {
   display: flex;
 }
 
-/* Links inside dropdown */
+
 .dropdown-menu a {
-  display: block; /* Ensures full-width clickable block */
+  display: block;
   padding: 10px 15px;
   text-decoration: none;
-  color:#F4C873;
+  color:white;
   white-space: nowrap;
   transition: background 0.3s ease;
 }
 
-/* Hover effect */
+
 .dropdown-menu a:hover {
 background-color: #756666c5;
 }
 
-/* Hamburger menu lines */
+
 .menu-line {
+
   width: 25px;
-  height: 3px;
+  height:3px;
   background-color: white;
-  margin: 3px 0;
+  margin: 5px 0;
   transition: all 0.3s ease;
 }
 
@@ -119,7 +120,7 @@ background-color: #756666c5;
 }
 
 
-/* Cart Container Styles */
+
 .cart-container {
   max-width: 1000px;
   margin: 30px auto;
@@ -138,7 +139,7 @@ background-color: #756666c5;
   padding-bottom: 15px;
 }
 
-/* Cart Items Styles */
+
 .cart-item {
   display: flex;
   justify-content: space-between;
@@ -207,7 +208,7 @@ background-color: #756666c5;
   text-align: center;
 }
 
-/* Empty Cart Styles */
+
 .empty-cart {
   text-align: center;
   padding: 40px 0;
@@ -227,7 +228,7 @@ background-color: #756666c5;
   display: none;
 }
 
-/* Price Summary Styles */
+
 .price-summary {
   background-color: #10332F;
   border-radius: 8px;
@@ -257,7 +258,7 @@ background-color: #756666c5;
   border-top: 1px solid #F4C873;
 }
 
-/* Button Styles */
+
 .checkout-btn {
   display: block;
   width: 100%;
@@ -280,7 +281,7 @@ background-color: #756666c5;
   box-shadow: 0 6px 12px rgba(255, 253, 107, 0.4);
 }
 
-/* Show dropdown as horizontal links on wider screens */
+
 @media (min-width: 768px) {
   .dropdown-menu {
     display: flex !important;
@@ -292,7 +293,7 @@ background-color: #756666c5;
   }
 
   .dropdown-menu a {
-    color: #F4C873;
+    color: white;
     text-decoration: none;
   }
 
@@ -301,7 +302,7 @@ background-color: #756666c5;
   }
 }
 
-/* On small screens, show dropdown in vertical stack */
+
 @media (max-width: 767px) {
   .dropdown-menu {
     display: none;
@@ -325,13 +326,11 @@ background-color: #756666c5;
 }
 
 
-/*media*/
 
-/* ========= Mobile First Media Query ========= */
 @media (max-width: 480px) {
   .navbar {
     flex-direction: column;
-    align-items: flex-start;
+   
     padding: 10px;
   }
 
@@ -345,10 +344,13 @@ background-color: #756666c5;
     font-size: 1rem;
     text-align: center;
   }
-
+  .menu-line{
+    right: 0;
+  }
+  
   .dropdown-menu {
     width: 60%;
-    left: 0;
+  right:0;
     font-size: 11px;
     margin-top: 4rem;
   }
@@ -430,7 +432,7 @@ background-color: #756666c5;
   }
 }
 
-/* ====== Tablet and medium screens ====== */
+
 @media (min-width: 481px) and (max-width: 767px) {
   .cart-container {
     padding: 20px;

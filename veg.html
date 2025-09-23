@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-translate="vegPageTitle">Vegetarian - Bite Box</title>
-       <link rel="icon" type="image/x-icon" href="Bite Box.png">
+  <link rel="icon" type="image/x-icon" href="Bite Box.png">
   <link rel="stylesheet" href="veg.css">
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -147,7 +147,7 @@ footer button:hover {
     <div class="nav-content">
       <h1 class="nav-logo" data-translate="siteName">Bite Box</h1>
       <p class="nav-tagline" data-translate="tagline">Every Bite is a flavor bomb</p>
-      <p class="nav-category" data-translate="vegCategory">Vegetarian</p>
+      <p class="nav-category" data-translate="vegCategory">Vegetarian 🥬</p>
     </div>
 
     <div class="cart-icon" onclick="window.location.href='cartpage.html'">
@@ -157,30 +157,7 @@ footer button:hover {
 
   </nav>
   
-  <div class="container">
-    <div class="tiffin-banner veg-banner">
-      <h2  id="vegTiffinTitle" data-translate="vegTiffinTitle"><span class="bite"> Bite Box </span>Tiffin Service</h2>
-      <div class="membership-cards">
-        <div class="card">
-          <h3 id="vegBasicPlan" data-translate="vegBasicPlan">Basic Plan</h3>
-          <p id="vegBasicDesc" data-translate="vegBasicDesc">1 meal/day  (Lunch)or(Dinner)</p>
-          <p>₹1700/month</p>
-          <button class="subscribe-btn" onclick="window.location.href='tiffin.html?plan=basic'" id="vegSubscribeBasic" data-translate="subscribeBtn">Subscribe</button>
-        </div>
-        <div class="card">
-          <h3 id="vegStandardPlan" data-translate="vegStandardPlan">Standard Plan</h3>
-          <p id="vegStandardDesc" data-translate="vegStandardDesc">2 meals/day (Lunch + Dinner)</p>
-          <p>₹2800/month</p>
-          <button class="subscribe-btn" onclick="window.location.href='tiffin.html?plan=standard'" id="vegSubscribeStandard" data-translate="subscribeBtn">Subscribe</button>
-        </div>
-        <div class="card premium">
-          <h3 id="vegPremiumPlan" data-translate="vegPremiumPlan">Premium Plan</h3>
-          <p id="vegPremiumDesc" data-translate="vegPremiumDesc">3 meals/day (Breakfast + Lunch + Dinner)</p>
-          <p>₹3200/month</p>
-          <button class="subscribe-btn" onclick="window.location.href='tiffin.html?plan=premium'" id="vegSubscribePremium" data-translate="subscribeBtn">Subscribe</button>
-        </div>
-      </div>
-    </div>
+
     
     <section class="menu-section">
       <h2 id="vegMenuTitle" data-translate="vegMenuTitle">Vegetarian Menu</h2>
@@ -213,7 +190,7 @@ footer button:hover {
     </div>
   </div>
 
-  <footer id="mainFooter">
+ <footer id="mainFooter">
     <div class="footer-container">
       <div class="footer-section">
         <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Bite Box</h3>
@@ -227,30 +204,41 @@ footer button:hover {
           <a href="#"><i class="fab fa-whatsapp"></i></a>
         </div>
       </div>
-      
-      <div class="footer-section">
-        <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
-        <ul>
-          <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
-          <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
-          <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
-          <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
-          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
-          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
-          <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
-          
-        </ul>
-      </div>
-      
-      <div class="footer-section">
+       <div class="footer-section">
         <h3 id="footerContactTitle" data-translate="footerContactTitle">Contact Info</h3>
         <ul>
           <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress" data-translate="footerAddress">Clement Town, Dehradun</span></li>
           <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91 9627024287</span></li>
           <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.bitebox@gmail.com</span></li>
-          <li><i class="fas fa-clock"></i> <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span></li>
+           <li>
+  <i class="fas fa-clock"></i> 
+  <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span> 
+  <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span>
+</li>
         </ul>
       </div>
+      
+      <div class="footer-section">
+        <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
+        <ul>
+          <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
+          <li><a href="services.html" id="footerServicesLink" data-translate="footerServicesLink">Our Services</a></li>
+          <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
+          <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
+          <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
+          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
+          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+          <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
+          <li><a href="catering.html" id="footerCateringServicesLink" data-translate="footerCateringServicesLink">Catering Services</a></li>
+          <li><a href="highprotien.html" id="footerHighprotienLink" data-translate="footerHighProtienLink">High-Protein Meals</a></li>
+          <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
+          <li><a href="login.html" id="footerLoginLink" data-translate="footerLoginLink">Login</a></li>
+          <li><a href="register.html" id="footerRegisterLink" data-translate="footerRegisterLink">Register</a></li>
+        </ul>
+      </div>
+      
+     
       
       <div class="footer-section">
         <h3 id="footerNewsletterTitle" data-translate="footerNewsletterTitle">Newsletter</h3>
@@ -267,7 +255,22 @@ footer button:hover {
     </div>
   </footer>
 
+<script>
+  function updateOpenStatus() {
+    const now = new Date();
+    const hour = now.getHours();
 
+    
+    const isOpen = hour >= 7 && hour < 22;
+
+    const statusElement = document.getElementById("openStatus");
+    statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
+    statusElement.style.color = isOpen ? "green" : "red";
+  }
+
+  
+  updateOpenStatus();
+</script>
 
   <script src="script.js"></script>
 

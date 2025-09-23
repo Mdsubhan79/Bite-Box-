@@ -193,30 +193,41 @@ footer button:hover {
           <a href="#"><i class="fab fa-whatsapp"></i></a>
         </div>
       </div>
-      
-      <div class="footer-section">
-        <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
-        <ul>
-          <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
-          <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
-          <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
-          <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
-          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
-          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
-          <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
-          
-        </ul>
-      </div>
-      
-      <div class="footer-section">
+       <div class="footer-section">
         <h3 id="footerContactTitle" data-translate="footerContactTitle">Contact Info</h3>
         <ul>
           <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress" data-translate="footerAddress">Clement Town, Dehradun</span></li>
           <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91 9627024287</span></li>
           <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.bitebox@gmail.com</span></li>
-          <li><i class="fas fa-clock"></i> <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span></li>
+           <li>
+  <i class="fas fa-clock"></i> 
+  <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span> 
+  <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span>
+</li>
         </ul>
       </div>
+      
+      <div class="footer-section">
+        <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
+        <ul>
+          <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
+          <li><a href="services.html" id="footerServicesLink" data-translate="footerServicesLink">Our Services</a></li>
+          <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
+          <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
+          <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
+          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
+          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+          <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
+          <li><a href="catering.html" id="footerCateringServicesLink" data-translate="footerCateringServicesLink">Catering Services</a></li>
+          <li><a href="highprotien.html" id="footerHighprotienLink" data-translate="footerHighProtienLink">High-Protein Meals</a></li>
+          <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
+          <li><a href="login.html" id="footerLoginLink" data-translate="footerLoginLink">Login</a></li>
+          <li><a href="register.html" id="footerRegisterLink" data-translate="footerRegisterLink">Register</a></li>
+        </ul>
+      </div>
+      
+     
       
       <div class="footer-section">
         <h3 id="footerNewsletterTitle" data-translate="footerNewsletterTitle">Newsletter</h3>
@@ -324,8 +335,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     alert('Thank you for subscribing!');
-    emailInput.value = ''; // Clear input field
+    emailInput.value = ''; 
   });
+</script>
+<script>
+  function updateOpenStatus() {
+    const now = new Date();
+    const hour = now.getHours();
+
+    
+    const isOpen = hour >= 7 && hour < 22;
+
+    const statusElement = document.getElementById("openStatus");
+    statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
+    statusElement.style.color = isOpen ? "green" : "red";
+  }
+
+  
+  updateOpenStatus();
 </script>
 
 </body>

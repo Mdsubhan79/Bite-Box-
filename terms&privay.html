@@ -82,7 +82,7 @@
 
 }
 
-/* Dropdown Menu*/
+
 .dropdown-menu {
     display: flex;
     gap: 20px;
@@ -104,10 +104,10 @@
 @media (max-width: 768px) {
     .dropdown-menu {
         flex-direction: column;
-        background: rgba(0, 49, 34, 0.95);
+        background: var(--primary-color);
         position: absolute;
-        top: 65px;
-        right: 20px;
+        top:105px;
+        right: 80px;
         width: 200px;
         padding: 10px;
         border-radius: 10px;
@@ -312,7 +312,7 @@
             background-color: #ff5252;
             transform: translateX(-3px);
         }
-        /* Toggle sections */
+      
         .toggle-container {
             display: flex;
             gap: 1rem;
@@ -582,7 +582,7 @@
         </section>
     </div>
 
-     <footer id="mainFooter">
+   <footer id="mainFooter">
     <div class="footer-container">
       <div class="footer-section">
         <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Bite Box</h3>
@@ -596,29 +596,41 @@
           <a href="#"><i class="fab fa-whatsapp"></i></a>
         </div>
       </div>
-      
-      <div class="footer-section">
-        <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
-        <ul>
-          <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
-          <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
-          <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
-          <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
-          <li><a href="Aboutus.html" id="footerAboutusLink" data-translate="footerAoutusLink">About Us</a></li>
-          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
-          <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
-        </ul>
-      </div>
-      
-      <div class="footer-section">
+       <div class="footer-section">
         <h3 id="footerContactTitle" data-translate="footerContactTitle">Contact Info</h3>
         <ul>
           <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress" data-translate="footerAddress">Clement Town, Dehradun</span></li>
           <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91 9627024287</span></li>
           <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.bitebox@gmail.com</span></li>
-          <li><i class="fas fa-clock"></i> <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span></li>
+           <li>
+  <i class="fas fa-clock"></i> 
+  <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span> 
+  <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span>
+</li>
         </ul>
       </div>
+      
+      <div class="footer-section">
+        <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
+        <ul>
+          <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
+          <li><a href="services.html" id="footerServicesLink" data-translate="footerServicesLink">Our Services</a></li>
+          <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
+          <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
+          <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
+          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
+          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+          <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
+          <li><a href="catering.html" id="footerCateringServicesLink" data-translate="footerCateringServicesLink">Catering Services</a></li>
+          <li><a href="highprotien.html" id="footerHighprotienLink" data-translate="footerHighProtienLink">High-Protein Meals</a></li>
+          <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
+          <li><a href="login.html" id="footerLoginLink" data-translate="footerLoginLink">Login</a></li>
+          <li><a href="register.html" id="footerRegisterLink" data-translate="footerRegisterLink">Register</a></li>
+        </ul>
+      </div>
+      
+     
       
       <div class="footer-section">
         <h3 id="footerNewsletterTitle" data-translate="footerNewsletterTitle">Newsletter</h3>
@@ -641,18 +653,18 @@
 
     <script>
         function showSection(sectionId) {
-            // Hide all sections
+           
             document.getElementById('terms').classList.add('hidden');
             document.getElementById('privacy').classList.add('hidden');
             
-            // Remove active class from all buttons
+         
             document.getElementById('termsBtn').classList.remove('active');
             document.getElementById('policyBtn').classList.remove('active');
             
-            // Show selected section
+          
             document.getElementById(sectionId).classList.remove('hidden');
             
-            // Add active class to clicked button
+          
             if (sectionId === 'terms') {
                 document.getElementById('termsBtn').classList.add('active');
             } else {
@@ -660,17 +672,17 @@
             }
         }
 
-        // Initialize with Terms section visible
+      
         document.addEventListener('DOMContentLoaded', function() {
             showSection('terms');
         });
 
-        // Back button functionality
+        
         function goback() {
             window.history.back();
         }
 
-        // Font Awesome fallback
+       
         if (!document.querySelector('.fa')) {
             const faScript = document.createElement('script');
             faScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js';
@@ -704,8 +716,24 @@
     }
 
     alert('Thank you for subscribing!');
-    emailInput.value = ''; // Clear input field
+    emailInput.value = ''; 
   });
+</script>
+<script>
+  function updateOpenStatus() {
+    const now = new Date();
+    const hour = now.getHours();
+
+    
+    const isOpen = hour >= 7 && hour < 22;
+
+    const statusElement = document.getElementById("openStatus");
+    statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
+    statusElement.style.color = isOpen ? "green" : "red";
+  }
+
+  
+  updateOpenStatus();
 </script>
 
 </body>

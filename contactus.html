@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bite Box - Contact Us</title>
     <link rel="icon" type="image/x-icon" href="Bite Box.png">
+
     <style>
         /* Google Fonts - Poppins (Foodie Style) */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -22,6 +24,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            background-color: #222;
         }
 
         header {
@@ -45,26 +48,27 @@
         }
 
         .logo h1 {
-             font-family: 'Lucida Handwriting', cursive ;
-             color: #FFFBE6;
+            font-family: 'Lucida Handwriting', cursive;
+            color: #FFFBE6;
             font-size: 2rem;
             white-space: nowrap;
             display: block;
             opacity: 0;
             animation: logomove 1.5s forwards;
         }
-        
+
         @keyframes logomove {
             0% {
                 transform: translateY(-10px);
                 opacity: 0;
             }
+
             100% {
                 transform: translateY(0);
                 opacity: 1;
             }
         }
-        
+
 
         .menu-toggle {
             display: none;
@@ -79,7 +83,7 @@
             margin: 4px 0;
         }
 
-        /* Dropdown Menu*/
+        
         .dropdown-menu {
             display: flex;
             gap: 20px;
@@ -113,11 +117,11 @@
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid 	#F4C873;
+            border: 1px solid #F4C873;
         }
 
         .contact-info h2 {
-            color: 	#F4C873;
+            color: #F4C873;
             font-size: 28px;
             margin-bottom: 20px;
             position: relative;
@@ -153,7 +157,8 @@
             margin-bottom: 5px;
         }
 
-        .info-text p, .info-text a {
+        .info-text p,
+        .info-text a {
             color: #FFFBE6;
             text-decoration: none;
             transition: color 0.3s;
@@ -278,7 +283,7 @@
             color: #ff6b6b;
             margin-bottom: 10px;
         }
-        
+
         #footerAboutTitle {
             font-family: 'Lucida Handwriting', cursive;
         }
@@ -370,78 +375,76 @@
             transform: translateX(-3px);
         }
 
-        /* Media Queries for Responsive Design */
         
-        /* Extra Small Devices (250px - 575px) */
         @media (min-width: 250px) and (max-width: 575px) {
             .navbar {
                 padding: 10px;
             }
-            
+
             .logo h1 {
                 font-size: 1.5rem;
             }
-            
+
             .contact-container {
                 margin: 20px auto;
                 gap: 20px;
                 padding: 0 10px;
             }
-            
-            .contact-info, 
+
+            .contact-info,
             .contact-form {
                 min-width: 100%;
                 padding: 20px;
             }
-            
+
             .contact-info h2,
             .contact-form h2 {
                 font-size: 24px;
             }
-            
+
             .info-item i {
                 font-size: 18px;
                 margin-right: 10px;
             }
-            
+
             .info-text h3 {
                 font-size: 16px;
             }
-            
-            .info-text p, 
+
+            .info-text p,
             .info-text a {
                 font-size: 14px;
             }
-            
+
             .form-group input,
             .form-group textarea {
                 padding: 10px 12px;
                 font-size: 14px;
             }
-            
+
             .submit-btn {
                 padding: 10px 20px;
                 font-size: 14px;
             }
-            
+
             .footer-container {
                 grid-template-columns: 1fr;
                 text-align: center;
             }
-            
+
             .social-links {
                 justify-content: center;
                 display: flex;
                 margin-top: 10px;
             }
-            
+
             .back-btn {
                 padding: 8px 15px;
                 font-size: 14px;
                 bottom: 15px;
                 left: 15px;
             }
-            
+
             .dropdown-menu {
                 flex-direction: column;
                 background: rgba(0, 49, 34, 0.95);
@@ -454,53 +457,53 @@
                 display: none;
                 z-index: 1000;
             }
-            
+
             .dropdown-menu.show-menu {
                 display: flex;
             }
-            
+
             .menu-toggle {
                 display: flex;
             }
         }
 
-        /* Small Devices (576px - 767px) */
+       
         @media (min-width: 576px) and (max-width: 767px) {
             .logo h1 {
                 font-size: 1.7rem;
             }
-            
+
             .contact-container {
                 margin: 30px auto;
                 gap: 30px;
             }
-            
-            .contact-info, 
+
+            .contact-info,
             .contact-form {
                 min-width: 100%;
             }
-            
+
             .footer-container {
                 grid-template-columns: repeat(2, 1fr);
             }
-            
+
             .dropdown-menu {
                 flex-direction: column;
                 background: rgba(0, 49, 34, 0.95);
                 position: absolute;
                 top: 65px;
-                right: 20px;
+                right: 7px;
                 width: 200px;
                 padding: 10px;
                 border-radius: 10px;
                 display: none;
                 z-index: 1000;
             }
-            
+
             .dropdown-menu.show-menu {
                 display: flex;
             }
-            
+
             .menu-toggle {
                 display: flex;
             }
@@ -511,20 +514,20 @@
             .contact-container {
                 flex-direction: row;
             }
-            
-            .contact-info, 
+
+            .contact-info,
             .contact-form {
                 min-width: calc(50% - 20px);
             }
-            
+
             .footer-container {
                 grid-template-columns: repeat(3, 1fr);
             }
-            
+
             .dropdown-menu {
                 display: flex;
             }
-            
+
             .menu-toggle {
                 display: none;
             }
@@ -535,7 +538,7 @@
             .contact-container {
                 max-width: 960px;
             }
-            
+
             .footer-container {
                 grid-template-columns: repeat(4, 1fr);
             }
@@ -553,11 +556,11 @@
             .dropdown-menu {
                 gap: 15px;
             }
-            
+
             .dropdown-menu a {
                 padding: 5px 0;
             }
-            
+
             .dropdown-menu a:hover {
                 padding: 5px 10px;
             }
@@ -565,6 +568,7 @@
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
     <header>
         <div class="navbar">
@@ -577,7 +581,7 @@
                     <div class="menu-line"></div>
                     <div class="menu-line"></div>
                 </div>
-         
+
                 <div class="dropdown-menu" id="dropdownMenu">
                     <a href="index.html">Home</a>
                     <a href="veg.html">Veg</a>
@@ -649,13 +653,13 @@
             </form>
         </div>
     </div>
-
     <footer id="mainFooter">
         <div class="footer-container">
             <div class="footer-section">
                 <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Bite Box</h3>
                 <p id="footerAboutText" data-translate="footerAboutText">
-                    Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.
+                    Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable
+                    experience.
                 </p>
                 <div class="social-links">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -664,63 +668,87 @@
                     <a href="#"><i class="fab fa-whatsapp"></i></a>
                 </div>
             </div>
-            
+            <div class="footer-section">
+                <h3 id="footerContactTitle" data-translate="footerContactTitle">Contact Info</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress"
+                            data-translate="footerAddress">Clement Town, Dehradun</span></li>
+                    <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91
+                            9627024287</span></li>
+                    <li><i class="fas fa-envelope"></i> <span id="footerEmail"
+                            data-translate="footerEmail">Official.bitebox@gmail.com</span></li>
+                    <li>
+                        <i class="fas fa-clock"></i>
+                        <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span>
+                        <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span>
+                    </li>
+                </ul>
+            </div>
+
             <div class="footer-section">
                 <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
                 <ul>
                     <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
+                    <li><a href="services.html" id="footerServicesLink" data-translate="footerServicesLink">Our
+                            Services</a></li>
                     <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
-                    <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
-                    <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
+                    <li><a href="non-veg.html" id="footerNonVegLink"
+                            data-translate="footerNonVegLink">Non-Vegetarian</a></li>
+                    <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a>
+                    </li>
                     <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
-                    <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
-                    <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerterms&PolicyLink">Terms & Policy</a></li>
+                    <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact
+                            Us</a></li>
+                    <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+                    <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
+                    <li><a href="catering.html" id="footerCateringServicesLink"
+                            data-translate="footerCateringServicesLink">Catering Services</a></li>
+                    <li><a href="highprotien.html" id="footerHighprotienLink"
+                            data-translate="footerHighProtienLink">High-Protein Meals</a></li>
+                    <li><a href="terms&privay.html" id="footerTerms&PolicyLink"
+                            data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
+                    <li><a href="login.html" id="footerLoginLink" data-translate="footerLoginLink">Login</a></li>
+                    <li><a href="register.html" id="footerRegisterLink" data-translate="footerRegisterLink">Register</a>
+                    </li>
                 </ul>
             </div>
-            
-            <div class="footer-section">
-                <h3 id="footerContactTitle" data-translate="footerContactTitle">Contact Info</h3>
-                <ul>
-                    <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress" data-translate="footerAddress">Clement Town,Dehradun</span></li>
-                    <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91 9627024287</span></li>
-                    <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.BiteBox@gmail.com</span></li>
-                    <li><i class="fas fa-clock"></i> <span id="footerHours" data-translate="footerHours">7:00 AM - 10:00 PM</span></li>
-                </ul>
-            </div>
-            
+
+
+
             <div class="footer-section">
                 <h3 id="footerNewsletterTitle" data-translate="footerNewsletterTitle">Newsletter</h3>
-                <p id="footerNewsletterText" data-translate="footerNewsletterText">Subscribe for updates and special offers!</p>
+                <p id="footerNewsletterText" data-translate="footerNewsletterText">Subscribe for updates and special
+                    offers!</p>
                 <form id="newsletterForm">
-                    <input type="email" id="newsletterEmail" placeholder="Enter your email" data-translate-placeholder="newsletterPlaceholder" required>
+                    <input type="email" id="newsletterEmail" placeholder="Enter your email"
+                        data-translate-placeholder="newsletterPlaceholder" required>
                     <button type="submit" id="newsletterSubmit" data-translate="subscribeBtn">Subscribe</button>
                 </form>
             </div>
         </div>
-        
+
         <div class="copyright">
             <p id="copyrightText" data-translate="copyrightText">&copy; 2025 Bite Box. All Rights Reserved.</p>
         </div>
     </footer>
-
     <script>
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             // Get form values
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const subject = document.getElementById('subject').value;
             const message = document.getElementById('message').value;
             const statusMessage = document.getElementById('statusMessage');
-            
+
             // Simple validation
             if (!name || !email || !subject || !message) {
                 statusMessage.textContent = 'Please fill in all fields.';
                 statusMessage.className = 'status-message error';
                 return;
             }
-            
+
             // Email validation regex
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
@@ -728,12 +756,12 @@
                 statusMessage.className = 'status-message error';
                 return;
             }
-            
+
             // Here you would typically send the data to a server
             // For demonstration, we'll simulate a successful submission
             statusMessage.textContent = 'Thank you! Your message has been sent. We will contact you soon.';
             statusMessage.className = 'status-message success';
-            
+
             // Reset form after 3 seconds
             setTimeout(() => {
                 this.reset();
@@ -751,36 +779,54 @@
     </script>
 
     <a>
-        <button onclick="goback()" class="back-btn"> <i class="fas fa-arrow-left"></i><span id="backTextVeg" data-translate="backToMain">Back to Main</span></button>
+        <button onclick="goback()" class="back-btn"> <i class="fas fa-arrow-left"></i><span id="backTextVeg"
+                data-translate="backToMain">Back to Main</span></button>
     </a>
-    
+
     <script>
-        function goback(){
+        function goback() {
             window.history.back();
         }
     </script>
     <script>
-  document.getElementById('newsletterForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevent actual form submission
-    const emailInput = document.getElementById('newsletterEmail');
-    const email = emailInput.value.trim();
+        document.getElementById('newsletterForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent actual form submission
+            const emailInput = document.getElementById('newsletterEmail');
+            const email = emailInput.value.trim();
 
-    if (email === '') {
-      alert('Please enter your email.');
-      return;
-    }
+            if (email === '') {
+                alert('Please enter your email.');
+                return;
+            }
 
-    // Simple email validation regex
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert('Please enter a valid email address.');
-      return;
-    }
+            // Simple email validation regex
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
 
-    alert('Thank you for subscribing!');
-    emailInput.value = ''; // Clear input field
-  });
-</script>
+            alert('Thank you for subscribing!');
+            emailInput.value = '';
+        });
+    </script>
+    <script>
+        function updateOpenStatus() {
+            const now = new Date();
+            const hour = now.getHours();
+
+
+            const isOpen = hour >= 7 && hour < 22;
+
+            const statusElement = document.getElementById("openStatus");
+            statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
+            statusElement.style.color = isOpen ? "green" : "red";
+        }
+
+
+        updateOpenStatus();
+    </script>
 
 </body>
+
 </html>

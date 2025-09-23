@@ -4,7 +4,7 @@ let cart = JSON.parse(localStorage.getItem('cart')) || [];
 function addToCart(item) {
   const existingItem = cart.find(cartItem => cartItem.name === item.name);
 
-  const baseImagePath = ''; // Make sure your images are inside a folder called 'images'
+  const baseImagePath = ''; 
 
   if (existingItem) {
     existingItem.quantity += 1;
@@ -132,18 +132,19 @@ function checkout() {
   window.location.href = "cartpage.html";
 }
 
-// Initialize cart count when page loads
+
 document.addEventListener("DOMContentLoaded", function () {
   if (document.body.getAttribute('data-page') === 'veg') {
     loadVegItems();
   } else if (document.body.getAttribute('data-page') === 'non-veg') {
     loadNonVegItems();
+    loadVegItems(); 
   }
   updateCartCount();
 });
 
 
 
-// tiffin service
+
 
 
