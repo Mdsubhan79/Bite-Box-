@@ -78,8 +78,7 @@ body {
 
 
 .dropdown-menu {
-    display: flex;
-   
+      display: flex;
       flex-direction: column;
       position: absolute;
       top: 95%;
@@ -89,7 +88,7 @@ body {
       border-radius: 6px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.8);
       z-index: 100;
-    }
+ }
     
 
 

@@ -76,6 +76,7 @@ h1 {
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   background: linear-gradient(1deg, #c90000, #0cfd40);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.6);
   box-shadow: 5px 10px 13px rgba(0, 0, 0, 3);
@@ -95,11 +96,15 @@ h1 {
   font-size: 2em;
   margin: 10px 0 40px;
   margin-bottom: 0.9rem;
+  background: linear-gradient(1deg, #c90000, #0cfd40);
   font-family: 'Times New Roman', Times, serif;
   overflow: hidden;
   white-space: nowrap;
   text-align: center;
-  text-shadow: 2px 2px 7px rgb(92, 55, 8);
+   -webkit-background-clip: text;
+  background-clip: text;
+
+  text-shadow: 2px 2px 7px rgb(177, 65, 1);
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 4);
   width: 0;
   animation:
@@ -268,8 +273,6 @@ h1 {
   }
 }
 
-
-/*index.html*/
 
 @media (max-width: 399px) and (min-width: 250px) {
   h1 {

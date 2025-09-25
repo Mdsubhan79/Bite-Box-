@@ -274,7 +274,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // Get the selected plan from URL
   const params = new URLSearchParams(window.location.search);
   const selectedPlan = params.get('plan');
-
+ if (!selectedPlan) {
+    // Redirect if no plan selected
+    window.location.href = "tiffinservice.html";
+    return; // stop further script execution
+  }
   // Plan details
   const planDetails = {
     basic: {
