@@ -425,7 +425,7 @@ footer button:hover {
     <div class="login-container">
         
         <div class="logo">
-             <h2>Welcome Back </h2>
+             <h2>Hungry? Let’s dive back in!</h2>
             <h1>Bite Box</h1>
         </div>
 
@@ -603,6 +603,25 @@ footer button:hover {
 
   
   updateOpenStatus();
+</script>
+<script>
+document.querySelector('.login-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const email = document.querySelector('input[type="email"]').value.trim();
+  const password = document.querySelector('input[type="password"]').value.trim();
+
+  // For now, you can simulate login success (no backend yet)
+  if (email !== "" && password !== "") {
+    // Save user info to localStorage to mark login
+    localStorage.setItem("biteboxUser", JSON.stringify({ email }));
+
+    // Redirect to home page
+    window.location.href = "index.html";
+  } else {
+    document.getElementById('error-message').style.display = 'block';
+  }
+});
 </script>
 
 </body>
