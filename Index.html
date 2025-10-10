@@ -6,6 +6,8 @@
   <title>Bite Box | Welcome</title>
   <link rel="icon" type="image/x-icon" href="Bite Box.png">
   <link rel="stylesheet" href="style.css">
+ 
+
   <style>
  
 * {
@@ -16,7 +18,7 @@
 }
 
 body {
-  background: url("thali8.jpg") no-repeat center center/cover;
+  background-color: #092724;
   height: 100vh;
   color: #fff;
   display: flex;
@@ -64,12 +66,16 @@ body {
   z-index: 2;
   animation: fadeIn 1.2s ease-in-out;
 }
-
+.hadd{
+  margin-bottom: 8rem;
+}
 .logo {
+  font-family:  'Lucida Handwriting', cursive;
   font-size: 4rem;
-  color: #ffb300;
+  color: #ffd87c;
   text-shadow: 0 0 20px #ffa600, 0 0 30px #ff7700;
   animation: glow 2s infinite alternate;
+  
 }
 
 .tagline {
@@ -77,17 +83,18 @@ body {
   font-size: 1.2rem;
   color: #ffdd99;
   text-shadow: 0 0 10px #000;
+  
 }
 
 .menu-btn {
   margin-top: 25px;
-  background: linear-gradient(100deg, #092724,#d6b025);
+  background: linear-gradient(170deg, #092724,#d6b025);
   border: none;
   padding: 12px 28px;
   border-top-left-radius: 25px;
   border-bottom-left-radius: 25px;
   border-bottom-right-radius: 20px;
-  color: white;
+  color: #000000;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -96,7 +103,7 @@ body {
 
 .menu-btn:hover {
   transform: scale(1.1);
-  background: linear-gradient(90deg, #0e2e2a,#05332c);
+  background: linear-gradient(90deg, #917513,#8d7210);
 }
 
 footer {
@@ -131,10 +138,10 @@ footer {
 
 @media (max-width: 600px) {
   .logo {
-    font-size: 3.5rem;
+    font-size: 4.5rem;
   }
   .tagline {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 }
 
@@ -176,8 +183,10 @@ footer {
 <nav class="navbar"></nav>
 
   <main class="hero">
+    <div class="hadd">
     <h1 class="logo">Bite Box</h1>
     <p class="tagline">Where Every Bite is a Flavor Bomb</p>
+    </div>
     <button class="menu-btn">Check Our Menu</button>
   </main>
 

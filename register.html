@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bite Box - Register</title>
     <link rel="icon" type="image/x-icon" href="Bite Box.png">
-    <link rel="preload" as="image" href="thali9.jpg">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
@@ -17,7 +16,7 @@
         }
 
         body {
-            background: url('thali9.jpg') no-repeat center center fixed;
+            background-color: #222;
             background-size: cover;
             min-height: 100vh;
             display: flex;
@@ -468,62 +467,17 @@ footer button:hover {
    <footer id="mainFooter">
     <div class="footer-container">
       <div class="footer-section">
-        <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Bite Box</h3>
+        <h3 id="footerAboutTitle" data-translate="footerAboutTitle"> Bite Box</h3>
         <p id="footerAboutText" data-translate="footerAboutText">
           Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.
         </p>
-        <div class="social-links">
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-twitter"></i></a>
-          <a href="#"><i class="fab fa-whatsapp"></i></a>
+          <li>
+            <i class="fas fa-clock"></i> 
+           <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span>
+          </li>
         </div>
       </div>
-       <div class="footer-section">
-        <h3 id="footerContactTitle" data-translate="footerContactTitle">Contact Info</h3>
-        <ul>
-          <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress" data-translate="footerAddress">Clement Town, Dehradun</span></li>
-          <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91 9627024287</span></li>
-          <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.bitebox@gmail.com</span></li>
-           <li>
-  <i class="fas fa-clock"></i> 
-  <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span> 
-  <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span>
-</li>
-        </ul>
-      </div>
-      
-      <div class="footer-section">
-        <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
-        <ul>
-          <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
-          <li><a href="services.html" id="footerServicesLink" data-translate="footerServicesLink">Our Services</a></li>
-          <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
-          <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
-          <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
-          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
-          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
-          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
-          <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
-          <li><a href="catering.html" id="footerCateringServicesLink" data-translate="footerCateringServicesLink">Catering Services</a></li>
-          <li><a href="highprotien.html" id="footerHighprotienLink" data-translate="footerHighProtienLink">High-Protein Meals</a></li>
-          <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
-          <li><a href="login.html" id="footerLoginLink" data-translate="footerLoginLink">Login</a></li>
-          <li><a href="register.html" id="footerRegisterLink" data-translate="footerRegisterLink">Register</a></li>
-        </ul>
-      </div>
-      
-     
-      
-      <div class="footer-section">
-        <h3 id="footerNewsletterTitle" data-translate="footerNewsletterTitle">Newsletter</h3>
-        <p id="footerNewsletterText" data-translate="footerNewsletterText">Subscribe for updates and special offers!</p>
-        <form id="newsletterForm">
-          <input type="email" id="newsletterEmail" placeholder="Enter your email" data-translate-placeholder="newsletterPlaceholder" required>
-          <button type="submit" id="newsletterSubmit" data-translate="subscribeBtn">Subscribe</button>
-        </form>
-      </div>
-    </div>
+
     
     <div class="copyright">
       <p id="copyrightText" data-translate="copyrightText">&copy; 2025 Bite Box. All Rights Reserved.</p>
@@ -564,7 +518,7 @@ footer button:hover {
     </script>
     <a>
         
-    <button onclick="goback()" class="back-btn"> <i class="fas fa-arrow-left"></i><span id="backTextVeg" data-translate="backToMain">Back to Main</span></button>
+    <button onclick="goback()" class="back-btn"> <i class="fas fa-arrow-left"></i><span id="backTextVeg" data-translate="backToMain"></span></button>
     
     </a>
     <script>
