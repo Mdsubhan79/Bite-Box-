@@ -403,170 +403,94 @@ footer button:hover {
 </head>
 <body>
     <div class="register-container">
-        \
-        <div class="logo">
-            <h2>Welcome To</h2>
-            <h1>Bite Box</h1>
-        </div>
-
-      \
-        <form class="register-form">
-            <input type="text" placeholder="Full Name" required>
-            <input type="email" placeholder="Email Address" required>
-            
-            <div class="password-field">
-                <input type="password" placeholder="Password" required>
-                <span class="toggle-password">👁</span>
-            </div>
-
-            <div class="password-field">
-                <input type="password" placeholder="Confirm Password" required>
-                <span class="toggle-password">👁</span>
-            </div>
-
-            <div class="terms">
-                <input type="checkbox" id="terms" required>
-                <label for="terms">I agree to the <a href="terms&privay.html">Terms & Conditions</a> and <a href="terms&privay.html">Privacy Policy</a></label>
-            </div>
-
-            
-            <button type="submit" class="register-btn">Create Account</button>
-
-            
-            <div class="error-message" id="error-message">
-                Passwords do not match. Please try again.
-            </div>
-        </form>
-
-        
-        <div class="divider">or</div>
-
-       
-        <div class="social-register">
-            <div class="social-btn">
-                 <a href="#"><i class="fab fa-whatsapp"></i></a>
-            </div>
-            <div class="social-btn">
-                 <a href="#"><i class="fab fa-twitter"></i></a>
-            </div>
-            <div class="social-btn">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-            </div>
-            <div class="social-btn">
-                 <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-        </div>
-
-       
-        <div class="login-link">
-            Already have an account? <a href="login.html">Log In</a>
-        </div>
+    <div class="logo">
+      <h2>Welcome To</h2>
+      <h1>Bite Box</h1>
     </div>
 
-    <!-- Footer -->
-   <footer id="mainFooter">
-    <div class="footer-container">
-      <div class="footer-section">
-        <h3 id="footerAboutTitle" data-translate="footerAboutTitle"> Bite Box</h3>
-        <p id="footerAboutText" data-translate="footerAboutText">
-          Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.
-        </p>
-          <li>
-            <i class="fas fa-clock"></i> 
-           <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span>
-          </li>
-        </div>
+    <form class="register-form">
+      <input type="text" placeholder="Full Name" required>
+      <input type="email" placeholder="Email Address" required>
+      <div class="password-field">
+        <input type="password" placeholder="Password" required>
+        <span class="toggle-password">👁</span>
       </div>
+      <div class="password-field">
+        <input type="password" placeholder="Confirm Password" required>
+        <span class="toggle-password">👁</span>
+      </div>
+      <div class="terms">
+        <input type="checkbox" id="terms" required>
+        <label for="terms">I agree to the <a href="terms&privay.html">Terms & Conditions</a> and <a href="terms&privay.html">Privacy Policy</a></label>
+      </div>
+      <button type="submit" class="register-btn">Create Account</button>
+      <div class="error-message" id="error-message"></div>
+    </form>
 
-    
-    <div class="copyright">
-      <p id="copyrightText" data-translate="copyrightText">&copy; 2025 Bite Box. All Rights Reserved.</p>
+    <div class="divider">or</div>
+
+    <div class="social-register">
+      <div class="social-btn"><a href="#"><i class="fab fa-whatsapp"></i></a></div>
+      <div class="social-btn"><a href="#"><i class="fab fa-twitter"></i></a></div>
+      <div class="social-btn"><a href="#"><i class="fab fa-facebook-f"></i></a></div>
+      <div class="social-btn"><a href="#"><i class="fab fa-instagram"></i></a></div>
     </div>
-  </footer>
 
-    <script>
-        // Toggle Password Visibility
-        const togglePassword = document.querySelectorAll('.toggle-password');
-        togglePassword.forEach(eye => {
-            eye.addEventListener('click', function() {
-                const passwordField = this.parentElement.querySelector('input');
-                if (passwordField.type === 'password') {
-                    passwordField.type = 'text';
-                    this.textContent = '🙈';
-                } else {
-                    passwordField.type = 'password';
-                    this.textContent = '👁';
-                }
-            });
-        });
-
-        // Password Match Check
-        document.querySelector('.register-form').addEventListener('submit', function(e) {
-            const password = document.querySelector('.password-field input').value;
-            const confirmPassword = document.querySelectorAll('.password-field input')[1].value;
-            const errorMessage = document.getElementById('error-message');
-
-            if (password !== confirmPassword) {
-                e.preventDefault();
-                errorMessage.style.display = 'block';
-            } else {
-                errorMessage.style.display = 'none';
-                // Proceed with registration (backend needed)
-                alert('Account created successfully!');
-            }
-        });
-    </script>
-    <a>
-        
-    <button onclick="goback()" class="back-btn"> <i class="fas fa-arrow-left"></i><span id="backTextVeg" data-translate="backToMain"></span></button>
-    
-    </a>
-    <script>
-        function goback(){
-            window.history.back();
-        }
-    </script>
-    
+    <div class="login-link">
+      Already have an account? <a href="login.html">Log In</a>
+    </div>
   </div>
 
   <script>
-  document.getElementById('newsletterForm').addEventListener('submit', function(e) {
-    e.preventDefault(); 
-    const emailInput = document.getElementById('newsletterEmail');
-    const email = emailInput.value.trim();
+    // Toggle Password Visibility
+    const togglePassword = document.querySelectorAll('.toggle-password');
+    togglePassword.forEach(eye => {
+      eye.addEventListener('click', function() {
+        const passwordField = this.parentElement.querySelector('input');
+        passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
+        this.textContent = passwordField.type === 'password' ? '👁' : '🙈';
+      });
+    });
 
-    if (email === '') {
-      alert('Please enter your email.');
-      return;
-    }
+    // Backend Register
+    document.querySelector('.register-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
 
-   
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert('Please enter a valid email address.');
-      return;
-    }
+      const name = document.querySelector('input[placeholder="Full Name"]').value.trim();
+      const email = document.querySelector('input[placeholder="Email Address"]').value.trim();
+      const password = document.querySelectorAll('.password-field input')[0].value;
+      const confirmPassword = document.querySelectorAll('.password-field input')[1].value;
+      const errorMessage = document.getElementById('error-message');
 
-    alert('Thank you for subscribing!');
-    emailInput.value = ''; 
-  });
-</script>
-<script>
-  function updateOpenStatus() {
-    const now = new Date();
-    const hour = now.getHours();
+      if(password !== confirmPassword){
+        errorMessage.style.display = 'block';
+        errorMessage.textContent = 'Passwords do not match!';
+        return;
+      }
 
-    
-    const isOpen = hour >= 7 && hour < 22;
+      errorMessage.style.display = 'none';
 
-    const statusElement = document.getElementById("openStatus");
-    statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
-    statusElement.style.color = isOpen ? "green" : "red";
-  }
+      try {
+        const response = await fetch('http://localhost:5000/api/auth/register', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ name, email, password })
+        });
 
-  
-  updateOpenStatus();
-</script>
+        const data = await response.json();
 
+        if(response.status === 201){
+          alert('Account created successfully!');
+          window.location.href = 'login.html';
+        } else {
+          errorMessage.style.display = 'block';
+          errorMessage.textContent = data.message;
+        }
+      } catch(err){
+        errorMessage.style.display = 'block';
+        errorMessage.textContent = 'Server error. Try again later.';
+      }
+    });
+  </script>
 </body>
 </html>

@@ -73,7 +73,7 @@ body {
   font-family:  'Lucida Handwriting', cursive;
   font-size: 4rem;
   color: #ffd87c;
-  text-shadow: 0 0 20px #ffa600, 0 0 30px #ff7700;
+  text-shadow: 0 0 16px #ffa600, 0 0 25px #ff7700;
   animation: glow 2s infinite alternate;
   
 }
@@ -88,13 +88,14 @@ body {
 
 .menu-btn {
   margin-top: 25px;
-  background: linear-gradient(170deg, #092724,#d6b025);
+  background: #e4bf3c;
   border: none;
+  box-shadow: 0 1px 8px rgb(199, 188, 37);
   padding: 12px 28px;
   border-top-left-radius: 25px;
   border-bottom-left-radius: 25px;
   border-bottom-right-radius: 20px;
-  color: #000000;
+  color: #041a10;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -103,6 +104,7 @@ body {
 
 .menu-btn:hover {
   transform: scale(1.1);
+  
   background: linear-gradient(90deg, #917513,#8d7210);
 }
 
@@ -174,13 +176,81 @@ footer {
   animation-delay: 1.5s;
   opacity: 0;
 }
+/* Profile Icon and Slide Panel */
+.profile-container {
+  position: relative;
+}
+
+.profile-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 2px solid #ffd87c;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.profile-icon:hover {
+  transform: scale(1.1);
+}
+
+.profile-panel {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 300px;
+  height: 100%;
+  background: rgba(10, 40, 35, 0.98);
+  box-shadow: -3px 0 10px rgba(0,0,0,0.4);
+  color: white;
+  padding: 20px;
+  transition: right 0.4s ease;
+  z-index: 10;
+}
+
+.profile-panel.active {
+  right: 0;
+}
+
+.profile-panel h3 {
+  color: #ffd87c;
+  font-family: 'Lucida Handwriting', cursive;
+}
+
+.profile-info p {
+  margin: 10px 0;
+  font-size: 1rem;
+}
+
+.logout-btn {
+  margin-top: 25px;
+  width: 100%;
+  background-color: #d9534f;
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #b52b27;
+}
+
 
   </style>
 </head>
 <body>
   <div class="overlay"></div>
 
-<nav class="navbar"></nav>
+<nav class="navbar">
+  <div class="profile-container">
+    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" id="profileIcon" alt="Profile" class="profile-icon">
+  </div>
+</nav>
+
 
   <main class="hero">
     <div class="hadd">
@@ -214,10 +284,44 @@ document.querySelector(".menu-btn").addEventListener("click", () => {
     window.location.href = "login.html";
   }
 </script>
+
+<div class="profile-panel" id="profilePanel">
+  <h3>My Profile</h3>
+  <div class="profile-info">
+    <p><strong>Name:</strong> <span id="profileName"></span></p>
+    <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+  </div>
+  <button class="logout-btn" id="logoutBtn">Logout</button>
+</div>
 <script>
-document.getElementById("logoutBtn").addEventListener("click", function() {
-  localStorage.removeItem("biteboxUser");
-  window.location.href = "login.html";
+document.addEventListener("DOMContentLoaded", function() {
+  const userData = JSON.parse(localStorage.getItem("biteboxUser"));
+  const profilePanel = document.getElementById("profilePanel");
+  const profileIcon = document.getElementById("profileIcon");
+  const profileName = document.getElementById("profileName");
+  const profileEmail = document.getElementById("profileEmail");
+
+  if (!userData) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  // Fill user info
+  profileName.textContent = userData.name;
+  profileEmail.textContent = userData.email;
+
+  // Toggle profile slide
+  profileIcon.addEventListener("click", () => {
+    profilePanel.classList.toggle("active");
+  });
+
+  // Logout button
+  document.getElementById("logoutBtn").addEventListener("click", function() {
+    if (confirm("Are you sure you want to log out?")) {
+      localStorage.removeItem("biteboxUser");
+      window.location.href = "login.html";
+    }
+  });
 });
 </script>
 

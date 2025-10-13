@@ -421,161 +421,83 @@ footer button:hover {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="login-container">
-        
-        <div class="logo">
-             <h2>Hungry? Let’s dive back in!</h2>
-            <h1>Bite Box</h1>
-        </div>
-
-    
-        <form class="login-form">
-            <input type="email" placeholder="Email Address" required>
-            
-            <div class="password-field">
-                <input type="password" placeholder="Password" required>
-                <span class="toggle-password">👁</span>
-            </div>
-
-
-            <div class="options">
-                <div class="remember-me">
-                    <input type="checkbox" id="remember">
-                    <label for="remember">Remember Me</label>
-                </div>
-                <div class="forgot-password">
-                    <a href="#">Forgot Password?</a>
-                </div>
-            </div>
-
-            <button type="submit" class="login-btn">Log In</button>
-
-        
-            <div class="error-message" id="error-message">
-                Invalid email or password. Please try again.
-            </div>
-        </form>
-        <div class="divider">or</div>
-
-        <div class="social-login">
-             <div class="social-btn">
-                 <a href="#"><i class="fab fa-whatsapp"></i></a>
-            </div>
-            <div class="social-btn">
-                 <a href="#"><i class="fab fa-twitter"></i></a>
-            </div>
-            <div class="social-btn">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-            </div>
-            <div class="social-btn">
-                 <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-        </div>
-        <div class="signup-link">
-            New to Bite Box? <a href="register.html">Sign Up</a>
-        </div>
+   <div class="login-container">
+    <div class="logo">
+      <h2>Hungry? Let’s dive back in!</h2>
+      <h1>Bite Box</h1>
     </div>
 
-    
- <footer id="mainFooter">
-    <div class="footer-container">
-      <div class="footer-section">
-        <h3 id="footerAboutTitle" data-translate="footerAboutTitle"> Bite Box</h3>
-        <p id="footerAboutText" data-translate="footerAboutText">
-          Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.
-        </p>
-        <li>
-            <i class="fas fa-clock"></i> 
-           <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span>
-          </li>
-     </div>
-    </div>
-    
-    <div class="copyright">
-      <p id="copyrightText" data-translate="copyrightText">&copy; 2025 Bite Box. All Rights Reserved.</p>
-    </div>
-  </footer>
+    <form class="login-form">
+      <input type="email" placeholder="Email Address" required>
+      <div class="password-field">
+        <input type="password" placeholder="Password" required>
+        <span class="toggle-password">👁</span>
+      </div>
 
-    <script>
-        document.querySelector('.toggle-password').addEventListener('click', function() {
-            const passwordField = document.querySelector('.password-field input');
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                this.textContent = '🙈';
-            } else {
-                passwordField.type = 'password';
-                this.textContent = '👁';
-            }
-        });
-    </script>
-    <a>
-        
-    <button onclick="goback()" class="back-btn"> <i class="fas fa-arrow-left"></i><span id="backTextVeg" data-translate="backToMain"></span></button>
-    
-    </a>
-    <script>
-        function goback(){
-            window.history.back();
-        }
-    </script>
+      <div class="options">
+        <div class="forgot-password">
+          <a href="#">Forgot Password?</a>
+        </div>
+      </div>
+
+      <button type="submit" class="login-btn">Log In</button>
+      <div class="error-message" id="error-message"></div>
+    </form>
+
+    <div class="divider">or</div>
+
+    <div class="social-login">
+      <div class="social-btn"><a href="#"><i class="fab fa-whatsapp"></i></a></div>
+      <div class="social-btn"><a href="#"><i class="fab fa-twitter"></i></a></div>
+      <div class="social-btn"><a href="#"><i class="fab fa-facebook-f"></i></a></div>
+      <div class="social-btn"><a href="#"><i class="fab fa-instagram"></i></a></div>
+    </div>
+
+    <div class="signup-link">
+      New to Bite Box? <a href="register.html">Sign Up</a>
+    </div>
   </div>
+
   <script>
-  document.getElementById('newsletterForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevent actual form submission
-    const emailInput = document.getElementById('newsletterEmail');
-    const email = emailInput.value.trim();
+    // Toggle password visibility
+    const togglePassword = document.querySelector('.toggle-password');
+    togglePassword.addEventListener('click', function() {
+      const passwordField = document.querySelector('.password-field input');
+      passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
+      this.textContent = passwordField.type === 'password' ? '👁' : '🙈';
+    });
 
-    if (email === '') {
-      alert('Please enter your email.');
-      return;
-    }
+    // Backend login
+    document.querySelector('.login-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
 
-    // Simple email validation regex
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert('Please enter a valid email address.');
-      return;
-    }
+      const email = document.querySelector('input[type="email"]').value.trim();
+      const password = document.querySelector('input[type="password"]').value.trim();
+      const errorMessage = document.getElementById('error-message');
 
-    alert('Thank you for subscribing!');
-    emailInput.value = '';
-  });
-</script>
-<script>
-  function updateOpenStatus() {
-    const now = new Date();
-    const hour = now.getHours();
+      try {
+        const response = await fetch('http://localhost:5000/api/auth/login', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ email, password })
+        });
 
-    
-    const isOpen = hour >= 7 && hour < 22;
+        const data = await response.json();
 
-    const statusElement = document.getElementById("openStatus");
-    statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
-    statusElement.style.color = isOpen ? "green" : "red";
-  }
+        if(response.status === 200){
+          alert('Login successful!');
+          localStorage.setItem('biteboxUser', JSON.stringify(data.user));
+          window.location.href = 'index.html';
+        } else {
+          errorMessage.style.display = 'block';
+          errorMessage.textContent = data.message;
+        }
 
-  
-  updateOpenStatus();
-</script>
-<script>
-document.querySelector('.login-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-
-  const email = document.querySelector('input[type="email"]').value.trim();
-  const password = document.querySelector('input[type="password"]').value.trim();
-
-  // For now, you can simulate login success (no backend yet)
-  if (email !== "" && password !== "") {
-    // Save user info to localStorage to mark login
-    localStorage.setItem("biteboxUser", JSON.stringify({ email }));
-
-    // Redirect to home page
-    window.location.href = "index.html";
-  } else {
-    document.getElementById('error-message').style.display = 'block';
-  }
-});
-</script>
-
+      } catch(err){
+        errorMessage.style.display = 'block';
+        errorMessage.textContent = 'Server error. Try again later.';
+      }
+    });
+  </script>
 </body>
 </html>

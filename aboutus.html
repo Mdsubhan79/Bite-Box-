@@ -467,14 +467,14 @@
   }
 }
 
-/* Media Query for 400px and up */
+
 @media (min-width: 400px) {
   .plans {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Media Query for 600px and up */
+
 @media (min-width: 600px) {
   .plans {
     grid-template-columns: repeat(3, 1fr);
@@ -485,7 +485,7 @@
   }
 }
 
-/* Media Query for 768px and up - matches your existing breakpoint */
+
 @media (min-width: 768px) {
   .plans {
     display: flex;
@@ -632,15 +632,13 @@
           <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
           <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
           <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
-          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
-          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
-          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
-          <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
           <li><a href="catering.html" id="footerCateringServicesLink" data-translate="footerCateringServicesLink">Catering Services</a></li>
           <li><a href="highprotien.html" id="footerHighprotienLink" data-translate="footerHighProtienLink">High-Protein Meals</a></li>
+          <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
+          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
           <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
-          <li><a href="login.html" id="footerLoginLink" data-translate="footerLoginLink">Login</a></li>
-          <li><a href="register.html" id="footerRegisterLink" data-translate="footerRegisterLink">Register</a></li>
+          <li> <a href="#" id="logoutBtn" >Close your BiteBox Account</a></li>
         </ul>
       </div>
       
@@ -663,7 +661,7 @@
  
   <a href="index.html" class="back-btn">
     <i class="fas fa-arrow-left"></i>
-    <span>Back to Main</span>
+    <span></span>
   </a>
 
   <script>
@@ -739,7 +737,7 @@ subscribeBtn.addEventListener("click", () => {
     }
 
     alert('Thank you for subscribing!');
-    emailInput.value = ''; // Clear input field
+    emailInput.value = '';
   });
 </script>
 <script>
@@ -758,6 +756,26 @@ subscribeBtn.addEventListener("click", () => {
   
   updateOpenStatus();
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const logoutBtn = document.getElementById("logoutBtn");
+  
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", function(e) {
+      e.preventDefault();
+      if (confirm("Are you sure you want to log out?")) {
+   
+        localStorage.removeItem("biteboxUser");
+      
+        window.location.href = "login.html";
+      }
+    });
+  } else {
+    console.error("Logout button not found!");
+  }
+});
+</script>
+
 
 </body>
 </html>
