@@ -515,5 +515,21 @@ footer button:hover {
       }
     });
   </script>
+  <script>
+  function updateOpenStatus() {
+    const now = new Date();
+    const hour = now.getHours();
+
+    
+    const isOpen = hour >= 7 && hour < 22;
+
+    const statusElement = document.getElementById("openStatus");
+    statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
+    statusElement.style.color = isOpen ? "green" : "red";
+  }
+
+  
+  updateOpenStatus();
+</script>
 </body>
 </html>
