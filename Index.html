@@ -176,7 +176,7 @@ footer {
   animation-delay: 1.5s;
   opacity: 0;
 }
-/* Profile Icon and Slide Panel */
+
 .profile-container {
   position: relative;
 }
@@ -264,6 +264,17 @@ footer {
     <p>© 2025 Bite Box. All rights reserved.</p>
   </footer>
 
+  <div class="profile-panel" id="profilePanel">
+    <div class="profile-header">
+      <h3>My Profile</h3>
+      <button class="close-btn" id="closeProfileBtn">×</button>
+    </div>
+    <div class="profile-info">
+      <p><strong>Name:</strong> <span id="profileName"></span></p>
+      <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+    </div>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+  </div>
  <script>
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -285,19 +296,13 @@ document.querySelector(".menu-btn").addEventListener("click", () => {
   }
 </script>
 
-<div class="profile-panel" id="profilePanel">
-  <h3>My Profile</h3>
-  <div class="profile-info">
-    <p><strong>Name:</strong> <span id="profileName"></span></p>
-    <p><strong>Email:</strong> <span id="profileEmail"></span></p>
-  </div>
-  <button class="logout-btn" id="logoutBtn">Logout</button>
-</div>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const userData = JSON.parse(localStorage.getItem("biteboxUser"));
   const profilePanel = document.getElementById("profilePanel");
   const profileIcon = document.getElementById("profileIcon");
+  const closeProfileBtn = document.getElementById("closeProfileBtn");
   const profileName = document.getElementById("profileName");
   const profileEmail = document.getElementById("profileEmail");
 
@@ -310,11 +315,31 @@ document.addEventListener("DOMContentLoaded", function() {
   profileName.textContent = userData.name;
   profileEmail.textContent = userData.email;
 
-  // Toggle profile slide
-  profileIcon.addEventListener("click", () => {
-    profilePanel.classList.toggle("active");
-  });
+      // Open profile panel
+      profileIcon.addEventListener("click", () => {
+        profilePanel.classList.add("active");
+        profileOverlay.classList.add("active");
+      });
 
+      // Close profile panel with close button
+      closeProfileBtn.addEventListener("click", () => {
+        profilePanel.classList.remove("active");
+        profileOverlay.classList.remove("active");
+      });
+
+      // Close profile panel when clicking overlay
+      profileOverlay.addEventListener("click", () => {
+        profilePanel.classList.remove("active");
+        profileOverlay.classList.remove("active");
+      });
+
+      // Close profile panel with Escape key
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && profilePanel.classList.contains("active")) {
+          profilePanel.classList.remove("active");
+          profileOverlay.classList.remove("active");
+        }
+      });
   // Logout button
   document.getElementById("logoutBtn").addEventListener("click", function() {
     if (confirm("Are you sure you want to log out?")) {
