@@ -1,4 +1,4 @@
-// checkUser.js
+/*  // checkUser.js
 window.addEventListener('DOMContentLoaded', () => {
   const user = JSON.parse(localStorage.getItem('biteboxUser'));
   const isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -10,4 +10,4 @@ window.addEventListener('DOMContentLoaded', () => {
   } else {
     window.location.href = 'index.html';
   }
-});
+});*/

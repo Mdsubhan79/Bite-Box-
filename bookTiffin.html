@@ -708,74 +708,121 @@ footer button:hover {
             window.history.back();
         }
     </script>
-    <script>
+ <script>
+// Form Submission
+const bookingForm = document.getElementById('bookingForm');
+const confirmationModal = document.getElementById('confirmationModal');
+const modalCloseBtn = document.getElementById('modalCloseBtn');
 
-        // Form Submission
-        const bookingForm = document.getElementById('bookingForm');
-        const confirmationModal = document.getElementById('confirmationModal');
-        const modalCloseBtn = document.getElementById('modalCloseBtn');
+bookingForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    // Validate form
+    const fullName = document.getElementById('fullName').value;
+    const address = document.getElementById('address').value;
+    const phone = document.getElementById('phone').value;
+    const city = document.getElementById('city').value;
+    const state = document.getElementById('state').value;
+    
+    if (!fullName || !address || !phone || !city || !state) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+   
+    const urlParams = new URLSearchParams(window.location.search);
+    let selectedPlan = urlParams.get('plan');
+    
+    console.log('Plan from URL:', selectedPlan); 
+    
+  
+    if (!selectedPlan) {
+        const existingSubscription = JSON.parse(localStorage.getItem("biteboxSubscription")) || {};
+        selectedPlan = existingSubscription.plan;
+        console.log('Plan from localStorage:', selectedPlan); 
+    }
+    
+   
+    if (!selectedPlan) {
+        alert('Please select a plan first from the tiffin service page.');
+        window.location.href = 'tiffinservice.html';
+        return;
+    }
+    
+    const userData = JSON.parse(localStorage.getItem("biteboxUser")) || {};
+    const subscriptionData = {
+        plan: selectedPlan,
+        status: 'active',
+        startDate: new Date().toISOString(),
+        customerDetails: {
+            fullName: fullName,
+            fatherName: document.getElementById('fatherName').value,
+            profession: document.getElementById('profession').value,
+            address: address,
+            phone: phone,
+            email: document.getElementById('email').value,
+            city: city,
+            state: state
+        },
+        deliveryAddress: address,
+        userId: userData.email || 'unknown',
+        bookingDate: new Date().toISOString()
+    };
+    
+    console.log('Saving subscription data:', subscriptionData);
+    
+   
+    localStorage.setItem("biteboxSubscription", JSON.stringify(subscriptionData));
+    
+   
+    const savedData = JSON.parse(localStorage.getItem("biteboxSubscription"));
+    console.log('Verified saved data:', savedData); 
+    
+   
+    confirmationModal.style.display = 'flex';
+});
 
-        bookingForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Validate form
-            const fullName = document.getElementById('fullName').value;
-            const address = document.getElementById('address').value;
-            const phone = document.getElementById('phone').value;
-            const city = document.getElementById('city').value;
-            const state = document.getElementById('state').value;
-            
-            if (!fullName || !address || !phone || !city || !state) {
-                alert('Please fill in all required fields');
-                return;
-            }
-            
-            // Show confirmation modal
-            confirmationModal.style.display = 'flex';
-            
-            // In a real application, you would send the data to your server here
-            // For example:
-            /*
-            fetch('your-server-endpoint', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    fullName: fullName,
-                    fatherName: document.getElementById('fatherName').value,
-                    profession: document.getElementById('profession').value,
-                    address: address,
-                    phone: phone,
-                    email: document.getElementById('email').value,
-                    city: city,
-                    state: state
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                confirmationModal.style.display = 'flex';
-            })
-            .catch(error => {
-                alert('There was an error submitting your booking. Please try again.');
-            });
-            */
-        });
 
-        // Close modal
-        modalCloseBtn.addEventListener('click', () => {
-            confirmationModal.style.display = 'none';
-            bookingForm.reset();
-        });
+modalCloseBtn.addEventListener('click', () => {
+    confirmationModal.style.display = 'none';
+    bookingForm.reset();
+  
+    window.location.href = "index.html";
+});
 
-        // Close modal when clicking outside
-        window.addEventListener('click', (e) => {
-            if (e.target === confirmationModal) {
-                confirmationModal.style.display = 'none';
-                bookingForm.reset();
-            }
-        });
-    </script>
+
+window.addEventListener('click', (e) => {
+    if (e.target === confirmationModal) {
+        confirmationModal.style.display = 'none';
+        bookingForm.reset();
+        window.location.href = "index.html";
+    }
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedPlan = urlParams.get('plan');
+    console.log('Page loaded with plan:', selectedPlan);
+    
+
+    if (selectedPlan) {
+        const planTitles = {
+            'basic': 'Basic Plan',
+            'standard': 'Standard Plan', 
+            'premium': 'Premium Plan'
+        };
+        const planTitle = document.createElement('p');
+        planTitle.innerHTML = `<strong>Selected Plan: ${planTitles[selectedPlan] || selectedPlan}</strong>`;
+        planTitle.style.color = '#F4C873';
+        planTitle.style.textAlign = 'center';
+        planTitle.style.marginBottom = '20px';
+        
+        const form = document.getElementById('bookingForm');
+        form.insertBefore(planTitle, form.firstChild);
+    }
+});
+</script>
     <script>
   const menuToggle = document.getElementById('menuToggle');
   const dropdownMenu = document.getElementById('dropdownMenu');

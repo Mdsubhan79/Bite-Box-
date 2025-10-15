@@ -357,6 +357,87 @@ document.addEventListener("DOMContentLoaded", () => {
   updateOpenStatus();
 </script>
 <script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Get the selected plan from URL
+  const params = new URLSearchParams(window.location.search);
+  const selectedPlan = params.get('plan');
+  
+  console.log('Tiffin page - Selected plan:', selectedPlan); // Debug log
+  
+  if (!selectedPlan) {
+    // Redirect if no plan selected
+    window.location.href = "tiffinservice.html";
+    return;
+  }
+  
+  // Plan details
+  const planDetails = {
+    basic: {
+      title: "Basic Plan",
+      description: "1 meal/day (Lunch)",
+      price: "₹1700/month",
+      items: ["Meals -- Dal, Rice, Roti", "Seasonal Veg", "Salad"],
+    },
+    standard: {
+      title: "Standard Plan", 
+      description: "2 meals/day (Lunch + Dinner)",
+      price: "₹2800/month",
+      items: ["Meals -- Dal, Rice, Roti", "Seasonal Veg", "Salad"],
+    },
+    premium: {
+      title: "Premium Plan",
+      description: "3 meals/day (Breakfast + Lunch + Dinner)",
+      price: "₹3200/month",
+      items: ["Meals -- Dal, Rice, Roti", "Seasonal Veg", "Salad"],
+    }
+  };
+
+  const displayArea = document.getElementById("selectedPlan");
+
+  if (selectedPlan && planDetails[selectedPlan]) {
+    const plan = planDetails[selectedPlan];
+    
+    // Save plan selection to localStorage immediately
+    const userData = JSON.parse(localStorage.getItem("biteboxUser")) || {};
+    const subscriptionData = {
+      plan: selectedPlan,
+      status: 'pending', // Set to pending until booking is completed
+      planDetails: plan,
+      userId: userData.email || 'unknown',
+      selectedDate: new Date().toISOString()
+    };
+    localStorage.setItem("biteboxSubscription", JSON.stringify(subscriptionData));
+    
+    console.log('Plan saved to localStorage:', subscriptionData); // Debug log
+    
+    displayArea.innerHTML = `
+      <h2>${plan.title}</h2>
+      <p>${plan.description}</p>
+      <p><strong>Includes:</strong> ${plan.items.join(', ')}</p>
+      <p><strong>${plan.price}</strong></p>
+      <p style="color: #ffd87c; margin-top: 10px;"><i class="fas fa-info-circle"></i> Complete booking to activate your subscription</p>
+    `;
+  } else {
+    displayArea.innerHTML = "<p>Please select a plan from the About page to view details here.</p>";
+  }
+});
+
+// Update the Book Now button to pass the plan parameter
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const selectedPlan = params.get('plan');
+  const bookNowButton = document.querySelector('.book-now');
+  
+  console.log('Updating Book Now button with plan:', selectedPlan); // Debug log
+  
+  if (selectedPlan && bookNowButton) {
+    const link = bookNowButton.parentElement;
+    link.href = `bookTiffin.html?plan=${selectedPlan}`;
+    console.log('Book Now link set to:', link.href); // Debug log
+  }
+});
+</script>
+<script>
 document.addEventListener("DOMContentLoaded", function() {
   const logoutBtn = document.getElementById("logoutBtn");
   

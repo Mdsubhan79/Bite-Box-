@@ -182,32 +182,6 @@ h1 {
     white-space: nowrap;
   }
 
-  .language-select {
-    display: flex;
-    flex-direction: row; 
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 8px;
-    background-color: rgba(255, 255, 255, 0.6);
-    border-radius: 10px;
-    font-size: 12px;
-  }
-
-  .language-select label {
-    font-size: 12px;
-  }
-
-  .language-select select {
-    font-size: 11px;
-    padding: 4px 6px;
-    border-radius: 8px;
-    max-width: 90px;
-    width: auto;
-    background-color: #0b9c8b;
-    color: black;
-  }
-
   .content {
     padding: 60px 10px 20px;
     overflow: hidden;
