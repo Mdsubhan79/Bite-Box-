@@ -132,6 +132,310 @@ footer button:hover {
     background-color: #ff5252;
     transform: translateX(-3px);
 }
+
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* NAVBAR STYLES */
+.navbar {
+  background-color: #10332F;
+  color: wheat;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-logo {
+  font-family: 'Lucida Handwriting', cursive;
+  font-size: 1.8rem;
+  color: #FFFBE6;
+  font-weight: 700;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  display: block;
+  opacity: 0;
+  animation: logomove 1.5s forwards;
+}
+@keyframes logomove {
+  0% { transform: translateY(-10px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.nav-tagline {
+  font-size: 0.85rem;
+  color: #F4C873;
+}
+
+/* Hamburger toggle (only visible on mobile) */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+}
+.menu-line {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  margin: 4px 0;
+}
+
+/* Default dropdown (desktop view) */
+.dropdown-menu {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  position: static;
+  background: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.dropdown-menu a {
+  color: #FFDFAF;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.dropdown-menu a:hover {
+  color: #ff6b6b;
+}
+
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: flex;
+  }
+
+  .dropdown-menu {
+    display: none;
+    flex-direction: column;
+    background-color: #0c2f2c;
+    position: absolute;
+    top: 100%;
+    right: 15px;
+    width: 200px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .dropdown-menu.active {
+    display: flex;
+  }
+
+  .dropdown-menu a {
+    width: 100%;
+    padding: 10px 0;
+    color: white;
+  }
+}
+
+
+.content {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.tiffin-plan {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.tiffin-plan h2 {
+    color: #ff6b6b;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.plan-details {
+    margin: 30px 0;
+    padding: 20px;
+    background-color: #10332F;
+    border-radius: 8px;
+    border-left: 5px solid #ff6b6b;
+}
+
+.plan-details h2 {
+    color: #F4C873;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.plan-details p {
+    margin-bottom: 15px;
+    color: #fdedce;
+}
+
+.plan-details ul {
+    list-style-position: inside;
+    text-align: left;
+    margin: 15px 0;
+    padding-left: 20px;
+}
+
+.plan-details li {
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.book-now {
+    background-color:#10332F ;
+    color:#E4C873 ;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.book-now:hover {
+    background-color:#0d443e ;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+}
+
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+    }
+
+    .dropdown-menu {
+        display: none;
+        flex-direction: column;
+        background-color: #10332F;
+        position: absolute;
+        top: 95%;
+        right: 0px;
+        width: 200px;
+        padding: 15px;
+        border-radius: 4px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .dropdown-menu.active {
+        display: flex;
+    }
+
+    .dropdown-menu a {
+        width: 100%;
+       
+        padding: 10px;
+    }
+
+    .tiffin-plan {
+        padding: 20px;
+    }
+
+    .plan-details {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-logo {
+        font-size: 1.5rem;
+    }
+
+    .nav-tagline {
+        font-size: 0.7rem;
+    }
+
+    .tiffin-plan h2 {
+        font-size: 1.5rem;
+    }
+
+    .book-now {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+    }
+}
+
+
+.footer-dropdown-header {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  align-items: center;
+  cursor: pointer;
+  color: #ff6b6b;
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+}
+
+.footer-dropdown-header:hover {
+  color: #ffa6a6;
+}
+
+.footer-dropdown-header i {
+  transition: transform 0.3s ease;
+}
+
+
+.footer-dropdown-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.4s ease;
+}
+
+
+.footer-dropdown-list.active {
+  max-height: 600px; 
+}
+
+
+.footer-dropdown-header.active i {
+  transform: rotate(180deg);
+}
+
+
+@media (min-width: 768px) {
+  .footer-dropdown-list {
+    max-height: none !important;
+  }
+
+  .footer-dropdown-header {
+    cursor: default;
+  }
+
+  .footer-dropdown-header i {
+    display: none;
+  }
+}
+
+
 </style>
 </head>
 <body>
@@ -152,12 +456,15 @@ footer button:hover {
          
         <div class="dropdown-menu" id="dropdownMenu">
             <a href="index.html">Home</a>
-            <a href="veg.html">Veg</a>
-            <a href="non-veg.html">Non Veg</a>
-            <a href="tiffin.html">Tiffin Service</a>
+            <a href="veg.html">Vegetarian</a>
+            <a href="non-veg.html">Non-Vegetarian</a>
+            <a href="catering.html">Catering Services</a>
+            <a href="highprotien.html">High-Protein Meals</a>
+            <a href="cartpage.html">Cart</a>
             <a href="aboutus.html">About Us</a>
-            <a href="contactus.html">Contact Us</a>
             <a href="terms&privay.html">Terms & Policy</a>
+            <a href="contactus.html">Contact Us</a>
+            
              
         </div>
 
@@ -182,7 +489,7 @@ footer button:hover {
  <footer id="mainFooter">
     <div class="footer-container">
       <div class="footer-section">
-        <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Bite Box</h3>
+        <h3 id="footerAboutTitle" data-translate="footerAboutTitle"> Bite Box</h3>
         <p id="footerAboutText" data-translate="footerAboutText">
           Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.
         </p>
@@ -208,22 +515,25 @@ footer button:hover {
       </div>
       
       <div class="footer-section">
-        <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
-        <ul>
-          <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
-          <li><a href="services.html" id="footerServicesLink" data-translate="footerServicesLink">Our Services</a></li>
-          <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
-          <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
-          <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
-          <li><a href="catering.html" id="footerCateringServicesLink" data-translate="footerCateringServicesLink">Catering Services</a></li>
-          <li><a href="highprotien.html" id="footerHighprotienLink" data-translate="footerHighProtienLink">High-Protein Meals</a></li>
-          <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
-          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
-          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
-          <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
-          <li> <a href="#" id="logoutBtn" >Close your BiteBox Account</a></li>
-        </ul>
-      </div>
+        <div class="footer-section quick-links">
+  <h3 id="footerLinksTitle" data-translate="footerLinksTitle" class="footer-dropdown-header">
+    Quick Links <i class="fas fa-chevron-down"></i>
+  </h3>
+  <ul class="footer-dropdown-list">
+    <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
+    <li><a href="services.html" id="footerServicesLink" data-translate="footerServicesLink">Our Services</a></li>
+    <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
+    <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
+    <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
+    <li><a href="catering.html" id="footerCateringServicesLink" data-translate="footerCateringServicesLink">Catering Services</a></li>
+    <li><a href="highprotien.html" id="footerHighprotienLink" data-translate="footerHighProtienLink">High-Protein Meals</a></li>
+    <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
+    <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+    <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
+    <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
+    <li><a href="#" id="logoutBtn">Close your BiteBox Account</a></li>
+  </ul>
+</div>
       
      
       
@@ -453,6 +763,22 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   } else {
     console.error("Logout button not found!");
+  }
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const dropdownHeader = document.querySelector(".footer-dropdown-header");
+  const dropdownList = document.querySelector(".footer-dropdown-list");
+
+  if (dropdownHeader && dropdownList) {
+    dropdownHeader.addEventListener("click", () => {
+      // Only work on small screens
+      if (window.innerWidth < 768) {
+        dropdownList.classList.toggle("active");
+        dropdownHeader.classList.toggle("active");
+      }
+    });
   }
 });
 </script>

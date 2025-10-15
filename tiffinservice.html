@@ -55,7 +55,7 @@
   font-weight: 500;
 }
 
-/* Hamburger icon */
+
 .menu-toggle {
   cursor: pointer;
   display: flex;
@@ -74,11 +74,11 @@
       display: none;
       flex-direction: column;
       position: absolute;
-      top: 90%;
-      right: 0.5rem;
+      top: 99%;
+      right: 0rem;
       background-color: #0c2f2c;
       padding: 1rem;
-      border-radius: 6px;
+      border-radius: 2px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       z-index: 100;
     }
@@ -242,6 +242,59 @@
     }
 
 
+.footer-dropdown-header {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  align-items: center;
+  cursor: pointer;
+  color: #ff6b6b;
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+}
+
+.footer-dropdown-header:hover {
+  color: #ffa6a6;
+}
+
+.footer-dropdown-header i {
+  transition: transform 0.3s ease;
+}
+
+
+.footer-dropdown-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.4s ease;
+}
+
+
+.footer-dropdown-list.active {
+  max-height: 600px; 
+}
+
+
+.footer-dropdown-header.active i {
+  transform: rotate(180deg);
+}
+
+
+@media (min-width: 768px) {
+  .footer-dropdown-list {
+    max-height: none !important;
+  }
+
+  .footer-dropdown-header {
+    cursor: default;
+  }
+
+  .footer-dropdown-header i {
+    display: none;
+  }
+}
 
   </style>
 </head>
@@ -260,14 +313,16 @@
     </div>
     <div class="dropdown-menu" id="dropdownMenu">
       <a href="index.html">Home</a>
-      <a href="veg.html">Vegetarian</a>
+      <a href="services.html">Our Services</a>
+      <a href="veg.html">Vegetarian</a> 
       <a href="non-veg.html">Non-Vegetarian</a>
-      <a href="tiffin.html">Tiffin Service</a>
+      <a href="catering.html">Catering Services</a>
+      <a href="highprotien.html">High-Protein Meals</a>
+      <a href="cartpage.html">Cart</a>
       <a href="aboutus.html">About Us</a>
-      <a href="contactus.html">Contact Us</a>
       <a href="terms&privay.html">Terms & Policy</a>
-      <a href="login.html">Login</a>
-      <a href="register.html">Signup</a>
+      <a href="contactus.html">Contact Us</a>
+
     </div>
   </nav>
 
@@ -301,7 +356,7 @@
  <footer id="mainFooter">
     <div class="footer-container">
       <div class="footer-section">
-        <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Bite Box</h3>
+        <h3 id="footerAboutTitle" data-translate="footerAboutTitle"> Bite Box</h3>
         <p id="footerAboutText" data-translate="footerAboutText">
           Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.
         </p>
@@ -327,22 +382,26 @@
       </div>
       
       <div class="footer-section">
-        <h3 id="footerLinksTitle" data-translate="footerLinksTitle">Quick Links</h3>
-        <ul>
-          <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
-          <li><a href="services.html" id="footerServicesLink" data-translate="footerServicesLink">Our Services</a></li>
-          <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
-          <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
-          <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
-          <li><a href="catering.html" id="footerCateringServicesLink" data-translate="footerCateringServicesLink">Catering Services</a></li>
-          <li><a href="highprotien.html" id="footerHighprotienLink" data-translate="footerHighProtienLink">High-Protein Meals</a></li>
-          <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
-          <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
-          <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
-          <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
-          <li> <a href="#" id="logoutBtn" >Close your BiteBox Account</a></li>
-        </ul>
-      </div>
+        <div class="footer-section quick-links">
+  <h3 id="footerLinksTitle" data-translate="footerLinksTitle" class="footer-dropdown-header">
+    Quick Links <i class="fas fa-chevron-down"></i>
+  </h3>
+  <ul class="footer-dropdown-list">
+    <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
+    <li><a href="services.html" id="footerServicesLink" data-translate="footerServicesLink">Our Services</a></li>
+    <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
+    <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
+    <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
+    <li><a href="catering.html" id="footerCateringServicesLink" data-translate="footerCateringServicesLink">Catering Services</a></li>
+    <li><a href="highprotien.html" id="footerHighprotienLink" data-translate="footerHighProtienLink">High-Protein Meals</a></li>
+    <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
+    <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+    <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
+    <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
+    <li><a href="#" id="logoutBtn">Close your BiteBox Account</a></li>
+  </ul>
+</div>
+
       
      
       
@@ -421,5 +480,22 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const dropdownHeader = document.querySelector(".footer-dropdown-header");
+  const dropdownList = document.querySelector(".footer-dropdown-list");
+
+  if (dropdownHeader && dropdownList) {
+    dropdownHeader.addEventListener("click", () => {
+      // Only work on small screens
+      if (window.innerWidth < 768) {
+        dropdownList.classList.toggle("active");
+        dropdownHeader.classList.toggle("active");
+      }
+    });
+  }
+});
+</script>
+
 </body>
 </html>
