@@ -1,107 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Admin Dashboard | Bite Box</title>
-<style>
-  :root{--accent:#ff6b6b;--muted:#eef7f5}
-  body{font-family:Inter,Arial;background:#f3f7f6;margin:0;color:#0b2f2c}
-  header{background:#10332f;color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center}
-  header h1{margin:0;font-size:20px}
-  .wrap{max-width:1100px;margin:22px auto;padding:16px}
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-  .card{background:#fff;padding:16px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
-  .big{grid-column:span 3}
-  .stat{font-size:28px;font-weight:700;color:#10332f}
-  nav a{margin-right:12px;color:#fff;text-decoration:none;padding:8px 10px;border-radius:6px;background:rgba(255,255,255,0.06)}
-  table{width:100%;border-collapse:collapse}
-  td,th{padding:8px;border-bottom:1px solid #eee}
-  .btn{padding:8px 10px;border-radius:6px;border:none;cursor:pointer}
-  .danger{background:#ff6b6b;color:#fff}
-  .primary{background:#27ae60;color:#fff}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bite Box - Admin Dashboard</title>
+  <link rel="icon" type="image/x-icon" href="Bite Box.png">
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://kit.fontawesome.com/a2e0e6b58d.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <header>
-    <div>
-      <h1>Admin Dashboard — Bite Box</h1>
-      <div style="font-size:13px;color:#d0e9e3">Logged in as: <span id="adminEmail"></span></div>
-    </div>
-    <div>
-      <nav>
-        <a href="admin-users.html">Users</a>
-        <a href="admin-food.html">Food Items</a>
-        <a href="admin-orders.html">Orders</a>
-        <a href="admin-bookings.html">Bookings</a>
-        <a href="admin-notifications.html">Notifications</a>
-      </nav>
-    </div>
-    <div>
-      <button id="logoutBtn" class="btn danger">Logout</button>
-    </div>
-  </header>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">Bite Box Admin</div>
+    <ul>
+      <li onclick="showSection('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</li>
+      <li onclick="showSection('users')"><i class="fas fa-users"></i> Users</li>
+      <li onclick="showSection('food')"><i class="fas fa-utensils"></i> Food</li>
+      <li onclick="showSection('bookings')"><i class="fas fa-calendar-check"></i> Bookings</li>
+      <li onclick="showSection('orders')"><i class="fas fa-box"></i> Orders</li>
+      <li onclick="showSection('notifications')"><i class="fas fa-bell"></i> Notifications</li>
+      <li onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</li>
+    </ul>
+  </div>
 
-  <main class="wrap">
-    <div class="grid">
-      <div class="card">
-        <div style="color:#6b8f7f;font-size:13px">Total Users</div>
-        <div class="stat" id="totalUsers">—</div>
-      </div>
-      <div class="card">
-        <div style="color:#6b8f7f;font-size:13px">Total Orders</div>
-        <div class="stat" id="totalOrders">—</div>
-      </div>
-      <div class="card">
-        <div style="color:#6b8f7f;font-size:13px">Active Bookings</div>
-        <div class="stat" id="totalBookings">—</div>
-      </div>
-
-      <div class="card big">
-        <h3 style="margin:0 0 10px">Recent Orders</h3>
-        <div id="recentOrdersWrap">Loading…</div>
+  <!-- Main content -->
+  <div class="main">
+    <div id="dashboard" class="section active">
+      <h1>Dashboard</h1>
+      <div class="cards">
+        <div class="card"><h2>Total Users</h2><p id="totalUsers">0</p></div>
+        <div class="card"><h2>Total Orders</h2><p id="totalOrders">0</p></div>
+        <div class="card"><h2>Total Food Items</h2><p id="totalFood">0</p></div>
+        <div class="card"><h2>Total Bookings</h2><p id="totalBookings">0</p></div>
+        <div class="card"><h2>Live Users</h2><p id="liveUsers">0</p></div>
+        <div class="card"><h2>Today's Orders</h2><p id="todayOrders">0</p></div>
       </div>
     </div>
-  </main>
 
-<script>
-const BASE_URL = localStorage.getItem('BB_BACKEND') || 'https://bbbackend-bng2.onrender.com';
-const token = localStorage.getItem('adminToken');
-if (!token) location.href = 'admin-login.html';
-document.getElementById('adminEmail').textContent = localStorage.getItem('adminEmail') || 'Admin';
+    <div id="users" class="section">
+      <h1>Users Management</h1>
+      <table id="usersTable">
+        <thead>
+          <tr><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-document.getElementById('logoutBtn').addEventListener('click', ()=>{
-  localStorage.removeItem('adminToken');
-  localStorage.removeItem('adminEmail');
-  location.href = 'admin-login.html';
-});
+    <div id="food" class="section">
+      <h1>Food Management</h1>
+      <button onclick="openFoodModal()">Add Food</button>
+      <table id="foodTable">
+        <thead>
+          <tr><th>Name</th><th>Category</th><th>Price</th><th>Actions</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-async function loadStats(){
-  try {
-    // users
-    const [usersRes, ordersRes, bookingsRes] = await Promise.all([
-      fetch(`${BASE_URL}/api/admin/users`, {headers:{Authorization:'Bearer '+token}}),
-      fetch(`${BASE_URL}/api/admin/orders`, {headers:{Authorization:'Bearer '+token}}),
-      fetch(`${BASE_URL}/api/admin/bookings`, {headers:{Authorization:'Bearer '+token}})
-    ]);
-    const users = await usersRes.json();
-    const orders = await ordersRes.json();
-    const bookings = await bookingsRes.json();
-    document.getElementById('totalUsers').textContent = Array.isArray(users) ? users.length : '—';
-    document.getElementById('totalOrders').textContent = Array.isArray(orders) ? orders.length : '—';
-    document.getElementById('totalBookings').textContent = Array.isArray(bookings) ? bookings.length : '—';
+    <div id="bookings" class="section">
+      <h1>Bookings / Tiffin Management</h1>
+      <table id="bookingTable">
+        <thead>
+          <tr><th>User</th><th>Plan</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-    // recent orders preview
-    const recent = (Array.isArray(orders) ? orders : []).slice(0,6);
-    const wrap = document.getElementById('recentOrdersWrap');
-    if (!recent.length) { wrap.innerHTML = '<div>No orders yet.</div>'; return; }
-    wrap.innerHTML = `<table><thead><tr><th>User</th><th>Total</th><th>Status</th></tr></thead><tbody>${recent.map(o=>`<tr><td>${o.userId||o.user||'—'}</td><td>₹${o.totalAmount||0}</td><td>${o.status||'—'}</td></tr>`).join('')}</tbody></table>`;
-  } catch (e) {
-    console.error(e);
-    document.getElementById('recentOrdersWrap').innerText = 'Error loading.';
-  }
-}
-loadStats();
-</script>
+    <div id="orders" class="section">
+      <h1>Orders Management</h1>
+      <table id="ordersTable">
+        <thead>
+          <tr><th>Order ID</th><th>User</th><th>Items</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="notifications" class="section">
+      <h1>Notifications</h1>
+      <textarea id="notificationMessage" placeholder="Type your message..."></textarea>
+      <button onclick="sendNotification()">Send</button>
+      <h3>Sent Notifications</h3>
+      <ul id="sentNotifications"></ul>
+    </div>
+  </div>
+
+  <!-- Food Modal -->
+  <div id="foodModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeFoodModal()">&times;</span>
+      <h2 id="foodModalTitle">Add Food</h2>
+      <input type="text" id="foodName" placeholder="Food Name">
+      <input type="text" id="foodCategory" placeholder="Category">
+      <input type="number" id="foodPrice" placeholder="Price">
+      <button onclick="saveFood()">Save</button>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
 </body>
 </html>
