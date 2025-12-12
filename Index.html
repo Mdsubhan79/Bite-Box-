@@ -423,12 +423,24 @@ document.querySelector(".menu-btn").addEventListener("click", () => {
  </script>
  <script>
   
-  const user = localStorage.getItem("biteboxUser");
+const user = JSON.parse(localStorage.getItem("biteboxUser"));
 
- 
-  if (!user) {
-    window.location.href = "login.html";
-  }
+if (!user) {
+  window.location.href = "login.html";
+} else {
+  fetch("https://your-backend-url.com/api/checkUser?email=" + user.email)
+    .then(res => res.json())
+    .then(data => {
+      if (!data.exists) {
+        localStorage.removeItem("biteboxUser");
+        window.location.href = "login.html";
+      }
+    })
+    .catch(() => {
+      console.log("Backend offline – using cached user");
+    });
+}
+
 </script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {

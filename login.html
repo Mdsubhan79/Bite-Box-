@@ -482,112 +482,79 @@ footer button:hover {
     </div>
   </footer>
   
+<script>
+/* -------------------------------
+   PASSWORD SHOW / HIDE
+--------------------------------*/
+const togglePassword = document.querySelector('.toggle-password');
+togglePassword.addEventListener('click', function () {
+    const passwordField = document.querySelector('.password-field input');
+    passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
+    this.textContent = passwordField.type === 'password' ? '👁' : '🙈';
+});
+</script>
 
-  <script>
-    // Toggle password visibility
-    const togglePassword = document.querySelector('.toggle-password');
-    togglePassword.addEventListener('click', function() {
-      const passwordField = document.querySelector('.password-field input');
-      passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
-      this.textContent = passwordField.type === 'password' ? '👁' : '🙈';
-    });
+<script>
+/* -------------------------------
+   LOGIN FUNCTION
+--------------------------------*/
+document.querySelector('.login-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-    // Backend login
-    document.querySelector('.login-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
+    const email = document.querySelector('input[type="email"]').value.trim();
+    const password = document.querySelector('input[type="password"]').value.trim();
+    const errorMessage = document.getElementById('error-message');
 
-      const email = document.querySelector('input[type="email"]').value.trim();
-      const password = document.querySelector('input[type="password"]').value.trim();
-      const errorMessage = document.getElementById('error-message');
-
-      try {
-        const response = await fetch('https://bbbackend-bng2.onrender.com/api/auth/login', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ email, password })
+    try {
+        const response = await fetch("https://bbbackend-bng2.onrender.com/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
         });
 
         const data = await response.json();
 
-        if(response.status === 200){
-          alert('Login successful!');
-          localStorage.setItem('biteboxUser', JSON.stringify(data.user));
-          window.location.href = 'index.html';
-        } else {
-          errorMessage.style.display = 'block';
-          errorMessage.textContent = data.message;
-        }
+        if (response.status === 200) {
+            // Save Token + User
+            localStorage.setItem("biteboxToken", data.token);
+            localStorage.setItem("biteboxUser", JSON.stringify(data.user));
 
-      } catch(err){
-        errorMessage.style.display = 'block';
-        errorMessage.textContent = 'Server error. Try again later.';
-      }
-    });
-  </script>
-  <script>
-  function updateOpenStatus() {
+            // Check Admin
+            if (email === "md.sammlk00@gmail.com") {
+                localStorage.setItem("biteboxAdmin", "true");
+                alert("Admin Login Successful!");
+                window.location.href = "admin-dashboard.html";
+            } else {
+                localStorage.setItem("biteboxAdmin", "false");
+                alert("Login Successful!");
+                window.location.href = "index.html";
+            }
+        } else {
+            errorMessage.style.display = "block";
+            errorMessage.textContent = data.message || "Invalid Credentials";
+        }
+    } catch (error) {
+        errorMessage.style.display = "block";
+        errorMessage.textContent = "Server error. Try again later.";
+    }
+});
+</script>
+
+<script>
+/* -------------------------------
+   OPEN / CLOSED STATUS
+--------------------------------*/
+function updateOpenStatus() {
     const now = new Date();
     const hour = now.getHours();
-
-    
     const isOpen = hour >= 7 && hour < 22;
 
     const statusElement = document.getElementById("openStatus");
     statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
     statusElement.style.color = isOpen ? "green" : "red";
-  }
-
-  
-  updateOpenStatus();
-  
+}
+updateOpenStatus();
 </script>
-<script>
-    // Backend login
-document.querySelector('.login-form').addEventListener('submit', async function(e) {
-  e.preventDefault();
 
-  const email = document.querySelector('input[type="email"]').value.trim();
-  const password = document.querySelector('input[type="password"]').value.trim();
-  const errorMessage = document.getElementById('error-message');
-
-  try {
-    const response = await fetch('https://bbbackend-bng2.onrender.com/api/auth/login', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ email, password })
-    });
-
-    const data = await response.json();
-
-    if (response.status === 200) {
-
-      // Save token + user
-      localStorage.setItem('biteboxToken', data.token);
-      localStorage.setItem('biteboxUser', JSON.stringify(data.user));
-
-      // ADMIN CHECK
-      if (email === "md.sammlk00@gmail.com") {
-        localStorage.setItem('biteboxAdmin', "true");
-        alert("Admin Login Successful!");
-        window.location.href = "admin-dashboard.html"; 
-      } 
-      else {
-        localStorage.setItem('biteboxAdmin', "false");
-        alert("Login Successful!");
-        window.location.href = "index.html";  
-      }
-
-    } else {
-      errorMessage.style.display = 'block';
-      errorMessage.textContent = data.message || "Invalid credentials";
-    }
-
-  } catch (err) {
-    errorMessage.style.display = 'block';
-    errorMessage.textContent = "Server error. Try again later.";
-  }
-});
-
-</script>
 </body>
 </html>
