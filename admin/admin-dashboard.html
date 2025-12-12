@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Admin Dashboard | Bite Box</title>
+<style>
+  :root{--accent:#ff6b6b;--muted:#eef7f5}
+  body{font-family:Inter,Arial;background:#f3f7f6;margin:0;color:#0b2f2c}
+  header{background:#10332f;color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center}
+  header h1{margin:0;font-size:20px}
+  .wrap{max-width:1100px;margin:22px auto;padding:16px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .card{background:#fff;padding:16px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+  .big{grid-column:span 3}
+  .stat{font-size:28px;font-weight:700;color:#10332f}
+  nav a{margin-right:12px;color:#fff;text-decoration:none;padding:8px 10px;border-radius:6px;background:rgba(255,255,255,0.06)}
+  table{width:100%;border-collapse:collapse}
+  td,th{padding:8px;border-bottom:1px solid #eee}
+  .btn{padding:8px 10px;border-radius:6px;border:none;cursor:pointer}
+  .danger{background:#ff6b6b;color:#fff}
+  .primary{background:#27ae60;color:#fff}
+</style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Admin Dashboard — Bite Box</h1>
+      <div style="font-size:13px;color:#d0e9e3">Logged in as: <span id="adminEmail"></span></div>
+    </div>
+    <div>
+      <nav>
+        <a href="admin-users.html">Users</a>
+        <a href="admin-food.html">Food Items</a>
+        <a href="admin-orders.html">Orders</a>
+        <a href="admin-bookings.html">Bookings</a>
+        <a href="admin-notifications.html">Notifications</a>
+      </nav>
+    </div>
+    <div>
+      <button id="logoutBtn" class="btn danger">Logout</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="grid">
+      <div class="card">
+        <div style="color:#6b8f7f;font-size:13px">Total Users</div>
+        <div class="stat" id="totalUsers">—</div>
+      </div>
+      <div class="card">
+        <div style="color:#6b8f7f;font-size:13px">Total Orders</div>
+        <div class="stat" id="totalOrders">—</div>
+      </div>
+      <div class="card">
+        <div style="color:#6b8f7f;font-size:13px">Active Bookings</div>
+        <div class="stat" id="totalBookings">—</div>
+      </div>
+
+      <div class="card big">
+        <h3 style="margin:0 0 10px">Recent Orders</h3>
+        <div id="recentOrdersWrap">Loading…</div>
+      </div>
+    </div>
+  </main>
+
+<script>
+const BASE_URL = localStorage.getItem('BB_BACKEND') || 'https://bbbackend-bng2.onrender.com';
+const token = localStorage.getItem('adminToken');
+if (!token) location.href = 'admin-login.html';
+document.getElementById('adminEmail').textContent = localStorage.getItem('adminEmail') || 'Admin';
+
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  localStorage.removeItem('adminToken');
+  localStorage.removeItem('adminEmail');
+  location.href = 'admin-login.html';
+});
+
+async function loadStats(){
+  try {
+    // users
+    const [usersRes, ordersRes, bookingsRes] = await Promise.all([
+      fetch(`${BASE_URL}/api/admin/users`, {headers:{Authorization:'Bearer '+token}}),
+      fetch(`${BASE_URL}/api/admin/orders`, {headers:{Authorization:'Bearer '+token}}),
+      fetch(`${BASE_URL}/api/admin/bookings`, {headers:{Authorization:'Bearer '+token}})
+    ]);
+    const users = await usersRes.json();
+    const orders = await ordersRes.json();
+    const bookings = await bookingsRes.json();
+    document.getElementById('totalUsers').textContent = Array.isArray(users) ? users.length : '—';
+    document.getElementById('totalOrders').textContent = Array.isArray(orders) ? orders.length : '—';
+    document.getElementById('totalBookings').textContent = Array.isArray(bookings) ? bookings.length : '—';
+
+    // recent orders preview
+    const recent = (Array.isArray(orders) ? orders : []).slice(0,6);
+    const wrap = document.getElementById('recentOrdersWrap');
+    if (!recent.length) { wrap.innerHTML = '<div>No orders yet.</div>'; return; }
+    wrap.innerHTML = `<table><thead><tr><th>User</th><th>Total</th><th>Status</th></tr></thead><tbody>${recent.map(o=>`<tr><td>${o.userId||o.user||'—'}</td><td>₹${o.totalAmount||0}</td><td>${o.status||'—'}</td></tr>`).join('')}</tbody></table>`;
+  } catch (e) {
+    console.error(e);
+    document.getElementById('recentOrdersWrap').innerText = 'Error loading.';
+  }
+}
+loadStats();
+</script>
+</body>
+</html>
