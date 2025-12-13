@@ -393,52 +393,7 @@ function editTiffin(id) {
     `;
   });
 }
-/* ================= UPDATE TIFFIN ================= */
-router.put("/tiffins/:id", adminAuth, async (req, res) => {
-  try {
-    const { type, price, meals, active } = req.body;
 
-    const tiffin = await Tiffin.findByIdAndUpdate(
-      req.params.id,
-      { type, price, meals, active },
-      { new: true }
-    );
-
-    res.json(tiffin);
-  } catch (err) {
-    res.status(500).json({ message: "Update failed" });
-  }
-});
-
-// load tiffins
-function loadTiffins() {  }
-
-// show add tiffin form
-function showAddTiffinForm() {  }
-
-// add tiffin
-function addTiffin() {  }
-
-// delete tiffin
-function deleteTiffin(id) {  }
-
-// ✅ ADD HERE
-function updateTiffin(id) {
-  fetch(`${API_BASE}/api/admin/tiffins/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + localStorage.getItem("adminToken")
-    },
-    body: JSON.stringify({
-      type: document.getElementById("type").value,
-      price: document.getElementById("price").value,
-      meals: document.getElementById("meals").value.split(","),
-      active: document.getElementById("active").checked
-    })
-  })
-  .then(() => loadTiffins());
-}
 /* ========= UPDATE TIFFIN ========= */
 function updateTiffin(id) {
   fetch(`${API_BASE}/api/admin/tiffins/${id}`, {
