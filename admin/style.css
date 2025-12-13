@@ -1,0 +1,45 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+.admin-wrapper {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 230px;
+  background: #111827;
+  color: #fff;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar ul li {
+  padding: 12px;
+  margin-bottom: 10px;
+  background: #1f2933;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.sidebar ul li:hover {
+  background: #374151;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  background: #f9fafb;
+}
