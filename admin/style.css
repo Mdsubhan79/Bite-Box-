@@ -1,79 +1,164 @@
-/* Reset and global styles */
+/* ================= RESET ================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
 }
 
 body {
-  background-color: #f3f4f6;
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  color: #333;
+  min-height: 100vh;
 }
 
-/* Admin wrapper */
+/* ================= LAYOUT ================= */
 .admin-wrapper {
   display: flex;
-  height: 100vh;
-  transition: all 0.3s ease;
+  min-height: 100vh;
 }
 
-/* Sidebar */
+/* ================= SIDEBAR ================= */
 .sidebar {
-  width: 230px;
-  background: #111827;
+  width: 240px;
+  background: #1f2937;
   color: #fff;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  transition: width 0.3s ease;
+  padding: 20px 15px;
 }
 
 .sidebar h2 {
   text-align: center;
   margin-bottom: 25px;
-  font-size: 24px;
+  font-size: 22px;
 }
 
 .sidebar ul {
   list-style: none;
-  flex: 1;
 }
 
 .sidebar ul li {
-  padding: 12px 15px;
-  margin-bottom: 12px;
-  background: #1f2933;
+  padding: 12px 10px;
+  margin-bottom: 8px;
+  background: #374151;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: 0.3s;
+  font-size: 15px;
 }
 
 .sidebar ul li:hover {
-  background: #374151;
-  transform: translateX(5px);
+  background: #4f46e5;
 }
 
-/* Content area */
+/* ================= CONTENT ================= */
 .content {
   flex: 1;
-  padding: 30px;
-  background: #f9fafb;
-  overflow-y: auto;
+  padding: 25px;
+  background: #ffffff;
 }
 
 .content h1 {
-  font-size: 28px;
-  margin-bottom: 15px;
-  color: #111827;
+  margin-bottom: 10px;
 }
 
 .content p {
-  font-size: 16px;
-  color: #4b5563;
+  color: #666;
 }
 
-/* Responsive for small screens */
-@media (max-width: 768px) {
+/* ================= DASHBOARD CARDS ================= */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.card {
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 18px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  font-size: 14px;
+}
+
+/* ================= TABLE ================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th,
+table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  font-size: 14px;
+  text-align: left;
+}
+
+table th {
+  background: #f1f5f9;
+}
+
+/* ================= BUTTONS ================= */
+button {
+  padding: 8px 14px;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background: #4338ca;
+}
+
+/* ===================================================== */
+/* ================= MEDIA QUERIES ===================== */
+/* ===================================================== */
+
+/* ===== EXTRA SMALL DEVICES (270px – 399px) ===== */
+@media (max-width: 399px) {
+  .admin-wrapper {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .sidebar h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+
+  .sidebar ul li {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .content {
+    padding: 15px;
+  }
+
+  table th,
+  table td {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  button {
+    font-size: 12px;
+    padding: 7px 10px;
+  }
+}
+
+/* ===== SMALL DEVICES (400px – 767px) ===== */
+@media (min-width: 400px) and (max-width: 767px) {
   .admin-wrapper {
     flex-direction: column;
   }
@@ -81,66 +166,61 @@ body {
   .sidebar {
     width: 100%;
     display: flex;
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 10px;
-  }
-
-  .sidebar h2 {
-    flex: 0 0 auto;
-    margin: 0 15px 0 0;
-    font-size: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .sidebar ul {
     display: flex;
-    flex-direction: row;
-    flex: 1;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
   }
 
   .sidebar ul li {
-    margin-right: 10px;
-    margin-bottom: 0;
-    white-space: nowrap;
+    font-size: 14px;
+    padding: 10px 12px;
   }
 
   .content {
     padding: 20px;
   }
+}
 
-  .content h1 {
-    font-size: 24px;
+/* ===== TABLETS (768px – 1023px) ===== */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .sidebar {
+    width: 200px;
   }
 
-  .content p {
+  .sidebar h2 {
+    font-size: 20px;
+  }
+
+  .sidebar ul li {
     font-size: 14px;
+  }
+
+  .content {
+    padding: 22px;
   }
 }
 
-/* Styles for large screens */
-@media (min-width: 1200px) {
+/* ===== LARGE SCREENS (≥1024px) ===== */
+@media (min-width: 1024px) {
   .sidebar {
     width: 250px;
   }
 
   .sidebar h2 {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .sidebar ul li {
-    font-size: 16px;
-    padding: 14px 18px;
+    font-size: 15px;
   }
 
   .content {
-    padding: 40px;
-  }
-
-  .content h1 {
-    font-size: 32px;
-  }
-
-  .content p {
-    font-size: 18px;
+    padding: 30px;
   }
 }
