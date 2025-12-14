@@ -30,7 +30,7 @@ form.addEventListener("submit", async (e) => {
     localStorage.setItem("adminInfo", JSON.stringify(data.admin));
 
     // REDIRECT TO ADMIN DASHBOARD
-    window.location.href = "admin.html";
+    window.location.href = "index.html";
 
   } catch (err) {
     errorText.textContent = "Server error. Try again later.";

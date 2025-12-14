@@ -2,9 +2,11 @@
 const API_BASE = "https://bbbackend-bng2.onrender.com";
 
 /* ========= AUTH CHECK ========= */
-if (!localStorage.getItem("adminToken")) {
-  window.location.href = "login.html";
+const token = localStorage.getItem("adminToken");
+if (!token) {
+  window.location.replace("login.html");
 }
+
 
 /* ========= PAGE NAVIGATION ========= */
 function loadPage(page) {

@@ -4,18 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin-Login</title>
-  <style>/* General body styling */
+  <style>
+    /* ================= GLOBAL ================= */
 body {
   font-family: Arial, sans-serif;
   background: linear-gradient(135deg, #667eea, #764ba2);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
 }
 
-/* Form container */
+/* ================= FORM ================= */
 #adminLoginForm {
   background-color: #ffffff;
   padding: 40px 30px;
@@ -26,33 +27,30 @@ body {
   transition: all 0.3s ease;
 }
 
-/* Form heading */
 #adminLoginForm h2 {
   margin-bottom: 30px;
-  color: #333333;
+  color: #333;
   font-size: 24px;
 }
 
-/* Input fields */
-#adminLoginForm input[type="email"],
-#adminLoginForm input[type="password"] {
+/* Inputs */
+#adminLoginForm input {
   width: 100%;
   padding: 12px 15px;
-  margin: 10px 0 20px 0;
+  margin: 10px 0 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
-#adminLoginForm input[type="email"]:focus,
-#adminLoginForm input[type="password"]:focus {
+#adminLoginForm input:focus {
   border-color: #667eea;
-  box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+  box-shadow: 0 0 5px rgba(102,126,234,0.5);
   outline: none;
 }
 
-/* Login button */
+/* Button */
 #adminLoginForm button {
   width: 100%;
   padding: 12px;
@@ -62,7 +60,7 @@ body {
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
 #adminLoginForm button:hover {
@@ -70,14 +68,32 @@ body {
   transform: translateY(-2px);
 }
 
-/* Error message */
+/* Error */
 #error {
   margin-top: 15px;
   font-size: 14px;
   color: #e53e3e;
 }
 
-/* Responsive styles */
+/* ================= VERY SMALL SCREENS (≤360px) ================= */
+@media (max-width: 360px) {
+  #adminLoginForm {
+    width: 95%;
+    padding: 25px 18px;
+  }
+
+  #adminLoginForm h2 {
+    font-size: 18px;
+  }
+
+  #adminLoginForm input,
+  #adminLoginForm button {
+    font-size: 13px;
+    padding: 9px;
+  }
+}
+
+/* ================= SMALL SCREENS (≤500px) ================= */
 @media (max-width: 500px) {
   #adminLoginForm {
     width: 90%;
@@ -86,42 +102,45 @@ body {
 
   #adminLoginForm h2 {
     font-size: 20px;
-    margin-bottom: 20px;
   }
 
-  #adminLoginForm input[type="email"],
-  #adminLoginForm input[type="password"] {
-    padding: 10px 12px;
-    font-size: 14px;
-  }
-
+  #adminLoginForm input,
   #adminLoginForm button {
-    padding: 10px;
     font-size: 14px;
+    padding: 10px;
   }
 }
 
-@media (min-width: 1200px) {
+/* ================= TABLETS / LAPTOPS (768px–1199px) ================= */
+@media (min-width: 768px) and (max-width: 1199px) {
   #adminLoginForm {
-    width: 400px;
-    padding: 50px 40px;
+    width: 380px;
+    padding: 45px 35px;
   }
 
   #adminLoginForm h2 {
-    font-size: 28px;
-  }
-
-  #adminLoginForm input[type="email"],
-  #adminLoginForm input[type="password"] {
-    padding: 14px 18px;
-    font-size: 18px;
-  }
-
-  #adminLoginForm button {
-    padding: 14px;
-    font-size: 18px;
+    font-size: 26px;
   }
 }
+
+/* ================= LARGE SCREENS (≥1200px) ================= */
+@media (min-width: 1200px) {
+  #adminLoginForm {
+    width: 420px;
+    padding: 55px 45px;
+  }
+
+  #adminLoginForm h2 {
+    font-size: 30px;
+  }
+
+  #adminLoginForm input,
+  #adminLoginForm button {
+    font-size: 18px;
+    padding: 14px;
+  }
+}
+
 </style>
 </head>
 <body>
