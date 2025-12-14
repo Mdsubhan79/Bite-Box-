@@ -1,38 +1,33 @@
-const form = document.getElementById("adminLoginForm");
-const errorText = document.getElementById("error");
-
-form.addEventListener("submit", async (e) => {
+document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const error = document.getElementById("error");
 
   try {
     const res = await fetch("https://bbbackend-bng2.onrender.com/api/admin/login", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
     });
 
     const data = await res.json();
 
-    if (!res.ok) {
-      errorText.textContent = data.message || "Login failed";
+    console.log("LOGIN RESPONSE:", data); // 👈 DEBUG
+
+    if (!res.ok || !data.token) {
+      error.innerText = data.message || "Login failed";
       return;
     }
 
-    // 🔐 SAVE ADMIN TOKEN (VERY IMPORTANT)
+    // ✅ SAVE TOKEN (IMPORTANT)
     localStorage.setItem("adminToken", data.token);
 
-    // OPTIONAL: store admin info
-    localStorage.setItem("adminInfo", JSON.stringify(data.admin));
-
-    // REDIRECT TO ADMIN DASHBOARD
+    // ✅ REDIRECT
     window.location.href = "index.html";
 
   } catch (err) {
-    errorText.textContent = "Server error. Try again later.";
+    error.innerText = "Server error";
   }
 });
