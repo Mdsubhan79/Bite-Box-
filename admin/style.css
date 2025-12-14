@@ -1,3 +1,4 @@
+/* Reset and global styles */
 * {
   margin: 0;
   padding: 0;
@@ -5,41 +6,141 @@
   font-family: Arial, sans-serif;
 }
 
+body {
+  background-color: #f3f4f6;
+}
+
+/* Admin wrapper */
 .admin-wrapper {
   display: flex;
   height: 100vh;
+  transition: all 0.3s ease;
 }
 
+/* Sidebar */
 .sidebar {
   width: 230px;
   background: #111827;
   color: #fff;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
 }
 
 .sidebar h2 {
   text-align: center;
   margin-bottom: 25px;
+  font-size: 24px;
 }
 
 .sidebar ul {
   list-style: none;
+  flex: 1;
 }
 
 .sidebar ul li {
-  padding: 12px;
-  margin-bottom: 10px;
+  padding: 12px 15px;
+  margin-bottom: 12px;
   background: #1f2933;
   border-radius: 6px;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .sidebar ul li:hover {
   background: #374151;
+  transform: translateX(5px);
 }
 
+/* Content area */
 .content {
   flex: 1;
-  padding: 20px;
+  padding: 30px;
   background: #f9fafb;
+  overflow-y: auto;
+}
+
+.content h1 {
+  font-size: 28px;
+  margin-bottom: 15px;
+  color: #111827;
+}
+
+.content p {
+  font-size: 16px;
+  color: #4b5563;
+}
+
+/* Responsive for small screens */
+@media (max-width: 768px) {
+  .admin-wrapper {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 10px;
+  }
+
+  .sidebar h2 {
+    flex: 0 0 auto;
+    margin: 0 15px 0 0;
+    font-size: 20px;
+  }
+
+  .sidebar ul {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+  }
+
+  .sidebar ul li {
+    margin-right: 10px;
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  .content h1 {
+    font-size: 24px;
+  }
+
+  .content p {
+    font-size: 14px;
+  }
+}
+
+/* Styles for large screens */
+@media (min-width: 1200px) {
+  .sidebar {
+    width: 250px;
+  }
+
+  .sidebar h2 {
+    font-size: 28px;
+  }
+
+  .sidebar ul li {
+    font-size: 16px;
+    padding: 14px 18px;
+  }
+
+  .content {
+    padding: 40px;
+  }
+
+  .content h1 {
+    font-size: 32px;
+  }
+
+  .content p {
+    font-size: 18px;
+  }
 }

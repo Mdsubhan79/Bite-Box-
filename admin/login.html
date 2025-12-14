@@ -1,4 +1,131 @@
-<form id="adminLoginForm">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin-Login</title>
+  <style>/* General body styling */
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+/* Form container */
+#adminLoginForm {
+  background-color: #ffffff;
+  padding: 40px 30px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  width: 350px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+/* Form heading */
+#adminLoginForm h2 {
+  margin-bottom: 30px;
+  color: #333333;
+  font-size: 24px;
+}
+
+/* Input fields */
+#adminLoginForm input[type="email"],
+#adminLoginForm input[type="password"] {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0 20px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+#adminLoginForm input[type="email"]:focus,
+#adminLoginForm input[type="password"]:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+  outline: none;
+}
+
+/* Login button */
+#adminLoginForm button {
+  width: 100%;
+  padding: 12px;
+  background-color: #667eea;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#adminLoginForm button:hover {
+  background-color: #5a67d8;
+  transform: translateY(-2px);
+}
+
+/* Error message */
+#error {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #e53e3e;
+}
+
+/* Responsive styles */
+@media (max-width: 500px) {
+  #adminLoginForm {
+    width: 90%;
+    padding: 30px 20px;
+  }
+
+  #adminLoginForm h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  #adminLoginForm input[type="email"],
+  #adminLoginForm input[type="password"] {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  #adminLoginForm button {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1200px) {
+  #adminLoginForm {
+    width: 400px;
+    padding: 50px 40px;
+  }
+
+  #adminLoginForm h2 {
+    font-size: 28px;
+  }
+
+  #adminLoginForm input[type="email"],
+  #adminLoginForm input[type="password"] {
+    padding: 14px 18px;
+    font-size: 18px;
+  }
+
+  #adminLoginForm button {
+    padding: 14px;
+    font-size: 18px;
+  }
+}
+</style>
+</head>
+<body>
+  <form id="adminLoginForm">
   <h2>Admin Login</h2>
 
   <input type="email" id="email" placeholder="Admin Email" required>
@@ -9,3 +136,6 @@
 </form>
 
 <script src="login.js"></script>
+
+</body>
+</html>
