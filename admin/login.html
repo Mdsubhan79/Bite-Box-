@@ -5,7 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin-Login</title>
   <style>
-    /* ================= GLOBAL ================= */
+/* ============ RESET ============ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ============ GLOBAL ============ */
 body {
   font-family: Arial, sans-serif;
   background: linear-gradient(135deg, #667eea, #764ba2);
@@ -14,21 +21,23 @@ body {
   align-items: center;
   min-height: 100vh;
   margin: 0;
+  padding: 10px;
 }
 
-/* ================= FORM ================= */
+/* ============ FORM ============ */
 #adminLoginForm {
   background-color: #ffffff;
-  padding: 40px 30px;
-  border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  width: 350px;
+  width: 100%;
+  max-width: 420px;
+  padding: 36px 28px;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
   text-align: center;
-  transition: all 0.3s ease;
 }
 
+/* Heading */
 #adminLoginForm h2 {
-  margin-bottom: 30px;
+  margin-bottom: 24px;
   color: #333;
   font-size: 24px;
 }
@@ -36,17 +45,17 @@ body {
 /* Inputs */
 #adminLoginForm input {
   width: 100%;
-  padding: 12px 15px;
-  margin: 10px 0 20px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 6px;
   font-size: 16px;
-  transition: 0.3s;
+  transition: 0.25s ease;
 }
 
 #adminLoginForm input:focus {
   border-color: #667eea;
-  box-shadow: 0 0 5px rgba(102,126,234,0.5);
+  box-shadow: 0 0 6px rgba(102, 126, 234, 0.45);
   outline: none;
 }
 
@@ -54,36 +63,38 @@ body {
 #adminLoginForm button {
   width: 100%;
   padding: 12px;
+  margin-top: 6px;
   background-color: #667eea;
-  color: white;
+  color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   font-size: 16px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.25s ease;
 }
 
 #adminLoginForm button:hover {
   background-color: #5a67d8;
-  transform: translateY(-2px);
 }
 
-/* Error */
+/* Error text */
 #error {
-  margin-top: 15px;
+  margin-top: 14px;
   font-size: 14px;
   color: #e53e3e;
 }
 
-/* ================= VERY SMALL SCREENS (≤360px) ================= */
-@media (max-width: 360px) {
+/* ===========================
+   EXTRA SMALL (270px–320px)
+=========================== */
+@media (max-width: 320px) {
   #adminLoginForm {
-    width: 95%;
-    padding: 25px 18px;
+    padding: 22px 16px;
   }
 
   #adminLoginForm h2 {
     font-size: 18px;
+    margin-bottom: 18px;
   }
 
   #adminLoginForm input,
@@ -93,11 +104,12 @@ body {
   }
 }
 
-/* ================= SMALL SCREENS (≤500px) ================= */
-@media (max-width: 500px) {
+/* ===========================
+   SMALL PHONES (321px–480px)
+=========================== */
+@media (max-width: 480px) {
   #adminLoginForm {
-    width: 90%;
-    padding: 30px 20px;
+    padding: 28px 20px;
   }
 
   #adminLoginForm h2 {
@@ -111,11 +123,21 @@ body {
   }
 }
 
-/* ================= TABLETS / LAPTOPS (768px–1199px) ================= */
-@media (min-width: 768px) and (max-width: 1199px) {
+/* ===========================
+   TABLETS (481px–768px)
+=========================== */
+@media (min-width: 481px) and (max-width: 768px) {
+  #adminLoginForm h2 {
+    font-size: 22px;
+  }
+}
+
+/* ===========================
+   DESKTOP (769px+)
+=========================== */
+@media (min-width: 769px) {
   #adminLoginForm {
-    width: 380px;
-    padding: 45px 35px;
+    padding: 44px 36px;
   }
 
   #adminLoginForm h2 {
@@ -123,23 +145,6 @@ body {
   }
 }
 
-/* ================= LARGE SCREENS (≥1200px) ================= */
-@media (min-width: 1200px) {
-  #adminLoginForm {
-    width: 420px;
-    padding: 55px 45px;
-  }
-
-  #adminLoginForm h2 {
-    font-size: 30px;
-  }
-
-  #adminLoginForm input,
-  #adminLoginForm button {
-    font-size: 18px;
-    padding: 14px;
-  }
-}
 
 </style>
 </head>
