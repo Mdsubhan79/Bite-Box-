@@ -80,10 +80,14 @@ function loadDashboard() {
       </div>
     `;
   })
-  .catch(() => {
-    content.innerHTML = "<p>Session expired. Please login again.</p>";
+.then(res => {
+  if (res.status === 401) {
     logoutAdmin();
-  });
+    return;
+  }
+  return res.json();
+})
+
 }
 
 /* ========= VEG MENU MANAGEMENT ========= */
