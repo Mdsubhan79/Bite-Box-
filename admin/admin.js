@@ -464,6 +464,7 @@ function loadUsers() {
 
 
 
+
 /* ========= ORDERS MANAGEMENT ========= */
 function loadOrders() {
   const content = document.getElementById("content");
@@ -474,50 +475,54 @@ function loadOrders() {
       Authorization: "Bearer " + localStorage.getItem("adminToken")
     }
   })
-  .then(res => {
-    if (!res.ok) throw new Error("Unauthorized");
-    return res.json();
-  })
-  .then(orders => {
-    let html = `
-      <h2>Orders</h2>
-      <table>
-        <tr>
-          <th>User</th>
-          <th>Amount</th>
-          <th>Status</th>
-          <th>Date</th>
-          <th>Action</th>
-        </tr>
-    `;
-
-    orders.forEach(order => {
-      html += `
-        <tr>
-          <td>${order.user?.name || "Guest"}</td>
-          <td>₹${order.totalAmount}</td>
-          <td>
-            <select onchange="updateOrderStatus('${order._id}', this.value)">
-              <option ${order.status === "pending" ? "selected" : ""}>pending</option>
-              <option ${order.status === "confirmed" ? "selected" : ""}>confirmed</option>
-              <option ${order.status === "delivered" ? "selected" : ""}>delivered</option>
-              <option ${order.status === "cancelled" ? "selected" : ""}>cancelled</option>
-            </select>
-          </td>
-          <td>${new Date(order.createdAt).toLocaleString()}</td>
-          <td>✔</td>
-        </tr>
+    .then(res => {
+      if (res.status === 401) {
+        logoutAdmin();
+        throw new Error("Unauthorized");
+      }
+      return res.json();
+    })
+    .then(orders => {
+      let html = `
+        <h2>Orders</h2>
+        <table>
+          <tr>
+            <th>User</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
       `;
-    });
 
-    html += "</table>";
-    content.innerHTML = html;
-  })
-  .catch(() => {
-    content.innerHTML = "<p>Session expired. Please login again.</p>";
-    logoutAdmin();
-  });
+      orders.forEach(order => {
+        html += `
+          <tr>
+              <td>${order.userId?.name || "Guest"}</td>
+              <td>₹${order.totalPrice}</td>
+            <td>
+              <select onchange="updateOrderStatus('${order._id}', this.value)">
+                <option ${order.status === "pending" ? "selected" : ""}>pending</option>
+                <option ${order.status === "confirmed" ? "selected" : ""}>confirmed</option>
+                <option ${order.status === "delivered" ? "selected" : ""}>delivered</option>
+                <option ${order.status === "cancelled" ? "selected" : ""}>cancelled</option>
+              </select>
+            </td>
+            <td>${new Date(order.createdAt).toLocaleString()}</td>
+            <td>✔</td>
+          </tr>
+        `;
+      });
+
+      html += "</table>";
+      content.innerHTML = html;
+    })
+    .catch(err => {
+      console.error("Orders error:", err);
+      content.innerHTML = "<p>Failed to load orders. Try again.</p>";
+    });
 }
+
 function updateOrderStatus(id, status) {
   fetch(`${API_BASE}/api/admin/orders/${id}`, {
     method: "PUT",
@@ -527,5 +532,24 @@ function updateOrderStatus(id, status) {
     },
     body: JSON.stringify({ status })
   })
-  .then(() => loadOrders());
+    .then(res => {
+      if (res.status === 401) {
+        logoutAdmin();
+        throw new Error("Unauthorized");
+      }
+      return res.json();
+    })
+    .then(() => loadOrders())
+    .catch(err => console.error(err));
+}
+
+
+function fetchAuth(url, options = {}) {
+  return fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  });
 }
