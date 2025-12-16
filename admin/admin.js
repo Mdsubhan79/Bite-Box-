@@ -52,9 +52,9 @@ function loadPage(page) {
 }
 
 /* ========= DASHBOARD OVERVIEW ========= */
+
 function loadDashboard() {
   const content = document.getElementById("content");
-
   content.innerHTML = "<h2>Loading dashboard...</h2>";
 
   fetch(`${API_BASE}/api/admin/dashboard-stats`, {
@@ -62,32 +62,27 @@ function loadDashboard() {
       Authorization: "Bearer " + localStorage.getItem("adminToken")
     }
   })
-  .then(res => {
-    if (!res.ok) throw new Error("Unauthorized");
-    return res.json();
-  })
-  .then(data => {
-    content.innerHTML = `
-      <h2>Dashboard Overview</h2>
-
-      <div class="cards">
-        <div class="card">Total Users<br><b>${data.totalUsers}</b></div>
-        <div class="card">Today Orders<br><b>${data.todayOrders}</b></div>
-        <div class="card">Veg Items<br><b>${data.vegItems}</b></div>
-        <div class="card">Non-Veg Items<br><b>${data.nonVegItems}</b></div>
-        <div class="card">Active Tiffins<br><b>${data.activeTiffins}</b></div>
-        <div class="card">Today Revenue<br><b>₹${data.todayRevenue}</b></div>
-      </div>
-    `;
-  })
-.then(res => {
-  if (res.status === 401) {
-    logoutAdmin();
-    return;
-  }
-  return res.json();
-})
-
+    .then(res => {
+      if (res.status === 401) {
+        logoutAdmin();
+        throw new Error("Unauthorized");
+      }
+      return res.json();
+    })
+    .then(data => {
+      content.innerHTML = `
+        <h2>Dashboard Overview</h2>
+        <div class="cards">
+          <div class="card">Total Users<br><b>${data.totalUsers}</b></div>
+          <div class="card">Today Orders<br><b>${data.todayOrders}</b></div>
+          <div class="card">Veg Items<br><b>${data.vegItems}</b></div>
+          <div class="card">Non-Veg Items<br><b>${data.nonVegItems}</b></div>
+          <div class="card">Active Tiffins<br><b>${data.activeTiffins}</b></div>
+          <div class="card">Today Revenue<br><b>₹${data.todayRevenue}</b></div>
+        </div>
+      `;
+    })
+    .catch(err => console.error(err));
 }
 
 /* ========= VEG MENU MANAGEMENT ========= */
@@ -430,39 +425,43 @@ function loadUsers() {
       Authorization: "Bearer " + localStorage.getItem("adminToken")
     }
   })
-  .then(res => {
-    if (!res.ok) throw new Error("Unauthorized");
-    return res.json();
-  })
-  .then(users => {
-    let html = `
-      <h2>Users List</h2>
-      <table>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Joined</th>
-        </tr>
-    `;
-
-    users.forEach(user => {
-      html += `
-        <tr>
-          <td>${user.name}</td>
-          <td>${user.email}</td>
-          <td>${new Date(user.createdAt).toLocaleDateString()}</td>
-        </tr>
+    .then(res => {
+      if (res.status === 401) {
+        logoutAdmin();
+        throw new Error("Unauthorized");
+      }
+      return res.json();
+    })
+    .then(users => {
+      let html = `
+        <h2>Users List</h2>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Joined</th>
+          </tr>
       `;
-    });
 
-    html += "</table>";
-    content.innerHTML = html;
-  })
-  .catch(() => {
-    content.innerHTML = "<p>Session expired. Please login again.</p>";
-    logoutAdmin();
-  });
+      users.forEach(user => {
+        html += `
+          <tr>
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+            <td>${new Date(user.createdAt).toLocaleDateString()}</td>
+          </tr>
+        `;
+      });
+
+      html += "</table>";
+      content.innerHTML = html;
+    })
+    .catch(err => {
+      console.error(err);
+      content.innerHTML = "<p>Failed to load users. Try again.</p>";
+    });
 }
+
 
 
 /* ========= ORDERS MANAGEMENT ========= */
