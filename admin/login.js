@@ -14,7 +14,7 @@ document.getElementById("adminLoginForm").addEventListener("submit", async (e) =
 
     const data = await res.json();
 
-    console.log("LOGIN RESPONSE:", data); // 👈 DEBUG
+    console.log("LOGIN RESPONSE:", data); 
 
     if (!res.ok || !data.token) {
       error.innerText = data.message || "Login failed";

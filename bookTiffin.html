@@ -810,31 +810,40 @@ bookingForm.addEventListener('submit', (e) => {
     }
     
     const userData = JSON.parse(localStorage.getItem("biteboxUser")) || {};
-    const subscriptionData = {
-        plan: selectedPlan,
-        status: 'active',
-        startDate: new Date().toISOString(),
-        customerDetails: {
-            fullName: fullName,
-            fatherName: document.getElementById('fatherName').value,
-            profession: document.getElementById('profession').value,
-            address: address,
-            phone: phone,
-            email: document.getElementById('email').value,
-            city: city,
-            state: state
-        },
-        deliveryAddress: address,
-        userId: userData.email || 'unknown',
-        bookingDate: new Date().toISOString()
-    };
-    
-    console.log('Saving subscription data:', subscriptionData);
-    
-   
-    localStorage.setItem("biteboxSubscription", JSON.stringify(subscriptionData));
-    
-   
+fetch("http://localhost:5000/api/bookings", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    plan: selectedPlan,
+    userEmail: document.getElementById("email").value,
+
+    customerDetails: {
+      fullName,
+      fatherName: document.getElementById('fatherName').value,
+      profession: document.getElementById('profession').value,
+      address,
+      phone,
+      email: document.getElementById('email').value,
+      city,
+      state
+    }
+  })
+})
+.then(res => res.json())
+.then(data => {
+  if (data.success) {
+    confirmationModal.style.display = 'flex';
+  } else {
+    alert("Booking failed. Try again.");
+  }
+})
+.catch(err => {
+  console.error(err);
+  alert("Server error. Please try later.");
+});
+
     const savedData = JSON.parse(localStorage.getItem("biteboxSubscription"));
     console.log('Verified saved data:', savedData); 
     

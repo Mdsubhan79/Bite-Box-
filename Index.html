@@ -423,7 +423,6 @@ document.querySelector(".menu-btn").addEventListener("click", () => {
  </script>
  <script>
   
-const user = JSON.parse(localStorage.getItem("biteboxUser"));
 
 if (!user) {
   window.location.href = "login.html";
@@ -492,76 +491,63 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
-  function loadSubscriptionData() {
-    try {
-      const subscriptionData = JSON.parse(localStorage.getItem("biteboxSubscription")) || {};
-      const userEmail = userData.email;
+function loadSubscriptionData() {
+  const userEmail = userData.email;
 
-      const isUserMatch = !subscriptionData.userId || 
-                          subscriptionData.userId === userEmail;
-
-      if (!isUserMatch) {
+  fetch(`http://localhost:5000/api/bookings/user/${userEmail}`)
+    .then(res => res.json())
+    .then(booking => {
+      if (!booking || booking.message) {
         subscriptionDetails.innerHTML = `
           <div class="no-subscription">
-            <p>No active subscription found for your account</p>
-            <p>Subscribe to our tiffin service to enjoy delicious meals!</p>
+            <p>No tiffin subscription found</p>
+            <p>Please subscribe to enjoy our service</p>
           </div>`;
         return;
       }
 
-      if (subscriptionData.plan && subscriptionData.status) {
-        const planDetails = {
-          basic: { name: "Basic Plan", price: "₹1700/month", meals: "1 meal/day (Lunch or Dinner)" },
-          standard: { name: "Standard Plan", price: "₹2800/month", meals: "2 meals/day (Lunch + Dinner)" },
-          premium: { name: "Premium Plan", price: "₹3200/month", meals: "3 meals/day (Breakfast + Lunch + Dinner)" }
-        };
+      const planDetails = {
+        basic: { name: "Basic Plan", price: "₹1700/month", meals: "1 meal/day" },
+        standard: { name: "Standard Plan", price: "₹2800/month", meals: "2 meals/day" },
+        premium: { name: "Premium Plan", price: "₹3200/month", meals: "3 meals/day" }
+      };
 
-        const plan = planDetails[subscriptionData.plan] || { name: subscriptionData.plan, price: '-', meals: '-' };
-        const statusClass = `status-${subscriptionData.status}`;
+      const plan = planDetails[booking.plan] || { name: booking.plan };
 
-        subscriptionDetails.innerHTML = `
-          <div class="subscription-details">
-            <p><strong>Plan:</strong> ${plan.name}</p>
-            <p><strong>Price:</strong> ${plan.price}</p>
-            <p><strong>Meals:</strong> ${plan.meals}</p>
-            <p><strong>Status:</strong> 
-              <span class="subscription-status ${statusClass}">
-                ${subscriptionData.status}
-              </span>
-            </p>
-          </div>`;
-      } else {
-        subscriptionDetails.innerHTML = `
-          <div class="no-subscription">
-            <p>No active subscription found</p>
-            <p>Subscribe to our tiffin service to enjoy delicious meals!</p>
-          </div>`;
-      }
-    } catch (err) {
-      console.error('Error loading subscription data:', err);
-      subscriptionDetails.innerHTML = `<p>Error loading data</p>`;
-    }
-  }
+      const statusClass =
+        booking.status === "active" ? "status-active" : "status-pending";
+
+      const statusText =
+        booking.status === "active" ? "Active" : "Pending Activation";
+
+      subscriptionDetails.innerHTML = `
+        <div class="subscription-details">
+          <p><strong>Plan:</strong> ${plan.name}</p>
+          <p><strong>Price:</strong> ${plan.price}</p>
+          <p><strong>Meals:</strong> ${plan.meals}</p>
+          <p><strong>Status:</strong>
+            <span class="subscription-status ${statusClass}">
+              ${statusText}
+            </span>
+          </p>
+        </div>`;
+    })
+    .catch(err => {
+      console.error(err);
+      subscriptionDetails.innerHTML = `<p>Error loading subscription</p>`;
+    });
+}
 });
 
-// ✅ These functions are global now so onclick="" works
-window.addNewSubscription = function() {
-  console.log('Add New Subscription clicked');
-  localStorage.removeItem("biteboxSubscription");
-  setTimeout(() => {
-    window.location.href = "tiffinservice.html";
-  }, 100);
+// ✅ These functions are global so onclick="" works
+window.addNewSubscription = function () {
+  window.location.href = "tiffinservice.html";
 };
 
-window.manageSubscription = function() {
-  console.log('Manage Subscription clicked');
-  const data = JSON.parse(localStorage.getItem("biteboxSubscription"));
-  if (data && data.plan) {
-    window.location.href = `tiffin.html?plan=${data.plan}`;
-  } else {
-    window.location.href = "tiffinservice.html";
-  }
+window.manageSubscription = function () {
+  window.location.href = "tiffin.html";
 };
+
 </script>
 
 <script>

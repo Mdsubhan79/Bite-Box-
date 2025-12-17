@@ -265,52 +265,63 @@ function deleteNonVeg(id) {
 
 
 /* ========= TIFFIN MANAGEMENT ========= */
-function loadTiffins() {
-  const content = document.getElementById("content");
-  content.innerHTML = "<h2>Loading Tiffin Plans...</h2>";
-
-  fetch(`${API_BASE}/api/admin/tiffins`, {
+function loadTiffinBookings() {
+  fetch("http://localhost:5000/api/admin/bookings", {
     headers: {
-      Authorization: "Bearer " + localStorage.getItem("adminToken")
+      "Authorization": "Bearer " + localStorage.getItem("adminToken")
     }
   })
-  .then(res => res.json())
-  .then(tiffins => {
-    let html = `
-      <h2>Tiffin Services</h2>
-      <button onclick="showAddTiffinForm()">+ Add Tiffin Plan</button>
+    .then(res => res.json())
+    .then(bookings => {
+      const content = document.getElementById("content");
 
-      <table>
-        <tr>
-          <th>Plan</th>
-          <th>Type</th>
-          <th>Price</th>
-          <th>Meals</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-    `;
-
-    tiffins.forEach(t => {
-      html += `
-        <tr>
-          <td>${t.planName}</td>
-          <td>${t.type}</td>
-          <td>₹${t.price}</td>
-          <td>${t.meals.join(", ")}</td>
-          <td>${t.active ? "Active" : "Inactive"}</td>
-          <td>
-  <button onclick="editTiffin('${t._id}')">Edit</button>
-  <button onclick="deleteTiffin('${t._id}')">Delete</button>
-</td>
-
-        </tr>
+      let html = `
+        <h2>Tiffin Subscriptions</h2>
+        <table border="1" cellpadding="10" width="100%">
+          <tr>
+            <th>User Email</th>
+            <th>Plan</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
       `;
-    });
 
-    html += "</table>";
-    content.innerHTML = html;
-  });
+      bookings.forEach(b => {
+        html += `
+          <tr>
+            <td>${b.userEmail}</td>
+            <td>${b.plan}</td>
+            <td>${b.status}</td>
+            <td>
+              ${
+                b.status === "pending"
+                  ? `<button onclick="activateTiffin('${b._id}')">Activate</button>`
+                  : `<span style="color:green;font-weight:bold">Active</span>`
+              }
+            </td>
+          </tr>
+        `;
+      });
+
+      html += `</table>`;
+      content.innerHTML = html;
+    });
+}
+/* ========= Activation login========= */
+function activateTiffin(id) {
+  if (!confirm("Activate this tiffin subscription?")) return;
+
+  fetch(`http://localhost:5000/api/admin/bookings/${id}/activate`, {
+    method: "PUT",
+    headers: {
+      "Authorization": "Bearer " + localStorage.getItem("adminToken")
+    }
+  })
+    .then(res => res.json())
+    .then(data => {
+      alert("Tiffin Activated");
+      loadTiffinBookings();
+    });
 }
 
 /* ========= ADD TIFFIN FORM ========= */
