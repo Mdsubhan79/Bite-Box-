@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bite Box | Welcome</title>
+  <title>Brio Bite | Welcome</title>
   <link rel="icon" type="image/x-icon" href="Bite Box.png">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -372,14 +372,14 @@ footer {
 
   <main class="hero">
     <div class="hadd">
-    <h1 class="logo">Bite Box</h1>
+    <h1 class="logo">Brio Bite</h1>
     <p class="tagline">Where Every Bite is a Flavor Bomb</p>
     </div>
     <button class="menu-btn">Check Our Menu</button>
   </main>
 
   <footer>
-    <p>© 2025 Bite Box. All rights reserved.</p>
+    <p>© 2025 Brio Bite. All rights reserved.</p>
   </footer>
 
   <div class="profile-overlay" id="profileOverlay"></div>
@@ -431,7 +431,7 @@ if (!user) {
     .then(res => res.json())
     .then(data => {
       if (!data.exists) {
-        localStorage.removeItem("biteboxUser");
+        localStorage.removeItem("briobiteUser");
         window.location.href = "login.html";
       }
     })
@@ -539,7 +539,7 @@ function loadSubscriptionData() {
 }
 });
 
-// ✅ These functions are global so onclick="" works
+
 window.addNewSubscription = function () {
   window.location.href = "tiffinservice.html";
 };
@@ -597,7 +597,7 @@ function addDebugButton() {
 addDebugButton(); 
  document.getElementById("logoutBtn").addEventListener("click", function() {
     if (confirm("Are you sure you want to log out?")) {
-      localStorage.removeItem("biteboxUser");
+      localStorage.removeItem("briobiteUser");
       window.location.href = "login.html";
     }
   });

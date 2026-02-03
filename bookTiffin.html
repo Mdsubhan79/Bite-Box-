@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bite Box - Tiffin Service Booking</title>
+    <title>Brio Bite- Tiffin Service Booking</title>
          <link rel="icon" type="image/x-icon" href="Bite Box.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
@@ -58,6 +58,7 @@
         }
 
         .tagline {
+            font-family: 'Lucida Handwriting', cursive;
             font-size: 18px;
             color: #fff8e1;
         }
@@ -615,7 +616,7 @@ footer button:hover {
     <header class="header">
         <div class="header-container">
             <div class="logo">
-                <h1>Bite Box</h1>
+                <h1>Brio Bite</h1>
                 <span class="tagline">Home-style meals, delivered with love</span>
             </div>
              <div class="menu-toggle" id="menuToggle">
@@ -675,7 +676,7 @@ footer button:hover {
                     <label for="state">State</label>
                     <select id="state" name="state" required>
                         <option value="">Select State</option>
-                        <option value="Delhi">Uttrakhand</option>
+                        <option value="Uttarakhand">Uttarakhand</option>
                         
                     </select>
                 </div>
@@ -688,7 +689,7 @@ footer button:hover {
     <div class="modal" id="confirmationModal">
         <div class="modal-content">
             <h3>Booking Confirmed!</h3>
-            <p>Thank you for choosing Bite Box! Our delivery agent will visit your address within 24 hours to confirm your order details and collect payment. Fresh, home-style meals will be delivered to your doorstep as per your schedule.</p>
+            <p>Thank you for choosing Brio Bite! Our delivery agent will visit your address within 24 hours to confirm your order details and collect payment. Fresh, home-style meals will be delivered to your doorstep as per your schedule.</p>
             <button class="modal-btn" id="modalCloseBtn">Got It!</button>
         </div>
     </div>
@@ -697,7 +698,7 @@ footer button:hover {
 <footer id="mainFooter">
     <div class="footer-container">
       <div class="footer-section">
-        <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Bite Box</h3>
+        <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Brio Bite</h3>
         <p id="footerAboutText" data-translate="footerAboutText">
           Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.
         </p>
@@ -713,7 +714,7 @@ footer button:hover {
         <ul>
           <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress" data-translate="footerAddress">Clement Town, Dehradun</span></li>
           <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91 9627024287</span></li>
-          <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.bitebox@gmail.com</span></li>
+          <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.briobite@gmail.com</span></li>
            <li>
   <i class="fas fa-clock"></i> 
   <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span> 
@@ -739,7 +740,7 @@ footer button:hover {
     <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
     <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
     <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
-    <li><a href="#" id="logoutBtn">Close your BiteBox Account</a></li>
+    <li><a href="#" id="logoutBtn">Close your BrioBite Account</a></li>
   </ul>
 </div>
       
@@ -756,7 +757,7 @@ footer button:hover {
     </div>
     
     <div class="copyright">
-      <p id="copyrightText" data-translate="copyrightText">&copy; 2025 Bite Box. All Rights Reserved.</p>
+      <p id="copyrightText" data-translate="copyrightText">&copy; 2025 Brio Bite. All Rights Reserved.</p>
     </div>
   </footer>
  <a>
@@ -947,7 +948,7 @@ document.addEventListener("DOMContentLoaded", function() {
       e.preventDefault(); 
       if (confirm("Are you sure you want to log out?")) {
     
-        localStorage.removeItem("biteboxUser");
+        localStorage.removeItem("briobiteUser");
       
         window.location.href = "login.html";
       }
