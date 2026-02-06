@@ -1,9 +1,4 @@
-/* ===== bitebox script.js (upgraded) =====
-   - Dynamic load from backend
-   - Admin add/edit/delete (prompt-based)
-   - Cart preserved
-   - Graceful fallback to local menus
--------------------------------------------*/
+
 
 const BASE_URL = 'https://bbbackend-bng2.onrender.com'; // your backend
 let token = localStorage.getItem('biteboxToken') || null;
