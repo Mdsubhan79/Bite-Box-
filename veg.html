@@ -348,8 +348,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const container = document.getElementById("vegFoodItems");
 
   try {
-    const res = await fetch("http://localhost:5000/api/food?type=veg");
+    const res = await fetch("https://bbbackend-bng2.onrender.com/api/food?type=veg");
     const items = await res.json();
+
+    container.innerHTML = "";
 
     if (!items.length) {
       container.innerHTML = "<p>No veg items available</p>";
@@ -357,23 +359,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     items.forEach(item => {
-      const div = document.createElement("div");
-      div.className = "food-card";
-
-      div.innerHTML = `
-        <h3>${item.name}</h3>
-        <p>₹${item.price}</p>
-        <button onclick="addToCart('${item._id}', '${item.name}', ${item.price})">
-          Add to Cart
-        </button>
+      container.innerHTML += `
+        <div class="food-card">
+          <h3>${item.name}</h3>
+          <p>₹${item.price}</p>
+          <button onclick="addToCart('${item._id}', '${item.name}', ${item.price})">
+            Add to Cart
+          </button>
+        </div>
       `;
-
-      container.appendChild(div);
     });
 
   } catch (err) {
     console.error(err);
-    container.innerHTML = "<p>Failed to load menu</p>";
+    container.innerHTML = "<p>Failed to load veg menu</p>";
   }
 });
 
@@ -384,6 +383,7 @@ function addToCart(id, name, price) {
   alert("Added to cart");
 }
 </script>
+
 
 </body>
 </html>
