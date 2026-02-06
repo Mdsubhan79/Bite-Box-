@@ -40,21 +40,25 @@ function escapeHtml(str) {
   );
 }
 
+
 function createFoodCard(item) {
-  const img = item.image
+  const imageUrl = item.image
     ? `${BASE_URL}${item.image}`
-    : 'images/default-food.jpg';
+    : "images/default-food.jpg"; // optional fallback
 
   return `
     <div class="food-card">
-      <img src="${escapeHtml(img)}" class="food-img">
+      <img src="${imageUrl}" class="food-img" alt="${item.name}">
+      
       <h3>${escapeHtml(item.name)}</h3>
-      <p>${escapeHtml(item.description || '')}</p>
-      <p class="price">₹${item.price}</p>
-      <button class="order-btn add-btn" data-id="${item._id}">
-  Add to Cart
-</button>
 
+      ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}
+
+      <p class="price">₹${item.price}</p>
+
+      <button class="order-btn add-btn" data-id="${item._id}">
+        Add to Cart
+      </button>
     </div>
   `;
 }
@@ -83,18 +87,27 @@ function renderFood(containerId, items) {
 /* ---------------- LOAD FOOD ---------------- */
 async function loadFood() {
   const all = await fetchAllFood();
+  const page = document.body.dataset.page;
 
-  // VEG PAGE
-  renderFood(
-    'vegFoodItems',
-    all.filter(i => i.item_type === 'veg')
-  );
+  if (page === "veg") {
+    renderFood(
+      "vegFoodItems",
+      all.filter(i => i.item_type === "veg")
+    );
+  }
 
-  // NON-VEG PAGE
-  renderFood(
-    'nonVegFoodItems',
-    all.filter(i => i.item_type === 'nonveg')
-  );
+  if (page === "non-veg") {
+    renderFood(
+      "nonVegFoodItems",
+      all.filter(i => i.item_type === "nonveg")
+    );
+
+    // optional veg suggestions section
+    renderFood(
+      "vegFoodItems",
+      all.filter(i => i.item_type === "veg")
+    );
+  }
 }
 
 /* ---------------- DELETE FOOD (ADMIN USE) ---------------- */

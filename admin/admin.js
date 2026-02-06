@@ -133,29 +133,37 @@ function loadVegMenu() {
 function showAddVegForm() {
   document.getElementById("content").innerHTML = `
     <h2>Add Veg Item</h2>
-
     <input id="vegName" placeholder="Item Name">
     <input id="vegPrice" type="number" placeholder="Price">
-
+    <input id="vegImage" type="file" accept="image/*">
     <button onclick="addVeg()">Save</button>
     <button onclick="loadVegMenu()">Cancel</button>
   `;
 }
 
 function addVeg() {
+  const formData = new FormData();
+
+  formData.append("name", document.getElementById("vegName").value);
+  formData.append("price", document.getElementById("vegPrice").value);
+  formData.append("item_type", "veg");
+
+  const imageFile = document.getElementById("vegImage").files[0];
+  if (imageFile) {
+    formData.append("image", imageFile);
+  }
+
   fetch(`${API_BASE}/api/food/add`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: "Bearer " + localStorage.getItem("adminToken")
+      // ❌ DO NOT set Content-Type here
     },
-    body: JSON.stringify({
-      name: document.getElementById("vegName").value,
-      price: document.getElementById("vegPrice").value,
-      item_type: "veg"
-    })
+    body: formData
   })
-  .then(() => loadVegMenu());
+  .then(res => res.json())
+  .then(() => loadVegMenu())
+  .catch(err => console.error("Veg add error:", err));
 }
 
 /* ========= DELETE VEG ========= */
@@ -231,40 +239,37 @@ function showAddNonVegForm() {
 
     <input id="nonvegName" placeholder="Item Name">
     <input id="nonvegPrice" type="number" placeholder="Price">
+    <input id="nonvegImage" type="file" accept="image/*">
 
     <button onclick="addNonVeg()">Save</button>
     <button onclick="loadNonVegMenu()">Cancel</button>
   `;
 }
-function addNonVeg() {
-  fetch(`${API_BASE}/api/food/add`, {
 
+function addNonVeg() {
+  const formData = new FormData();
+
+  formData.append("name", document.getElementById("nonvegName").value);
+  formData.append("price", document.getElementById("nonvegPrice").value);
+  formData.append("item_type", "nonveg");
+
+  const imageFile = document.getElementById("nonvegImage").files[0];
+  if (imageFile) {
+    formData.append("image", imageFile);
+  }
+
+  fetch(`${API_BASE}/api/food/add`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: "Bearer " + localStorage.getItem("adminToken")
+      // ❌ do NOT set Content-Type
     },
-    body: JSON.stringify({
-      name: document.getElementById("nonvegName").value,
-      price: document.getElementById("nonvegPrice").value,
-      item_type: "nonveg"
-    })
+    body: formData
   })
-  .then(() => loadNonVegMenu());
+    .then(res => res.json())
+    .then(() => loadNonVegMenu())
+    .catch(err => console.error("Non-Veg add error:", err));
 }
-function deleteNonVeg(id) {
-  if (!confirm("Delete this item?")) return;
-
-  fetch(`${API_BASE}/api/food/${id}`, {
-
-    method: "DELETE",
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("adminToken")
-    }
-  })
-  .then(() => loadNonVegMenu());
-}
-
 
 
 /* ========= TIFFIN MANAGEMENT ========= */
@@ -314,7 +319,7 @@ function loadTiffinBookings() {
 function activateTiffin(id) {
   if (!confirm("Activate this tiffin subscription?")) return;
 
-  fetch(`http://localhost:5000/api/admin/bookings/${id}/activate`, {
+   fetch(`${API_BASE}/api/admin/bookings/${id}/activate`, {
     method: "PUT",
     headers: {
       "Authorization": "Bearer " + localStorage.getItem("adminToken")
