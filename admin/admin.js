@@ -91,7 +91,7 @@ function loadVegMenu() {
 
   content.innerHTML = "<h2>Loading Veg Menu...</h2>";
 
-  fetch(`${API_BASE}/api/admin/menu?type=veg`, {
+  fetch(`${API_BASE}/api/food?type=veg`, {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("adminToken")
     }
@@ -143,7 +143,7 @@ function showAddVegForm() {
 }
 
 function addVeg() {
-  fetch(`${API_BASE}/api/admin/menu`, {
+  fetch(`${API_BASE}/api/food/add`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -162,7 +162,8 @@ function addVeg() {
 function deleteVeg(id) {
   if (!confirm("Delete this item?")) return;
 
-  fetch(`${API_BASE}/api/admin/menu/${id}`, {
+  fetch(`${API_BASE}/api/food/${id}`, {
+
     method: "DELETE",
     headers: {
       Authorization: "Bearer " + localStorage.getItem("adminToken")
@@ -187,7 +188,7 @@ function loadNonVegMenu() {
 
   content.innerHTML = "<h2>Loading Non-Veg Menu...</h2>";
 
-  fetch(`${API_BASE}/api/admin/menu?type=nonveg`, {
+  fetch(`${API_BASE}/api/food?type=nonveg`, {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("adminToken")
     }
@@ -236,7 +237,8 @@ function showAddNonVegForm() {
   `;
 }
 function addNonVeg() {
-  fetch(`${API_BASE}/api/admin/menu`, {
+  fetch(`${API_BASE}/api/food/add`, {
+
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -253,7 +255,8 @@ function addNonVeg() {
 function deleteNonVeg(id) {
   if (!confirm("Delete this item?")) return;
 
-  fetch(`${API_BASE}/api/admin/menu/${id}`, {
+  fetch(`${API_BASE}/api/food/${id}`, {
+
     method: "DELETE",
     headers: {
       Authorization: "Bearer " + localStorage.getItem("adminToken")
