@@ -295,19 +295,13 @@ function deleteNonVeg(id) {
       Authorization: "Bearer " + localStorage.getItem("adminToken")
     }
   })
-.then(res => res.json())
+    .then(res => res.json())
 .then(data => {
-  if (!data.success) {
-    alert("Failed to add non-veg item");
-    return;
-  }
-  loadNonVegMenu();
+  if (!data.success) throw new Error("Delete failed");
+  alert("Item deleted");
+  loadVegMenu(); // or loadNonVegMenu
 })
-.catch(err => {
-  console.error("Non-Veg add error:", err);
-  alert("Error adding non-veg item");
-});
-
+    .catch(() => alert("Failed to delete veg item"));
 }
 
 
