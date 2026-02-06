@@ -1,15 +1,24 @@
 const BASE_URL = 'https://bbbackend-bng2.onrender.com';
 
-/* ---------------- AUTH ---------------- */
-let token = localStorage.getItem('biteboxToken');
+/* ---------------- CART ---------------- */
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-function checkAdmin() {
-  const user = JSON.parse(localStorage.getItem('biteboxUser') || '{}');
-  return (
-    localStorage.getItem('biteboxAdmin') === 'true' ||
-    (user.email && user.email.toLowerCase() === 'md.sammlk00@gmail.com')
-  );
+function updateCartCount() {
+  const count = cart.reduce((t, i) => t + i.quantity, 0);
+  const el = document.getElementById('cart-count');
+  if (el) el.textContent = count;
+}
+
+function addToCart(item) {
+  const found = cart.find(i => i._id === item._id);
+  if (found) {
+    found.quantity++;
+  } else {
+    cart.push({ ...item, quantity: 1 });
+  }
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartCount();
+  alert("Added to cart");
 }
 
 /* ---------------- FETCH FOOD ---------------- */
@@ -24,22 +33,6 @@ async function fetchAllFood() {
   }
 }
 
-/* ---------------- CART ---------------- */
-function addToCart(item) {
-  const found = cart.find(i => i._id === item._id);
-  if (found) found.quantity++;
-  else cart.push({ ...item, quantity: 1 });
-
-  localStorage.setItem('cart', JSON.stringify(cart));
-  updateCartCount();
-}
-
-function updateCartCount() {
-  const count = cart.reduce((t, i) => t + i.quantity, 0);
-  const el = document.getElementById('cart-count');
-  if (el) el.textContent = count;
-}
-
 /* ---------------- UI ---------------- */
 function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, m =>
@@ -48,8 +41,7 @@ function escapeHtml(str) {
 }
 
 function createFoodCard(item) {
-  const isAdmin = checkAdmin();
-  const img = item.imageUrl || item.image || 'images/default-food.jpg';
+  const img = item.image || 'images/default-food.jpg';
 
   return `
     <div class="food-card">
@@ -57,20 +49,7 @@ function createFoodCard(item) {
       <h3>${escapeHtml(item.name)}</h3>
       <p>${escapeHtml(item.description || '')}</p>
       <p class="price">₹${item.price}</p>
-
-      <button class="order-btn add-btn" data-id="${item._id}">
-        Add to Cart
-      </button>
-
-      ${
-        isAdmin
-          ? `
-        <div class="admin-btns">
-          <button onclick="promptEditFood('${item._id}')">Edit</button>
-          <button onclick="deleteFood('${item._id}')">Delete</button>
-        </div>`
-          : ''
-      }
+      <button class="add-btn" data-id="${item._id}">Add to Cart</button>
     </div>
   `;
 }
@@ -78,6 +57,11 @@ function createFoodCard(item) {
 function renderFood(containerId, items) {
   const box = document.getElementById(containerId);
   if (!box) return;
+
+  if (!items.length) {
+    box.innerHTML = "<p>No items available</p>";
+    return;
+  }
 
   box.innerHTML = items.map(createFoodCard).join('');
 
@@ -90,114 +74,38 @@ function renderFood(containerId, items) {
   });
 }
 
-/* ---------------- LOAD ---------------- */
+/* ---------------- LOAD FOOD ---------------- */
 async function loadFood() {
   const all = await fetchAllFood();
 
- renderFood(
-  'vegFoodItems',
-  all.filter(i => i.item_type === 'veg')
-);
+  // VEG PAGE
+  renderFood(
+    'vegFoodItems',
+    all.filter(i => i.item_type === 'veg')
+  );
 
-renderFood(
-  'nonVegFoodItems',
-  all.filter(i => i.item_type === 'nonveg')
-);
-
-
-  bindAdminAddUI();
+  // NON-VEG PAGE
+  renderFood(
+    'nonVegFoodItems',
+    all.filter(i => i.item_type === 'nonveg')
+  );
 }
 
-/* ---------------- ADMIN CRUD ---------------- */
+/* ---------------- DELETE FOOD (ADMIN USE) ---------------- */
 async function deleteFood(id) {
   if (!confirm('Delete this item?')) return;
 
-  await fetch(`${BASE_URL}/api/food/delete/${id}`, {
-    method: 'DELETE',
-    headers: { Authorization: 'Bearer ' + token }
+  await fetch(`${BASE_URL}/api/food/${id}`, {
+    method: 'DELETE'
   });
 
   loadFood();
 }
+
 window.deleteFood = deleteFood;
-
-async function promptEditFood(id) {
-  const all = await fetchAllFood();
-  const item = all.find(i => i._id === id);
-  if (!item) return;
-
-  const name = prompt('Name', item.name);
-  const description = prompt('Description', item.description);
-  const price = prompt('Price', item.price);
-  const imageUrl = prompt('Image URL', item.imageUrl || '');
-
-  if (!name || !price) return alert('Name & price required');
-
-  await fetch(`${BASE_URL}/api/food/edit/${id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + token
-    },
-body: JSON.stringify({
-  name,
-  description,
-  price: Number(price),
-  imageUrl,
-  item_type: item.item_type
-})
-
-  });
-
-  loadFood();
-}
-window.promptEditFood = promptEditFood;
-
-/* ---------------- ADMIN ADD ---------------- */
-function bindAdminAddUI() {
-  if (!checkAdmin() || document.getElementById('adminAddFoodForm')) return;
-
-  document.body.insertAdjacentHTML('afterbegin', `
-    <div id="adminAddFoodForm">
-      <input id="aName" placeholder="Name">
-      <input id="aPrice" type="number" placeholder="Price">
-      <select id="aCat">
-        <option value="veg">Veg</option>
-        <option value="nonveg">Non-Veg</option>
-      </select>
-      <input id="aImg" placeholder="Image URL">
-      <input id="aDesc" placeholder="Description">
-      <button id="aBtn">Add</button>
-    </div>
-  `);
-
-  aBtn.onclick = async () => {
-    if (!aName.value || !aPrice.value)
-      return alert('Name & price required');
-
-    await fetch(`${BASE_URL}/api/food/add`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + token
-      },
-body: JSON.stringify({
-  name: aName.value,
-  price: Number(aPrice.value),
-  item_type: aCat.value,  
-  imageUrl: aImg.value,
-  description: aDesc.value
-})
-
-    });
-
-    loadFood();
-  };
-}
 
 /* ---------------- INIT ---------------- */
 document.addEventListener('DOMContentLoaded', () => {
   updateCartCount();
   loadFood();
-  window.addToCart = addToCart;
 });
