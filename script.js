@@ -51,7 +51,10 @@ function createFoodCard(item) {
       <h3>${escapeHtml(item.name)}</h3>
       <p>${escapeHtml(item.description || '')}</p>
       <p class="price">₹${item.price}</p>
-      <button class="order-btn" data-id="${item._id}">Add to Cart</button>
+      <button class="order-btn add-btn" data-id="${item._id}">
+  Add to Cart
+</button>
+
     </div>
   `;
 }

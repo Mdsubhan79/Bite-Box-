@@ -276,14 +276,7 @@ footer button:hover {
   <script src="script.js"></script>
 
 
-  <script>
-  function updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    document.getElementById("cart-count").textContent = cart.length;
-  }
 
-  updateCartCount();
-</script>
 
 <script>
   document.getElementById('newsletterForm').addEventListener('submit', function(e) {
