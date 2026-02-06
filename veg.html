@@ -336,46 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
-<script>
-document.addEventListener("DOMContentLoaded", async () => {
-  const container = document.getElementById("vegFoodItems");
 
-  try {
-    const res = await fetch("https://bbbackend-bng2.onrender.com/api/food?type=veg");
-    const items = await res.json();
-
-    container.innerHTML = "";
-
-    if (!items.length) {
-      container.innerHTML = "<p>No veg items available</p>";
-      return;
-    }
-
-    items.forEach(item => {
-      container.innerHTML += `
-        <div class="food-card">
-          <h3>${item.name}</h3>
-          <p>₹${item.price}</p>
-          <button onclick="addToCart('${item._id}', '${item.name}', ${item.price})">
-            Add to Cart
-          </button>
-        </div>
-      `;
-    });
-
-  } catch (err) {
-    console.error(err);
-    container.innerHTML = "<p>Failed to load veg menu</p>";
-  }
-});
-
-function addToCart(id, name, price) {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.push({ id, name, price, qty: 1 });
-  localStorage.setItem("cart", JSON.stringify(cart));
-  alert("Added to cart");
-}
-</script>
 
 
 </body>
