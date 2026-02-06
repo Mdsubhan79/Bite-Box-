@@ -152,7 +152,7 @@ function addVeg() {
     body: JSON.stringify({
       name: document.getElementById("vegName").value,
       price: document.getElementById("vegPrice").value,
-      type: "veg"
+      item_type: "veg"
     })
   })
   .then(() => loadVegMenu());
@@ -247,7 +247,7 @@ function addNonVeg() {
     body: JSON.stringify({
       name: document.getElementById("nonvegName").value,
       price: document.getElementById("nonvegPrice").value,
-      type: "nonveg"
+      item_type: "nonveg"
     })
   })
   .then(() => loadNonVegMenu());
