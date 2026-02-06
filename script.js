@@ -139,13 +139,14 @@ async function promptEditFood(id) {
       'Content-Type': 'application/json',
       Authorization: 'Bearer ' + token
     },
-    body: JSON.stringify({
-      name,
-      description,
-      price: Number(price),
-      imageUrl,
-      category: item.category
-    })
+body: JSON.stringify({
+  name,
+  description,
+  price: Number(price),
+  imageUrl,
+  item_type: item.item_type
+})
+
   });
 
   loadFood();
@@ -180,13 +181,14 @@ function bindAdminAddUI() {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token
       },
-      body: JSON.stringify({
-        name: aName.value,
-        price: Number(aPrice.value),
-        category: aCat.value,
-        imageUrl: aImg.value,
-        description: aDesc.value
-      })
+body: JSON.stringify({
+  name: aName.value,
+  price: Number(aPrice.value),
+  item_type: aCat.value,  
+  imageUrl: aImg.value,
+  description: aDesc.value
+})
+
     });
 
     loadFood();
