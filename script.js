@@ -41,7 +41,9 @@ function escapeHtml(str) {
 }
 
 function createFoodCard(item) {
-  const img = item.image || 'images/default-food.jpg';
+  const img = item.image
+    ? `${BASE_URL}${item.image}`
+    : 'images/default-food.jpg';
 
   return `
     <div class="food-card">
@@ -49,10 +51,11 @@ function createFoodCard(item) {
       <h3>${escapeHtml(item.name)}</h3>
       <p>${escapeHtml(item.description || '')}</p>
       <p class="price">₹${item.price}</p>
-      <button class="add-btn" data-id="${item._id}">Add to Cart</button>
+      <button class="order-btn" data-id="${item._id}">Add to Cart</button>
     </div>
   `;
 }
+
 
 function renderFood(containerId, items) {
   const box = document.getElementById(containerId);
