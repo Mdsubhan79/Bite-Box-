@@ -161,9 +161,19 @@ function addVeg() {
     },
     body: formData
   })
-  .then(res => res.json())
-  .then(() => loadVegMenu())
-  .catch(err => console.error("Veg add error:", err));
+.then(res => res.json())
+.then(data => {
+  if (!data.success) {
+    alert("Failed to add veg item");
+    return;
+  }
+  loadVegMenu();
+})
+.catch(err => {
+  console.error("Veg add error:", err);
+  alert("Error adding veg item");
+});
+
 }
 
 /* ========= DELETE VEG ========= */
@@ -171,13 +181,18 @@ function deleteVeg(id) {
   if (!confirm("Delete this item?")) return;
 
   fetch(`${API_BASE}/api/food/${id}`, {
-
     method: "DELETE",
     headers: {
       Authorization: "Bearer " + localStorage.getItem("adminToken")
     }
   })
-  .then(() => loadVegMenu());
+    .then(res => res.json())
+.then(data => {
+  if (!data.success) throw new Error("Delete failed");
+  alert("Item deleted");
+  loadVegMenu(); // or loadNonVegMenu
+})
+    .catch(() => alert("Failed to delete veg item"));
 }
 
 /* ========= LOGOUT ========= */
@@ -269,6 +284,30 @@ function addNonVeg() {
     .then(res => res.json())
     .then(() => loadNonVegMenu())
     .catch(err => console.error("Non-Veg add error:", err));
+}
+/* ========= DELETE NON-VEG ========= */
+function deleteNonVeg(id) {
+  if (!confirm("Delete this item?")) return;
+
+  fetch(`${API_BASE}/api/food/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  })
+.then(res => res.json())
+.then(data => {
+  if (!data.success) {
+    alert("Failed to add non-veg item");
+    return;
+  }
+  loadNonVegMenu();
+})
+.catch(err => {
+  console.error("Non-Veg add error:", err);
+  alert("Error adding non-veg item");
+});
+
 }
 
 

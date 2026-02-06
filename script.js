@@ -42,9 +42,10 @@ function escapeHtml(str) {
 
 
 function createFoodCard(item) {
-  const imageUrl = item.image
-    ? `${BASE_URL}${item.image}`
-    : "images/default-food.jpg"; // optional fallback
+const img = item.image
+  ? `${BASE_URL}${item.image}`
+  : 'images/default-food.jpg';
+
 
   return `
     <div class="food-card">
