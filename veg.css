@@ -219,7 +219,7 @@ body {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
 }
 
-.food-card img.food-img {
+.food-card img {
   width: 120px;
   height: 120px;
   object-fit: cover;
@@ -244,21 +244,6 @@ body {
   text-align: center;
 }
 
-.food-card .order-btn {
-  margin-top: 1rem;
-  background-color: #E4C873;
-  color:  #10332F;
-  padding: 0.5rem 1.2rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.food-card .order-btn:hover {
-  background-color: #F4D35E ;
-}
 
 
 .food-card .price {
@@ -363,12 +348,12 @@ body {
     font-size: 1.2rem;
   }
   
-  /* Container adjustments */
+
   .container {
     padding: 15px 10px;
   }
   
-  /* Tiffin Banner adjustments */
+  
   .tiffin-banner.veg-banner {
     padding: 30px 10px;
     margin-bottom: 20px;
@@ -434,13 +419,13 @@ body {
   width: 100%;
 }
 
-/* Highlight popular plan */
+
 .card.popular {
   border: 1px solid #f4a261;
   background-color: #fffaf5;
 }
 
-/* Single column for very small screens */
+
 @media (max-width: 249px) {
   .membership-cards {
     grid-template-columns: 1fr;
@@ -449,13 +434,13 @@ body {
     max-width: 140px;
   }
 }
-/* Single column for very small screens (<250px) */
+
 @media (max-width: 249px) {
   .membership-cards {
     grid-template-columns: 1fr;
   }
   .card {
-    max-width: 150px; /* Even smaller cards for tiny screens */
+    max-width: 150px;
   }
 }
 
@@ -485,7 +470,7 @@ body {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
 
-  .food-card img.food-img {
+  .food-card img {
     width: 80px;
     height: 80px;
     margin-top: -40px;
@@ -733,3 +718,32 @@ body {
     padding: 6px 14px;
   }
 }
+
+
+
+
+/* ===== ADD TO CART BUTTON ===== */
+.add-btn {
+  background: #19914b;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s ease;
+}
+
+.add-btn:hover {
+  background: #0d5f2f;
+}
+@media (max-width: 600px) {
+
+  
+
+  .add-btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}
+
