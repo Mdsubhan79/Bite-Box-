@@ -1,10 +1,11 @@
-
+/* ===== RESET ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* ===== BODY ===== */
 body {
   font-family: Arial, sans-serif;
   background: #f4f6f8;
@@ -12,18 +13,20 @@ body {
   min-height: 100vh;
 }
 
-
+/* ===== MAIN WRAPPER ===== */
 .admin-wrapper {
   display: flex;
   min-height: 100vh;
+  width: 100%;
 }
 
-
+/* ===== SIDEBAR ===== */
 .sidebar {
   width: 240px;
   background: #10332F;
   color: #fff;
   padding: 20px 15px;
+  flex-shrink: 0;
 }
 
 .sidebar h2 {
@@ -51,21 +54,19 @@ body {
   background: #caa944;
 }
 
-
+/* ===== CONTENT ===== */
 .content {
   flex: 1;
   padding: 25px;
   background: #ffffff;
+  overflow-x: auto;
 }
 
-.content h1 {
-  margin-bottom: 10px;
+.content h2 {
+  margin-bottom: 15px;
 }
 
-.content p {
-  color: #10332F;
-}
-
+/* ===== DASHBOARD CARDS ===== */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -82,7 +83,7 @@ body {
   font-size: 14px;
 }
 
-
+/* ===== TABLE ===== */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -101,7 +102,7 @@ table th {
   background: #f1f5f9;
 }
 
-
+/* ===== BUTTON ===== */
 button {
   padding: 8px 14px;
   background: #10332F;
@@ -113,10 +114,10 @@ button {
 }
 
 button:hover {
-  background: #4338ca;
+  background: #aa1e1e;
 }
 
-
+/* ===== SMALL MOBILE ===== */
 @media (max-width: 399px) {
   .admin-wrapper {
     flex-direction: column;
@@ -124,65 +125,81 @@ button:hover {
 
   .sidebar {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
   }
 
   .sidebar h2 {
     font-size: 18px;
-    margin-bottom: 15px;
   }
 
   .sidebar ul li {
-    font-size: 13px;
-    padding: 10px;
+    font-size: 10px;
+    padding: 6px;
   }
 
   .content {
-    padding: 15px;
+    padding: 10px;
   }
 
   table th,
   table td {
-    font-size: 12px;
-    padding: 8px;
-  }
-
-  button {
-    font-size: 12px;
-    padding: 7px 10px;
+    font-size: 10px;
+    padding: 6px;
   }
 }
+/* ===== SMALL SCREENS (LIKE YOUR SCREENSHOT) ===== */
+@media (max-width: 400px) {
 
-
-@media (min-width: 400px) and (max-width: 767px) {
   .admin-wrapper {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;   /* ✅ KEEP SIDE BY SIDE */
+    min-height: 100vh;
   }
 
   .sidebar {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    width: 90px;          /* narrow sidebar */
+    padding: 6px;
   }
 
-  .sidebar ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
+  .sidebar h2 {
+    font-size: 14px;
+    margin-bottom: 10px;
   }
 
   .sidebar ul li {
-    font-size: 14px;
-    padding: 10px 12px;
+    font-size: 8px;
+    padding: 6px 4px;
+    text-align: center;
   }
 
   .content {
-    padding: 20px;
+    flex: 1;
+    padding: 7px;
+  }
+
+  /* Dashboard cards */
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .card {
+    font-size: 11px;
+    padding: 10px;
+  }
+
+  /* Tables */
+  table th,
+  table td {
+    font-size: 7px;
+    padding: 5px;
+  }
+
+  button {
+    font-size: 10px;
+    padding: 5px 8px;
   }
 }
-
 
 @media (min-width: 768px) and (max-width: 1023px) {
   .sidebar {
@@ -193,15 +210,12 @@ button:hover {
     font-size: 20px;
   }
 
-  .sidebar ul li {
-    font-size: 14px;
-  }
-
   .content {
     padding: 22px;
   }
 }
 
+/* ===== DESKTOP ===== */
 @media (min-width: 1024px) {
   .sidebar {
     width: 250px;
@@ -209,10 +223,6 @@ button:hover {
 
   .sidebar h2 {
     font-size: 24px;
-  }
-
-  .sidebar ul li {
-    font-size: 15px;
   }
 
   .content {
