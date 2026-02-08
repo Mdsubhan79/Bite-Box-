@@ -16,7 +16,7 @@
 /* ============ GLOBAL ============ */
 body {
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -27,7 +27,7 @@ body {
 
 /* ============ FORM ============ */
 #adminLoginForm {
-  background-color: #ffffff;
+  background-color: #007032;
   width: 100%;
   max-width: 420px;
   padding: 36px 28px;
@@ -36,14 +36,14 @@ body {
   text-align: center;
 }
 
-/* Heading */
+
 #adminLoginForm h2 {
+ 
   margin-bottom: 24px;
-  color: #333;
+  color: #ffd87c;
   font-size: 24px;
 }
 
-/* Inputs */
 #adminLoginForm input {
   width: 100%;
   padding: 12px 14px;
@@ -55,18 +55,18 @@ body {
 }
 
 #adminLoginForm input:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 6px rgba(102, 126, 234, 0.45);
+  border-color: #ffd87c;
+  box-shadow: 0 0 6px rgba(255, 241, 49, 0.45);
   outline: none;
 }
 
-/* Button */
+
 #adminLoginForm button {
   width: 100%;
   padding: 12px;
   margin-top: 6px;
-  background-color: #134e00;
-  color: #fff;
+  background-color: #ffd87c;
+  color: #000000;
   border: none;
   border-radius: 6px;
   font-size: 16px;
@@ -75,19 +75,17 @@ body {
 }
 
 #adminLoginForm button:hover {
-  background-color: #209602;
+  background-color: #dbac3d;
 }
 
-/* Error text */
+
 #error {
   margin-top: 14px;
   font-size: 14px;
-  color: #e53e3e;
+  color: #c93333;
 }
 
-/* ===========================
-   EXTRA SMALL (270px–320px)
-=========================== */
+
 @media (max-width: 320px) {
   #adminLoginForm {
     padding: 22px 16px;
@@ -105,9 +103,7 @@ body {
   }
 }
 
-/* ===========================
-   SMALL PHONES (321px–480px)
-=========================== */
+
 @media (max-width: 480px) {
   #adminLoginForm {
     padding: 28px 20px;
@@ -124,18 +120,14 @@ body {
   }
 }
 
-/* ===========================
-   TABLETS (481px–768px)
-=========================== */
+
 @media (min-width: 481px) and (max-width: 768px) {
   #adminLoginForm h2 {
     font-size: 22px;
   }
 }
 
-/* ===========================
-   DESKTOP (769px+)
-=========================== */
+
 @media (min-width: 769px) {
   #adminLoginForm {
     padding: 44px 36px;
