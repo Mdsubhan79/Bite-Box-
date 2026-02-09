@@ -305,24 +305,26 @@ function deleteNonVeg(id) {
 }
 
 
-/* ========= TIFFIN MANAGEMENT ========= */
+/* ========= TIFFIN BOOKINGS (ADMIN) ========= */
 function loadTiffinBookings() {
-  fetch("http://localhost:5000/api/admin/bookings", {
+  const content = document.getElementById("content");
+  content.innerHTML = "<h2>Loading Tiffin Bookings...</h2>";
+
+  fetch(`${API_BASE}/api/admin/tiffin-bookings`, {
     headers: {
-      "Authorization": "Bearer " + localStorage.getItem("adminToken")
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
     }
   })
     .then(res => res.json())
     .then(bookings => {
-      const content = document.getElementById("content");
-
       let html = `
         <h2>Tiffin Subscriptions</h2>
-        <table border="1" cellpadding="10" width="100%">
+        <table>
           <tr>
-            <th>User Email</th>
+            <th>User</th>
             <th>Plan</th>
             <th>Status</th>
+            <th>Payment</th>
             <th>Action</th>
           </tr>
       `;
@@ -330,9 +332,10 @@ function loadTiffinBookings() {
       bookings.forEach(b => {
         html += `
           <tr>
-            <td>${b.userEmail}</td>
-            <td>${b.plan}</td>
+            <td>${b.userName}</td>
+            <td>${b.planName}</td>
             <td>${b.status}</td>
+            <td>${b.paymentStatus}</td>
             <td>
               ${
                 b.status === "pending"
@@ -344,127 +347,79 @@ function loadTiffinBookings() {
         `;
       });
 
-      html += `</table>`;
+      html += "</table>";
       content.innerHTML = html;
+    })
+    .catch(() => {
+      content.innerHTML = "<p>Failed to load bookings</p>";
     });
 }
-/* ========= Activation login========= */
+
 function activateTiffin(id) {
   if (!confirm("Activate this tiffin subscription?")) return;
 
-   fetch(`${API_BASE}/api/admin/bookings/${id}/activate`, {
+  fetch(`${API_BASE}/api/admin/tiffin-bookings/${id}`, {
     method: "PUT",
     headers: {
-      "Authorization": "Bearer " + localStorage.getItem("adminToken")
-    }
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    },
+    body: JSON.stringify({
+      status: "active",
+      paymentStatus: "paid"
+    })
   })
-    .then(res => res.json())
-    .then(data => {
+    .then(() => {
       alert("Tiffin Activated");
       loadTiffinBookings();
     });
 }
 
-/* ========= ADD TIFFIN FORM ========= */
-function showAddTiffinForm() {
-  document.getElementById("content").innerHTML = `
-    <h2>Add Tiffin Plan</h2>
 
-    <input id="planName" placeholder="Plan Name">
-    <select id="type">
-      <option value="veg">Veg</option>
-      <option value="nonveg">Non-Veg</option>
-    </select>
-    <input id="price" type="number" placeholder="Monthly Price">
-    <input id="meals" placeholder="Meals (comma separated)">
-    
-    <button onclick="addTiffin()">Save</button>
-    <button onclick="loadTiffins()">Cancel</button>
-  `;
-}
+function loadTiffins() {
+  const content = document.getElementById("content");
+  content.innerHTML = "<h2>Loading Tiffin Plans...</h2>";
 
-function addTiffin() {
-  fetch(`${API_BASE}/api/admin/tiffins`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + localStorage.getItem("adminToken")
-    },
-    body: JSON.stringify({
-      planName: document.getElementById("planName").value,
-      type: document.getElementById("type").value,
-      price: document.getElementById("price").value,
-      meals: document.getElementById("meals").value.split(",")
-    })
-  })
-  .then(() => loadTiffins());
-}
-
-/* ========= DELETE TIFFIN ========= */
-function deleteTiffin(id) {
-  if (!confirm("Delete this tiffin plan?")) return;
-
-  fetch(`${API_BASE}/api/admin/tiffins/${id}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("adminToken")
-    }
-  })
-  .then(() => loadTiffins());
-}
-
-
-function editTiffin(id) {
   fetch(`${API_BASE}/api/admin/tiffins`, {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("adminToken")
     }
   })
-  .then(res => res.json())
-  .then(tiffins => {
-    const t = tiffins.find(x => x._id === id);
+    .then(res => res.json())
+    .then(plans => {
+      let html = `
+        <h2>Tiffin Plans</h2>
+        <button onclick="showAddTiffinForm()">+ Add Tiffin Plan</button>
 
-    document.getElementById("content").innerHTML = `
-      <h2>Edit Tiffin Plan</h2>
+        <table>
+          <tr>
+            <th>Plan</th>
+            <th>Type</th>
+            <th>Price</th>
+            <th>Meals</th>
+            <th>Active</th>
+            <th>Action</th>
+          </tr>
+      `;
 
-      <input id="planName" value="${t.planName}" disabled>
+      plans.forEach(p => {
+        html += `
+          <tr>
+            <td>${p.planName}</td>
+            <td>${p.type}</td>
+            <td>₹${p.price}</td>
+            <td>${p.meals.join(", ")}</td>
+            <td>${p.active ? "Yes" : "No"}</td>
+            <td>
+              <button onclick="deleteTiffin('${p._id}')">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
 
-      <select id="type">
-        <option value="veg" ${t.type === "veg" ? "selected" : ""}>Veg</option>
-        <option value="nonveg" ${t.type === "nonveg" ? "selected" : ""}>Non-Veg</option>
-      </select>
-
-      <input id="price" type="number" value="${t.price}">
-      <input id="meals" value="${t.meals.join(", ")}">
-
-      <label>
-        <input type="checkbox" id="active" ${t.active ? "checked" : ""}>
-        Active
-      </label>
-
-      <br><br>
-      <button onclick="updateTiffin('${id}')">Update</button>
-      <button onclick="loadTiffins()">Cancel</button>
-    `;
-  });
-}
-
-/* ========= UPDATE TIFFIN ========= */
-function updateTiffin(id) {
-  fetch(`${API_BASE}/api/admin/tiffins/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + localStorage.getItem("adminToken")
-    },
-    body: JSON.stringify({
-      type: document.getElementById("type").value,
-      price: document.getElementById("price").value,
-      meals: document.getElementById("meals").value.split(","),
-      active: document.getElementById("active").checked
-    })
-  })
-  .then(() => loadTiffins());
+      html += "</table>";
+      content.innerHTML = html;
+    });
 }
 
 /* ========= USERS LIST ========= */
