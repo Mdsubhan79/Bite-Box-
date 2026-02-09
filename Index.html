@@ -442,167 +442,26 @@ if (!user) {
 
 </script>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  console.log('DOM Content Loaded - Index Page');
-  
-  const userData = JSON.parse(localStorage.getItem("biteboxUser"));
-  const profilePanel = document.getElementById("profilePanel");
-  const profileIcon = document.getElementById("profileIcon");
-  const closeProfileBtn = document.getElementById("closeProfileBtn");
-  const profileName = document.getElementById("profileName");
-  const profileEmail = document.getElementById("profileEmail");
-  const profileOverlay = document.getElementById("profileOverlay");
-  const subscriptionDetails = document.getElementById("subscriptionDetails");
+  fetch(`https://bbbackend-bng2.onrender.com/api/tiffin-bookings`)
+  .then(res => res.json())
+  .then(bookings => {
+    const userBooking = bookings.find(b => b.userName === userData.name);
 
-  // Redirect if user not logged in
-  if (!userData) {
-    window.location.href = "login.html";
-    return;
-  }
-
-  // Fill profile info
-  profileName.textContent = userData.name;
-  profileEmail.textContent = userData.email;
-
-  // Load subscription
-  loadSubscriptionData();
-
-  // Open and close profile panel
-  profileIcon.addEventListener("click", () => {
-    profilePanel.classList.add("active");
-    profileOverlay.classList.add("active");
-    loadSubscriptionData();
-  });
-
-  closeProfileBtn.addEventListener("click", () => {
-    profilePanel.classList.remove("active");
-    profileOverlay.classList.remove("active");
-  });
-
-  profileOverlay.addEventListener("click", () => {
-    profilePanel.classList.remove("active");
-    profileOverlay.classList.remove("active");
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      profilePanel.classList.remove("active");
-      profileOverlay.classList.remove("active");
+    if (!userBooking) {
+      subscriptionDetails.innerHTML =
+        "<p>No active subscription</p>";
+      return;
     }
+
+    subscriptionDetails.innerHTML = `
+      <p><strong>Plan:</strong> ${userBooking.planName}</p>
+      <p><strong>Price:</strong> ₹${userBooking.price}</p>
+      <p><strong>Status:</strong> ${userBooking.status}</p>
+      <p><strong>Payment:</strong> ${userBooking.paymentStatus}</p>
+    `;
   });
-
-function loadSubscriptionData() {
-  const userEmail = userData.email;
-
-  fetch(`http://localhost:5000/api/bookings/user/${userEmail}`)
-    .then(res => res.json())
-    .then(booking => {
-      if (!booking || booking.message) {
-        subscriptionDetails.innerHTML = `
-          <div class="no-subscription">
-            <p>No tiffin subscription found</p>
-            <p>Please subscribe to enjoy our service</p>
-          </div>`;
-        return;
-      }
-
-      const planDetails = {
-        basic: { name: "Basic Plan", price: "₹1700/month", meals: "1 meal/day" },
-        standard: { name: "Standard Plan", price: "₹2800/month", meals: "2 meals/day" },
-        premium: { name: "Premium Plan", price: "₹3200/month", meals: "3 meals/day" }
-      };
-
-      const plan = planDetails[booking.plan] || { name: booking.plan };
-
-      const statusClass =
-        booking.status === "active" ? "status-active" : "status-pending";
-
-      const statusText =
-        booking.status === "active" ? "Active" : "Pending Activation";
-
-      subscriptionDetails.innerHTML = `
-        <div class="subscription-details">
-          <p><strong>Plan:</strong> ${plan.name}</p>
-          <p><strong>Price:</strong> ${plan.price}</p>
-          <p><strong>Meals:</strong> ${plan.meals}</p>
-          <p><strong>Status:</strong>
-            <span class="subscription-status ${statusClass}">
-              ${statusText}
-            </span>
-          </p>
-        </div>`;
-    })
-    .catch(err => {
-      console.error(err);
-      subscriptionDetails.innerHTML = `<p>Error loading subscription</p>`;
-    });
-}
-});
-
-
-window.addNewSubscription = function () {
-  window.location.href = "tiffinservice.html";
-};
-
-window.manageSubscription = function () {
-  window.location.href = "tiffin.html";
-};
 
 </script>
-
-<script>
-  // Add this function to debug subscription data
-function debugSubscription() {
-    const subscriptionData = JSON.parse(localStorage.getItem("biteboxSubscription")) || {};
-    const userData = JSON.parse(localStorage.getItem("biteboxUser")) || {};
-    
-    console.log('=== DEBUG SUBSCRIPTION DATA ===');
-    console.log('User Data:', userData);
-    console.log('Subscription Data:', subscriptionData);
-    console.log('User Email:', userData.email);
-    console.log('Subscription UserId:', subscriptionData.userId);
-    console.log('Subscription Plan:', subscriptionData.plan);
-    console.log('Subscription Status:', subscriptionData.status);
-    console.log('==============================');
-    
-    // Show debug info in alert
-    alert(`Debug Info:
-User: ${userData.email}
-Plan: ${subscriptionData.plan || 'None'}
-Status: ${subscriptionData.status || 'None'}
-UserId Match: ${subscriptionData.userId === userData.email}
-`);
-}
-
-// Add debug button to profile panel (optional)
-// You can add this button temporarily for testing
-function addDebugButton() {
-    const debugBtn = document.createElement('button');
-    debugBtn.textContent = 'Debug Subscription';
-    debugBtn.style.background = '#17a2b8';
-    debugBtn.style.color = 'white';
-    debugBtn.style.border = 'none';
-    debugBtn.style.padding = '8px';
-    debugBtn.style.borderRadius = '5px';
-    debugBtn.style.marginTop = '10px';
-    debugBtn.style.cursor = 'pointer';
-    debugBtn.style.width = '100%';
-    debugBtn.onclick = debugSubscription;
-    
-    const subscriptionSection = document.querySelector('.subscription-section');
-    subscriptionSection.appendChild(debugBtn);
-}
-
-
-addDebugButton(); 
- document.getElementById("logoutBtn").addEventListener("click", function() {
-    if (confirm("Are you sure you want to log out?")) {
-      localStorage.removeItem("briobiteUser");
-      window.location.href = "login.html";
-    }
-  });
-</script>
-
 
 </body>
 </html>

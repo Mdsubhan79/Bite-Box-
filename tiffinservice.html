@@ -327,30 +327,7 @@
   </nav>
 
 
-    <div class="container">
-    <div class="tiffin-banner veg-banner">
-      <h2  id="vegTiffinTitle" data-translate="vegTiffinTitle"><span class="bite"> Brio Bite </span>Tiffin Service</h2>
-      <div class="membership-cards">
-        <div class="card">
-          <h3 id="vegBasicPlan" data-translate="vegBasicPlan">Basic Plan</h3>
-          <p id="vegBasicDesc" data-translate="vegBasicDesc">1 meal/day  (Lunch)or(Dinner)</p>
-          <p>₹1700/month</p>
-          <button class="subscribe-btn" onclick="window.location.href='tiffin.html?plan=basic'" id="vegSubscribeBasic" data-translate="subscribeBtn">Subscribe</button>
-        </div>
-        <div class="card">
-          <h3 id="vegStandardPlan" data-translate="vegStandardPlan">Standard Plan</h3>
-          <p id="vegStandardDesc" data-translate="vegStandardDesc">2 meals/day (Lunch + Dinner)</p>
-          <p>₹2800/month</p>
-          <button class="subscribe-btn" onclick="window.location.href='tiffin.html?plan=standard'" id="vegSubscribeStandard" data-translate="subscribeBtn">Subscribe</button>
-        </div>
-        <div class="card premium">
-          <h3 id="vegPremiumPlan" data-translate="vegPremiumPlan">Premium Plan</h3>
-          <p id="vegPremiumDesc" data-translate="vegPremiumDesc">3 meals/day (Breakfast + Lunch + Dinner)</p>
-          <p>₹3200/month</p>
-          <button class="subscribe-btn" onclick="window.location.href='tiffin.html?plan=premium'" id="vegSubscribePremium" data-translate="subscribeBtn">Subscribe</button>
-        </div>
-      </div>
-    </div>
+<div class="membership-cards" id="tiffinPlans"></div>
 
   <!-- Footer -->
  <footer id="mainFooter">
@@ -494,6 +471,34 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+</script>
+<script>
+const API_BASE = "https://bbbackend-bng2.onrender.com";
+
+fetch(`${API_BASE}/api/tiffins`)
+  .then(res => res.json())
+  .then(plans => {
+    const box = document.getElementById("tiffinPlans");
+    box.innerHTML = "";
+
+    plans.forEach(plan => {
+      box.innerHTML += `
+        <div class="card ${plan.planName.toLowerCase().includes('premium') ? 'premium' : ''}">
+          <h3>${plan.planName}</h3>
+          <p>${plan.meals.join(", ")}</p>
+          <p>₹${plan.price}/month</p>
+          <button class="subscribe-btn"
+            onclick="window.location.href='tiffin.html?id=${plan._id}'">
+            Subscribe
+          </button>
+        </div>
+      `;
+    });
+  })
+  .catch(() => {
+    document.getElementById("tiffinPlans").innerHTML =
+      "<p>Failed to load plans</p>";
+  });
 </script>
 
 </body>
