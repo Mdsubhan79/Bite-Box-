@@ -360,106 +360,142 @@ footer {
 
   </style>
 </head>
+
 <body>
-  <div class="overlay"></div>
+
+<!-- ✅ LOGIN CHECK (VERY IMPORTANT) -->
+<script>
+const token = localStorage.getItem("biteboxToken");
+const user = JSON.parse(localStorage.getItem("biteboxUser"));
+
+if (!token || !user) {
+  window.location.href = "login.html";
+}
+</script>
+
+<div class="overlay"></div>
 
 <nav class="navbar">
   <div class="profile-container">
-    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" id="profileIcon" alt="Profile" class="profile-icon">
+    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+         id="profileIcon"
+         alt="Profile"
+         class="profile-icon">
   </div>
 </nav>
 
-
-  <main class="hero">
-    <div class="hadd">
+<main class="hero">
+  <div class="hadd">
     <h1 class="logo">Brio Bite</h1>
     <p class="tagline">Where Every Bite is a Flavor Bomb</p>
-    </div>
-    <button class="menu-btn">Check Our Menu</button>
-  </main>
+  </div>
+  <button class="menu-btn">Check Our Menu</button>
+</main>
 
-  <footer>
-    <p>© 2026 Brio Bite. All rights reserved.</p>
-  </footer>
+<footer>
+  <p>© 2026 Brio Bite. All rights reserved.</p>
+</footer>
 
-  <div class="profile-overlay" id="profileOverlay"></div>
+<!-- PROFILE PANEL -->
+<div class="profile-overlay" id="profileOverlay"></div>
 
 <div class="profile-panel" id="profilePanel">
   <div class="profile-header">
     <h3>My Profile</h3>
     <button class="close-btn" id="closeProfileBtn">×</button>
   </div>
+
   <div class="profile-info">
     <p><strong>Name:</strong> <span id="profileName"></span></p>
     <p><strong>Email:</strong> <span id="profileEmail"></span></p>
   </div>
-  
-<!-- Subscription Details Section -->
-<div class="subscription-section">
-  <h4>My Subscriptions</h4>
-  <div id="subscriptionDetails">
-    <!-- Subscription details will be populated by JavaScript -->
+
+  <div class="subscription-section">
+    <h4>My Subscriptions</h4>
+    <div id="subscriptionDetails"></div>
+
+    <button class="manage-subscription-btn" onclick="window.location.href='tiffinservice.html'">
+      <i class="fas fa-plus"></i> Add New Tiffin Service
+    </button>
   </div>
-  
-  <!-- Add New Subscription Button -->
-  <button class="manage-subscription-btn" onclick="addNewSubscription()">
-    <i class="fas fa-plus"></i> Add New Tiffin Service
-  </button>
-  
-  <button class="manage-subscription-btn" onclick="manageSubscription()">
-    <i class="fas fa-cog"></i> Manage Current Subscription
-  </button>
+
+  <button class="logout-btn" onclick="logout()">Logout</button>
 </div>
- <script>
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelector(".hero").classList.add("visible");
-});
+<!-- SCRIPTS -->
+<script>
 
+document.getElementById("profileName").textContent = user.name;
+document.getElementById("profileEmail").textContent = user.email;
 
 document.querySelector(".menu-btn").addEventListener("click", () => {
   window.location.href = "services.html";
 });
- </script>
- <script>
-  
 
-if (!user) {
+/* PROFILE PANEL TOGGLE */
+const profileIcon = document.getElementById("profileIcon");
+const profilePanel = document.getElementById("profilePanel");
+const profileOverlay = document.getElementById("profileOverlay");
+const closeBtn = document.getElementById("closeProfileBtn");
+
+profileIcon.onclick = () => {
+  profilePanel.classList.add("active");
+  profileOverlay.classList.add("active");
+};
+
+closeBtn.onclick = () => {
+  profilePanel.classList.remove("active");
+  profileOverlay.classList.remove("active");
+};
+
+profileOverlay.onclick = () => {
+  profilePanel.classList.remove("active");
+  profileOverlay.classList.remove("active");
+};
+
+/* LOGOUT */
+function logout() {
+  localStorage.removeItem("biteboxToken");
+  localStorage.removeItem("biteboxUser");
+  localStorage.removeItem("biteboxAdmin");
   window.location.href = "login.html";
-} else {
-  fetch("https://your-backend-url.com/api/checkUser?email=" + user.email)
-    .then(res => res.json())
-    .then(data => {
-      if (!data.exists) {
-        localStorage.removeItem("biteboxUser");
-        window.location.href = "login.html";
-      }
-    })
-    .catch(() => {
-      console.log("Backend offline – using cached user");
-    });
 }
 
-</script>
-<script>
-  fetch(`https://bbbackend-bng2.onrender.com/api/tiffin-bookings`)
-  .then(res => res.json())
-  .then(bookings => {
-    const userBooking = bookings.find(b => b.userName === userData.name);
+/* LOAD USER TIFFIN SUBSCRIPTIONS */
+async function loadSubscriptions() {
+  try {
+    const res = await fetch("https://bbbackend-bng2.onrender.com/api/tiffin-bookings");
+    const bookings = await res.json();
 
-    if (!userBooking) {
+    const subscriptionDetails = document.getElementById("subscriptionDetails");
+
+    const userBookings = bookings.filter(b => b.userName === user.name);
+
+    if (userBookings.length === 0) {
       subscriptionDetails.innerHTML =
-        "<p>No active subscription</p>";
+        "<p class='no-subscription'>No active subscription</p>";
       return;
     }
 
-    subscriptionDetails.innerHTML = `
-      <p><strong>Plan:</strong> ${userBooking.planName}</p>
-      <p><strong>Price:</strong> ₹${userBooking.price}</p>
-      <p><strong>Status:</strong> ${userBooking.status}</p>
-      <p><strong>Payment:</strong> ${userBooking.paymentStatus}</p>
-    `;
-  });
+    subscriptionDetails.innerHTML = userBookings.map(b => `
+      <div class="subscription-details">
+        <p><strong>Plan:</strong> ${b.planName}</p>
+        <p><strong>Price:</strong> ₹${b.price}</p>
+        <p><strong>Status:</strong> 
+          <span class="subscription-status status-${b.status}">
+            ${b.status}
+          </span>
+        </p>
+        <p><strong>Payment:</strong> ${b.paymentStatus}</p>
+      </div>
+    `).join("");
+
+  } catch (err) {
+    console.log("Subscription load error", err);
+  }
+}
+
+loadSubscriptions();
 
 </script>
 
