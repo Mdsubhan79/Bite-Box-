@@ -431,7 +431,7 @@ if (!user) {
     .then(res => res.json())
     .then(data => {
       if (!data.exists) {
-        localStorage.removeItem("briobiteUser");
+        localStorage.removeItem("biteboxUser");
         window.location.href = "login.html";
       }
     })
