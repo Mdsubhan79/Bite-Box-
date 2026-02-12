@@ -483,9 +483,9 @@ footer button:hover {
   </footer>
   
 <script>
-/* -------------------------------
+/*  
    PASSWORD SHOW / HIDE
---------------------------------*/
+*/
 const togglePassword = document.querySelector('.toggle-password');
 togglePassword.addEventListener('click', function () {
     const passwordField = document.querySelector('.password-field input');
@@ -493,11 +493,24 @@ togglePassword.addEventListener('click', function () {
     this.textContent = passwordField.type === 'password' ? '👁' : '🙈';
 });
 </script>
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const token = localStorage.getItem("biteboxToken");
+
+    // If token exists, go to index page
+    if (token && token !== "null" && token !== "") {
+        window.location.href = "index.html";
+    }
+
+});
+</script>
 
 <script>
-/* -------------------------------
+/* 
    LOGIN FUNCTION
---------------------------------*/
+*/
 document.querySelector('.login-form').addEventListener('submit', async function (e) {
     e.preventDefault();
 
@@ -541,9 +554,9 @@ document.querySelector('.login-form').addEventListener('submit', async function 
 </script>
 
 <script>
-/* -------------------------------
+/* 
    OPEN / CLOSED STATUS
---------------------------------*/
+*/
 function updateOpenStatus() {
     const now = new Date();
     const hour = now.getHours();
