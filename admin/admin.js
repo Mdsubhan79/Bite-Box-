@@ -299,7 +299,7 @@ function deleteNonVeg(id) {
 .then(data => {
   if (!data.success) throw new Error("Delete failed");
   alert("Item deleted");
-  loadNonVegMenu(); // or loadNonVegMenu
+  loadNonVegMenu();
 })
     .catch(() => alert("Failed to delete veg item"));
 }
@@ -419,6 +419,85 @@ function loadTiffins() {
 
       html += "</table>";
       content.innerHTML = html;
+    });
+}
+
+function deleteTiffin(id) {
+  if (!confirm("Delete this tiffin plan?")) return;
+
+  fetch(`${API_BASE}/api/admin/tiffins/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        alert("Tiffin plan deleted");
+        loadTiffins();
+      } else {
+        alert("Delete failed");
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Error deleting plan");
+    });
+}
+
+function showAddTiffinForm() {
+  const content = document.getElementById("content");
+
+  content.innerHTML = `
+    <h2>Add Tiffin Plan</h2>
+
+    <input id="planName" placeholder="Plan Name"><br><br>
+
+    <select id="type">
+      <option value="veg">Veg</option>
+      <option value="nonveg">Non-Veg</option>
+    </select><br><br>
+
+    <input id="price" type="number" placeholder="Monthly Price"><br><br>
+
+    <input id="meals" placeholder="Meals (comma separated)"><br><br>
+
+    <button onclick="addTiffin()">Save</button>
+    <button onclick="loadTiffins()">Cancel</button>
+  `;
+}
+function addTiffin() {
+  const planName = document.getElementById("planName").value;
+  const type = document.getElementById("type").value;
+  const price = document.getElementById("price").value;
+  const meals = document.getElementById("meals").value.split(",");
+
+  fetch(`${API_BASE}/api/admin/tiffins`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    },
+    body: JSON.stringify({
+      planName,
+      type,
+      price,
+      meals
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        alert("Tiffin plan added");
+        loadTiffins();
+      } else {
+        alert("Failed to add plan");
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Error adding plan");
     });
 }
 
