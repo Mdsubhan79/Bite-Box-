@@ -366,11 +366,11 @@ footer {
 
 <script>
 const token = localStorage.getItem("biteboxToken");
+const user = JSON.parse(localStorage.getItem("biteboxUser"));
 
-if (!token) {
+if (!token || !user) {
   window.location.href = "login.html";
 }
-
 </script>
 
 <div class="overlay"></div>
