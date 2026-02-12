@@ -363,14 +363,14 @@ footer {
 
 <body>
 
-<!-- ✅ LOGIN CHECK (VERY IMPORTANT) -->
+
 <script>
 const token = localStorage.getItem("biteboxToken");
-const user = JSON.parse(localStorage.getItem("biteboxUser"));
 
-if (!token || !user) {
+if (!token) {
   window.location.href = "login.html";
 }
+
 </script>
 
 <div class="overlay"></div>
@@ -422,7 +422,7 @@ if (!token || !user) {
   <button class="logout-btn" onclick="logout()">Logout</button>
 </div>
 
-<!-- SCRIPTS -->
+<!-- SCRIPT-->
 <script>
 
 document.getElementById("profileName").textContent = user.name;
