@@ -423,7 +423,7 @@ function loadTiffins() {
 }
 
 function deleteTiffin(id) {
-  if (!confirm("Delete this tiffin plan?")) return;
+  if (!confirm("Delete this plan?")) return;
 
   fetch(`${API_BASE}/api/admin/tiffins/${id}`, {
     method: "DELETE",
@@ -432,17 +432,13 @@ function deleteTiffin(id) {
     }
   })
     .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        alert("Tiffin plan deleted");
-        loadTiffins();
-      } else {
-        alert("Delete failed");
-      }
+    .then(() => {
+      alert("Plan deleted successfully");
+      loadTiffins(); 
     })
     .catch(err => {
       console.error(err);
-      alert("Error deleting plan");
+      alert("Delete failed");
     });
 }
 
@@ -459,6 +455,14 @@ function showAddTiffinForm() {
       <option value="nonveg">Non-Veg</option>
     </select><br><br>
 
+    <select id="mealType">
+      <option value="breakfast">Breakfast</option>
+      <option value="lunch">Lunch</option>
+      <option value="dinner">Dinner</option>
+    </select><br><br>
+
+    <textarea id="description" placeholder="Plan Description"></textarea><br><br>
+
     <input id="price" type="number" placeholder="Monthly Price"><br><br>
 
     <input id="meals" placeholder="Meals (comma separated)"><br><br>
@@ -470,6 +474,8 @@ function showAddTiffinForm() {
 function addTiffin() {
   const planName = document.getElementById("planName").value;
   const type = document.getElementById("type").value;
+  const mealType = document.getElementById("mealType").value;
+  const description = document.getElementById("description").value;
   const price = document.getElementById("price").value;
   const meals = document.getElementById("meals").value.split(",");
 
@@ -482,18 +488,16 @@ function addTiffin() {
     body: JSON.stringify({
       planName,
       type,
+      mealType,
+      description,
       price,
       meals
     })
   })
     .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        alert("Tiffin plan added");
-        loadTiffins();
-      } else {
-        alert("Failed to add plan");
-      }
+    .then(() => {
+      alert("Plan added successfully");
+      loadTiffins();  
     })
     .catch(err => {
       console.error(err);
