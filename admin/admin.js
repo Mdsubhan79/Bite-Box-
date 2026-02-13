@@ -466,7 +466,7 @@ function showAddTiffinForm() {
 }
 
 function addTiffin() {
-  const mealTime = Array.from(
+  const meals = Array.from(
     document.querySelectorAll("input[name='mealTime']:checked")
   ).map(el => el.value);
 
@@ -479,7 +479,7 @@ function addTiffin() {
     body: JSON.stringify({
       planName: document.getElementById("planName").value,
       type: document.getElementById("type").value,
-      mealTime: mealTime,
+      meals: meals,   // ✅ FIXED
       description: document.getElementById("description").value,
       price: document.getElementById("price").value,
       active: true
