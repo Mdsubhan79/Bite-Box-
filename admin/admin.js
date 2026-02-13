@@ -408,7 +408,7 @@ function loadTiffins() {
             <td>${p.planName}</td>
             <td>${p.type}</td>
             <td>₹${p.price}</td>
-            <td>${p.meals.join(", ")}</td>
+            <td>${p.mealTime.join(", ")}</td>
             <td>${p.active ? "Yes" : "No"}</td>
             <td>
               <button onclick="deleteTiffin('${p._id}')">Delete</button>
@@ -466,7 +466,7 @@ function showAddTiffinForm() {
 }
 
 function addTiffin() {
-  const meals = Array.from(
+  const mealTime = Array.from(
     document.querySelectorAll("input[name='mealTime']:checked")
   ).map(el => el.value);
 
@@ -479,7 +479,7 @@ function addTiffin() {
     body: JSON.stringify({
       planName: document.getElementById("planName").value,
       type: document.getElementById("type").value,
-      meals: meals,   // ✅ FIXED
+      mealTime: mealTime,
       description: document.getElementById("description").value,
       price: document.getElementById("price").value,
       active: true
