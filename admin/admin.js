@@ -450,11 +450,11 @@ function showAddTiffinForm() {
       <option value="nonveg">Non-Veg</option>
     </select>
 
-    <select id="mealTime">
-      <option value="breakfast">Breakfast</option>
-      <option value="lunch">Lunch</option>
-      <option value="dinner">Dinner</option>
-    </select>
+    <div>
+      <label><input type="checkbox" name="mealTime" value="breakfast"> Breakfast</label>
+      <label><input type="checkbox" name="mealTime" value="lunch"> Lunch</label>
+      <label><input type="checkbox" name="mealTime" value="dinner"> Dinner</label>
+    </div>
 
     <textarea id="description" placeholder="Plan Description"></textarea>
 
@@ -465,8 +465,11 @@ function showAddTiffinForm() {
   `;
 }
 
-
 function addTiffin() {
+  const mealTime = Array.from(
+    document.querySelectorAll("input[name='mealTime']:checked")
+  ).map(el => el.value);
+
   fetch(`${API_BASE}/api/admin/tiffins`, {
     method: "POST",
     headers: {
@@ -476,7 +479,7 @@ function addTiffin() {
     body: JSON.stringify({
       planName: document.getElementById("planName").value,
       type: document.getElementById("type").value,
-      mealTime: document.getElementById("mealTime").value,
+      mealTime: mealTime,
       description: document.getElementById("description").value,
       price: document.getElementById("price").value,
       active: true
@@ -484,12 +487,19 @@ function addTiffin() {
   })
   .then(res => res.json())
   .then(data => {
-    alert("Plan Added Successfully");
-    loadTiffins(); // ✅ Auto refresh
-  })
-  .catch(() => alert("Failed to add plan"));
-}
+    if (!data || data.message) {
+      alert("Failed to add tiffin");
+      return;
+    }
 
+    alert("Tiffin Added Successfully");
+    loadTiffins();   // ✅ Auto refresh
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Server error");
+  });
+}
 
 /* ========= USERS LIST ========= */
 function loadUsers() {
