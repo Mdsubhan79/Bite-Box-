@@ -482,17 +482,17 @@ fetch(`${API_BASE}/api/tiffins`)
     box.innerHTML = "";
 
     plans.forEach(plan => {
-      box.innerHTML += `
-        <div class="card ${plan.planName.toLowerCase().includes('premium') ? 'premium' : ''}">
-          <h3>${plan.planName}</h3>
-          <p>${plan.meals.join(", ")}</p>
-          <p>₹${plan.price}/month</p>
-          <button class="subscribe-btn"
-            onclick="window.location.href='tiffin.html?id=${plan._id}'">
-            Subscribe
-          </button>
-        </div>
-      `;
+         box.innerHTML += `
+  <div class="card">
+    <h3>${plan.planName}</h3>
+    <p>Type: ${plan.type}</p>
+    <p>Meal: ${plan.mealTime}</p>
+    <p>₹${plan.price}/month</p>
+    <button onclick="window.location.href='tiffin.html?id=${plan._id}'">
+      Subscribe
+    </button>
+  </div>
+`;
     });
   })
   .catch(() => {

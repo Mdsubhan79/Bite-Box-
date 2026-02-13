@@ -423,7 +423,7 @@ function loadTiffins() {
 }
 
 function deleteTiffin(id) {
-  if (!confirm("Delete this plan?")) return;
+  if (!confirm("Delete this tiffin plan?")) return;
 
   fetch(`${API_BASE}/api/admin/tiffins/${id}`, {
     method: "DELETE",
@@ -431,54 +431,42 @@ function deleteTiffin(id) {
       Authorization: "Bearer " + localStorage.getItem("adminToken")
     }
   })
-    .then(res => res.json())
-    .then(() => {
-      alert("Plan deleted successfully");
-      loadTiffins(); 
-    })
-    .catch(err => {
-      console.error(err);
-      alert("Delete failed");
-    });
+  .then(res => res.json())
+  .then(() => {
+    alert("Plan Deleted");
+    loadTiffins(); // ✅ Auto refresh
+  })
+  .catch(() => alert("Delete failed"));
 }
 
 function showAddTiffinForm() {
-  const content = document.getElementById("content");
-
-  content.innerHTML = `
+  document.getElementById("content").innerHTML = `
     <h2>Add Tiffin Plan</h2>
 
-    <input id="planName" placeholder="Plan Name"><br><br>
+    <input id="planName" placeholder="Plan Name">
 
     <select id="type">
       <option value="veg">Veg</option>
       <option value="nonveg">Non-Veg</option>
-    </select><br><br>
+    </select>
 
-    <select id="mealType">
+    <select id="mealTime">
       <option value="breakfast">Breakfast</option>
       <option value="lunch">Lunch</option>
       <option value="dinner">Dinner</option>
-    </select><br><br>
+    </select>
 
-    <textarea id="description" placeholder="Plan Description"></textarea><br><br>
+    <textarea id="description" placeholder="Plan Description"></textarea>
 
-    <input id="price" type="number" placeholder="Monthly Price"><br><br>
-
-    <input id="meals" placeholder="Meals (comma separated)"><br><br>
+    <input id="price" type="number" placeholder="Monthly Price">
 
     <button onclick="addTiffin()">Save</button>
     <button onclick="loadTiffins()">Cancel</button>
   `;
 }
-function addTiffin() {
-  const planName = document.getElementById("planName").value;
-  const type = document.getElementById("type").value;
-  const mealType = document.getElementById("mealType").value;
-  const description = document.getElementById("description").value;
-  const price = document.getElementById("price").value;
-  const meals = document.getElementById("meals").value.split(",");
 
+
+function addTiffin() {
   fetch(`${API_BASE}/api/admin/tiffins`, {
     method: "POST",
     headers: {
@@ -486,24 +474,22 @@ function addTiffin() {
       Authorization: "Bearer " + localStorage.getItem("adminToken")
     },
     body: JSON.stringify({
-      planName,
-      type,
-      mealType,
-      description,
-      price,
-      meals
+      planName: document.getElementById("planName").value,
+      type: document.getElementById("type").value,
+      mealTime: document.getElementById("mealTime").value,
+      description: document.getElementById("description").value,
+      price: document.getElementById("price").value,
+      active: true
     })
   })
-    .then(res => res.json())
-    .then(() => {
-      alert("Plan added successfully");
-      loadTiffins();  
-    })
-    .catch(err => {
-      console.error(err);
-      alert("Error adding plan");
-    });
+  .then(res => res.json())
+  .then(data => {
+    alert("Plan Added Successfully");
+    loadTiffins(); // ✅ Auto refresh
+  })
+  .catch(() => alert("Failed to add plan"));
 }
+
 
 /* ========= USERS LIST ========= */
 function loadUsers() {

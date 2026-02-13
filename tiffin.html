@@ -592,28 +592,13 @@ if (!planId) {
 }
 
 fetch(`${API_BASE}/api/tiffins/${planId}`)
-  .then(res => {
-    if (!res.ok) {
-      throw new Error("Plan not found");
-    }
-    return res.json();
-  })
+  .then(res => res.json())
   .then(plan => {
-
-    if (!plan || !plan.planName) {
-      throw new Error("Invalid plan data");
-    }
-
     document.getElementById("selectedPlan").innerHTML = `
       <h2>${plan.planName}</h2>
-
-      ${plan.description ? `<p>${plan.description}</p>` : ""}
-
-      <p><strong>Meals Included:</strong></p>
-      <p>${plan.meals.join(", ")}</p>
-
-      ${plan.mealType ? `<p><strong>Meal Time:</strong> ${plan.mealType.join(", ")}</p>` : ""}
-
+      <p><strong>Type:</strong> ${plan.type}</p>
+      <p><strong>Meal:</strong> ${plan.mealTime}</p>
+      <p><strong>Description:</strong> ${plan.description}</p>
       <p><strong>₹${plan.price}/month</strong></p>
     `;
 
