@@ -594,11 +594,18 @@ if (!planId) {
 fetch(`${API_BASE}/api/tiffins/${planId}`)
   .then(res => res.json())
   .then(plan => {
+
     document.getElementById("selectedPlan").innerHTML = `
       <h2>${plan.planName}</h2>
-      <p><strong>Type:</strong> ${plan.type}</p>
-      <p><strong>Meal:</strong> ${plan.mealTime}</p>
-      <p><strong>Description:</strong> ${plan.description}</p>
+
+      <p><strong>Meal Time:</strong> 
+        ${plan.mealTime ? plan.mealTime.join(", ") : "-"}
+      </p>
+
+      <p>
+        ${plan.description ? plan.description : ""}
+      </p>
+
       <p><strong>₹${plan.price}/month</strong></p>
     `;
 
