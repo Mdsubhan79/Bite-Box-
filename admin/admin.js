@@ -408,7 +408,7 @@ function loadTiffins() {
             <td>${p.planName}</td>
             <td>${p.type}</td>
             <td>₹${p.price}</td>
-            <td>${p.mealTime.join(", ")}</td>
+            <td>${p.mealTime ? p.mealTime.join(", ") : ""}</td>
             <td>${p.active ? "Yes" : "No"}</td>
             <td>
               <button onclick="deleteTiffin('${p._id}')">Delete</button>

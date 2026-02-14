@@ -486,7 +486,7 @@ fetch(`${API_BASE}/api/tiffins`)
   <div class="card">
     <h3>${plan.planName}</h3>
     <p>Type: ${plan.type}</p>
-    <p>Meal: ${plan.mealTime}</p>
+    <p>Meal: ${plan.mealTime ? plan.mealTime.join(", ") : ""}</p>
     <p>₹${plan.price}/month</p>
     <button onclick="window.location.href='tiffin.html?id=${plan._id}'">
       Subscribe

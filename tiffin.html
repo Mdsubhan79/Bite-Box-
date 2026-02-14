@@ -581,8 +581,7 @@ body {
 
 
     <script defer src="script.js"></script>
-
-    <script>
+<script>
 const API_BASE = "https://bbbackend-bng2.onrender.com";
 const params = new URLSearchParams(window.location.search);
 const planId = params.get("id");
@@ -594,32 +593,21 @@ if (!planId) {
 fetch(`${API_BASE}/api/tiffins/${planId}`)
   .then(res => res.json())
   .then(plan => {
-
     document.getElementById("selectedPlan").innerHTML = `
       <h2>${plan.planName}</h2>
-
-      <p><strong>Meal Time:</strong> 
-        ${plan.mealTime ? plan.mealTime.join(", ") : "-"}
-      </p>
-
-      <p>
-        ${plan.description ? plan.description : ""}
-      </p>
-
+      <p><strong>Meal Time:</strong> ${plan.mealTime?.join(", ") || ""}</p>
+      <p><strong>Description:</strong> ${plan.description || ""}</p>
       <p><strong>₹${plan.price}/month</strong></p>
     `;
 
     document.querySelector(".book-now").parentElement.href =
       `bookTiffin.html?id=${plan._id}`;
   })
-  .catch(err => {
-    console.error(err);
+  .catch(() => {
     document.getElementById("selectedPlan").innerHTML =
-      "<p style='color:red'>Failed to load plan details.</p>";
+      "<p>Failed to load plan</p>";
   });
 </script>
-
-
 <script>
   document.getElementById('newsletterForm').addEventListener('submit', function(e) {
     e.preventDefault(); // Prevent actual form submission
