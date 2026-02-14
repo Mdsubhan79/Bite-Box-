@@ -31,6 +31,10 @@ function loadPage(page) {
        loadTiffins();
       break;
 
+    case "tiffinBookings":
+  loadTiffinBookings();
+  break;
+
     case "orders":
        loadOrders();
       break;
