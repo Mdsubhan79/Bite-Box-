@@ -476,17 +476,15 @@ async function loadSubscriptions() {
       return;
     }
 
-    subscriptionDetails.innerHTML = userBookings.map(b => `
+subscriptionDetails.innerHTML = userBookings.map(b => `
   <div class="subscription-details">
     <p><strong>Plan:</strong> ${b.planName}</p>
     <p><strong>Price:</strong> ₹${b.price}</p>
 
     ${
-      b.startDate
-        ? `<p><strong>Start Date:</strong> 
-             ${new Date(b.startDate).toLocaleDateString()}
-           </p>`
-        : `<p><strong>Start Date:</strong> Not Activated</p>`
+      b.startDate 
+      ? `<p><strong>Start Date:</strong> ${new Date(b.startDate).toLocaleDateString()}</p>`
+      : `<p><strong>Start Date:</strong> Not Started Yet</p>`
     }
 
     <p><strong>Status:</strong> 

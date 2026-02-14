@@ -409,15 +409,15 @@ function activateTiffin(id) {
       Authorization: "Bearer " + localStorage.getItem("adminToken")
     },
     body: JSON.stringify({
-  status: "active",
-  paymentStatus: "paid",
-  startDate: new Date()
-})
+      status: "active",
+      paymentStatus: "paid",
+      startDate: new Date()   // ✅ SET START DATE HERE
+    })
   })
-    .then(() => {
-      alert("Tiffin Activated");
-      loadTiffinBookings();
-    });
+  .then(() => {
+    alert("Tiffin Activated");
+    loadTiffinBookings();
+  });
 }
 
 
