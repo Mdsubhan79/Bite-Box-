@@ -477,17 +477,27 @@ async function loadSubscriptions() {
     }
 
     subscriptionDetails.innerHTML = userBookings.map(b => `
-      <div class="subscription-details">
-        <p><strong>Plan:</strong> ${b.planName}</p>
-        <p><strong>Price:</strong> ₹${b.price}</p>
-        <p><strong>Status:</strong> 
-          <span class="subscription-status status-${b.status}">
-            ${b.status}
-          </span>
-        </p>
-        <p><strong>Payment:</strong> ${b.paymentStatus}</p>
-      </div>
-    `).join("");
+  <div class="subscription-details">
+    <p><strong>Plan:</strong> ${b.planName}</p>
+    <p><strong>Price:</strong> ₹${b.price}</p>
+
+    ${
+      b.startDate
+        ? `<p><strong>Start Date:</strong> 
+             ${new Date(b.startDate).toLocaleDateString()}
+           </p>`
+        : `<p><strong>Start Date:</strong> Not Activated</p>`
+    }
+
+    <p><strong>Status:</strong> 
+      <span class="subscription-status status-${b.status}">
+        ${b.status}
+      </span>
+    </p>
+
+    <p><strong>Payment:</strong> ${b.paymentStatus}</p>
+  </div>
+`).join("");
 
   } catch (err) {
     console.log("Subscription load error", err);

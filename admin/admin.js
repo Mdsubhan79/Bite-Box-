@@ -357,13 +357,18 @@ function loadTiffinBookings() {
           <td>${b.planName}</td>
           <td>${b.status}</td>
           <td>${b.paymentStatus}</td>
-          <td>
-            ${
-              b.status === "pending"
-              ? `<button onclick="activateTiffin('${b._id}')">Activate</button>`
-              : `<span style="color:green;font-weight:bold">Active</span>`
-            }
-          </td>
+<td>
+  ${
+    b.status === "pending"
+      ? `<button onclick="activateTiffin('${b._id}')">Activate</button>`
+      : `<span style="color:green;font-weight:bold">Active</span>`
+  }
+  <br/>
+  <button style="background:red;color:white;margin-top:5px"
+          onclick="deleteTiffinBooking('${b._id}')">
+    Delete
+  </button>
+</td>
         </tr>
       `;
     });
@@ -375,6 +380,25 @@ function loadTiffinBookings() {
     content.innerHTML = "<p>Failed to load bookings</p>";
   });
 }
+
+function deleteTiffinBooking(id) {
+  if (!confirm("Delete this booking?")) return;
+
+  fetch(`${API_BASE}/api/admin/tiffin-bookings/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  })
+  .then(res => res.json())
+  .then(() => {
+    alert("Booking Deleted");
+    loadTiffinBookings();
+  })
+  .catch(() => alert("Delete failed"));
+}
+
+
 function activateTiffin(id) {
   if (!confirm("Activate this tiffin subscription?")) return;
 
@@ -385,9 +409,10 @@ function activateTiffin(id) {
       Authorization: "Bearer " + localStorage.getItem("adminToken")
     },
     body: JSON.stringify({
-      status: "active",
-      paymentStatus: "paid"
-    })
+  status: "active",
+  paymentStatus: "paid",
+  startDate: new Date()
+})
   })
     .then(() => {
       alert("Tiffin Activated");
