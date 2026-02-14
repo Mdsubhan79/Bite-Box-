@@ -319,46 +319,62 @@ function loadTiffinBookings() {
       Authorization: "Bearer " + localStorage.getItem("adminToken")
     }
   })
-    .then(res => res.json())
-    .then(bookings => {
-      let html = `
-        <h2>Tiffin Subscriptions</h2>
-        <table>
-          <tr>
-            <th>User</th>
-            <th>Plan</th>
-            <th>Status</th>
-            <th>Payment</th>
-            <th>Action</th>
-          </tr>
+  .then(res => res.json())
+  .then(bookings => {
+
+    let html = `
+      <h2>Tiffin Subscriptions</h2>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Father</th>
+          <th>Profession</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>City</th>
+          <th>State</th>
+          <th>Address</th>
+          <th>Start Date</th>
+          <th>Plan</th>
+          <th>Status</th>
+          <th>Payment</th>
+          <th>Action</th>
+        </tr>
+    `;
+
+    bookings.forEach(b => {
+      html += `
+        <tr>
+          <td>${b.userName || ""}</td>
+          <td>${b.fatherName || ""}</td>
+          <td>${b.profession || ""}</td>
+          <td>${b.email || ""}</td>
+          <td>${b.phone || ""}</td>
+          <td>${b.city || ""}</td>
+          <td>${b.state || ""}</td>
+          <td>${b.address || ""}</td>
+          <td>${new Date(b.startDate).toLocaleDateString()}</td>
+          <td>${b.planName}</td>
+          <td>${b.status}</td>
+          <td>${b.paymentStatus}</td>
+          <td>
+            ${
+              b.status === "pending"
+              ? `<button onclick="activateTiffin('${b._id}')">Activate</button>`
+              : `<span style="color:green;font-weight:bold">Active</span>`
+            }
+          </td>
+        </tr>
       `;
-
-      bookings.forEach(b => {
-        html += `
-          <tr>
-            <td>${b.userName}</td>
-            <td>${b.planName}</td>
-            <td>${b.status}</td>
-            <td>${b.paymentStatus}</td>
-            <td>
-              ${
-                b.status === "pending"
-                  ? `<button onclick="activateTiffin('${b._id}')">Activate</button>`
-                  : `<span style="color:green;font-weight:bold">Active</span>`
-              }
-            </td>
-          </tr>
-        `;
-      });
-
-      html += "</table>";
-      content.innerHTML = html;
-    })
-    .catch(() => {
-      content.innerHTML = "<p>Failed to load bookings</p>";
     });
-}
 
+    html += "</table>";
+    content.innerHTML = html;
+  })
+  .catch(() => {
+    content.innerHTML = "<p>Failed to load bookings</p>";
+  });
+}
 function activateTiffin(id) {
   if (!confirm("Activate this tiffin subscription?")) return;
 

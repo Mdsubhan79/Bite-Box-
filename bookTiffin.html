@@ -799,16 +799,21 @@ document.getElementById("bookingForm").addEventListener("submit", async function
     return;
   }
 
-  const bookingData = {
-    userName: user.name,
-    phone: document.getElementById("phone").value,
-    address: document.getElementById("address").value,
-    startDate: new Date(),
-    planId: selectedPlan._id,
-    planName: selectedPlan.planName,
-    planType: selectedPlan.type,
-    price: selectedPlan.price
-  };
+const bookingData = {
+  userName: user.name,
+  fatherName: document.getElementById("fatherName").value,
+  profession: document.getElementById("profession").value,
+  email: document.getElementById("email").value,
+  phone: document.getElementById("phone").value,
+  city: document.getElementById("city").value,
+  state: document.getElementById("state").value,
+  address: document.getElementById("address").value,
+  startDate: new Date(),
+  planId: selectedPlan._id,
+  planName: selectedPlan.planName,
+  planType: selectedPlan.type,
+  price: selectedPlan.price
+};
 
   try {
     const res = await fetch(`${API_BASE}/api/tiffin-bookings`, {
