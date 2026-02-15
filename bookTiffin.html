@@ -827,9 +827,9 @@ const bookingData = {
 
     const data = await res.json();
 
-    if (data.success) {
-      document.getElementById("confirmationModal").style.display = "flex";
-    } else {
+if (data.success) {
+  window.location.href = `maketiffinmenu.html?bookingId=${data.booking._id}`;
+} else {
       alert(data.message || "Booking failed");
     }
 

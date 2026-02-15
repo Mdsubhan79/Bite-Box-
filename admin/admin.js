@@ -379,6 +379,29 @@ function loadTiffinBookings() {
   .catch(() => {
     content.innerHTML = "<p>Failed to load bookings</p>";
   });
+
+  fetch(`${API_BASE}/api/tiffin-menus/${b._id}`)
+.then(res => res.json())
+.then(menu => {
+
+  if (!menu) return;
+
+  menu.days.forEach(d => {
+
+    html += `
+      <tr>
+        <td colspan="13">
+          <b>Day ${d.dayNumber}</b><br>
+          Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
+          Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
+          Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
+        </td>
+      </tr>
+    `;
+  });
+
+});
+
 }
 
 function deleteTiffinBooking(id) {

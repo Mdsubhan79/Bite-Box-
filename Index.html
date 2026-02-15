@@ -417,12 +417,18 @@ if (!token || !user) {
     <button class="manage-subscription-btn" onclick="window.location.href='tiffinservice.html'">
       <i class="fas fa-plus"></i> Add New Tiffin Service
     </button>
+    <button onclick="openMenu()">Tiffin Menu</button>
   </div>
 
   <button class="logout-btn" onclick="logout()">Logout</button>
 </div>
 
-<!-- SCRIPT-->
+<script>
+  function openMenu() {
+  const bookingId = localStorage.getItem("activeBookingId");
+  window.location.href = `maketiffinmenu.html?bookingId=${bookingId}`;
+}
+</script>
 <script>
 
 document.getElementById("profileName").textContent = user.name;
