@@ -147,17 +147,16 @@ button:hover {
     padding: 6px;
   }
 }
-/* ===== SMALL SCREENS (LIKE YOUR SCREENSHOT) ===== */
 @media (max-width: 400px) {
 
   .admin-wrapper {
     display: flex;
-    flex-direction: row;   /* ✅ KEEP SIDE BY SIDE */
+    flex-direction: row; 
     min-height: 100vh;
   }
 
   .sidebar {
-    width: 90px;          /* narrow sidebar */
+    width: 90px;         
     padding: 6px;
   }
 

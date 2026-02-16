@@ -366,16 +366,17 @@ function loadTiffinBookings() {
   }
   <br/>
 
-  <button onclick="toggleMenu('${b._id}')" 
-          style="background:#007bff;color:white;margin-top:5px">
-    See Menu
-  </button>
-
-  <br/>
-
+ 
   <button style="background:red;color:white;margin-top:5px"
     onclick="deleteTiffinBooking('${b._id}')">
     Delete
+  </button>
+  
+  <br/>
+
+ <button onclick="toggleMenu('${b._id}')" 
+          style="background:#10332F;color:white;margin-top:5px">
+    See Menu
   </button>
 </td>
         </tr>
@@ -460,7 +461,7 @@ function activateTiffin(id) {
     body: JSON.stringify({
       status: "active",
       paymentStatus: "paid",
-      startDate: new Date()   // ✅ SET START DATE HERE
+      startDate: new Date()   
     })
   })
   .then(() => {
