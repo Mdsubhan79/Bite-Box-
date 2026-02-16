@@ -209,6 +209,7 @@ function logoutAdmin() {
 window.onload = () => {
   loadPage("dashboard");
 };
+
 /* ========= ADD NON-VEG ITEM ========= */
 function loadNonVegMenu() {
   const content = document.getElementById("content");
@@ -357,17 +358,26 @@ function loadTiffinBookings() {
           <td>${b.status}</td>
           <td>${b.paymentStatus}</td>
           <td>
-            ${
-              b.status === "pending"
-              ? `<button onclick="activateTiffin('${b._id}')">Activate</button>`
-              : `<span style="color:green;font-weight:bold">Active</span>`
-            }
-            <br/>
-            <button style="background:red;color:white;margin-top:5px"
-              onclick="deleteTiffinBooking('${b._id}')">
-              Delete
-            </button>
-          </td>
+           <td>
+  ${
+    b.status === "pending"
+      ? `<button onclick="activateTiffin('${b._id}')">Activate</button>`
+      : `<span style="color:green;font-weight:bold">Active</span>`
+  }
+  <br/>
+
+  <button onclick="toggleMenu('${b._id}')" 
+          style="background:#007bff;color:white;margin-top:5px">
+    See Menu
+  </button>
+
+  <br/>
+
+  <button style="background:red;color:white;margin-top:5px"
+    onclick="deleteTiffinBooking('${b._id}')">
+    Delete
+  </button>
+</td>
         </tr>
       `;
 
@@ -378,16 +388,16 @@ function loadTiffinBookings() {
 
         if (menu && menu.days) {
           menu.days.forEach(d => {
-            html += `
-              <tr>
-                <td colspan="13">
-                  <b>Day ${d.dayNumber}</b><br>
-                  Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
-                  Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
-                  Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
-                </td>
-              </tr>
-            `;
+           html += `
+  <tr class="menuRow-${b._id}" style="display:none;">
+    <td colspan="13">
+      <b>Day ${d.dayNumber}</b><br>
+      Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
+      Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
+      Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
+    </td>
+  </tr>
+`;
           });
         }
 
@@ -404,6 +414,21 @@ function loadTiffinBookings() {
     content.innerHTML = "<p>Failed to load bookings</p>";
   });
 }
+function toggleMenu(bookingId) {
+
+  const rows = document.querySelectorAll(`.menuRow-${bookingId}`);
+
+  rows.forEach(row => {
+
+    if (row.style.display === "none") {
+      row.style.display = "table-row";
+    } else {
+      row.style.display = "none";
+    }
+
+  });
+}
+
 
 function deleteTiffinBooking(id) {
   if (!confirm("Delete this booking?")) return;
