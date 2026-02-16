@@ -1,56 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-  font-family: Arial;
-  background: #f5f5f5;
-}
+<title>Make Tiffin Menu</title>
 
-.container {
-  width: 90%;
-  margin: auto;
+<style>
+
+/* ========= GLOBAL ========= */
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  margin: 0;
   padding: 20px;
 }
 
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+}
+
+/* ========= DAY CARD ========= */
+
 .day-card {
   background: white;
-  margin-bottom: 20px;
-  padding: 15px;
+  margin-bottom: 15px;
   border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.day-header {
+  padding: 15px;
+  background: #0c2f2c;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.day-content {
+  display: none;
+  padding: 15px;
+}
+
+.day-content.active {
+  display: block;
+}
+
+/* ========= FORM ========= */
+
+.meal-section {
+  margin-bottom: 20px;
+}
+
+.meal-section h4 {
+  margin-bottom: 5px;
 }
 
 select, input {
   width: 100%;
-  margin: 5px 0;
   padding: 8px;
+  margin: 5px 0 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
 button {
-  padding: 10px 15px;
-  margin-top: 20px;
-  background: #ff6b00;
-  color: white;
+  padding: 12px 20px;
+  background: #e0a500;
+  color: #0c2f2c;
   border: none;
+  border-radius: 6px;
   cursor: pointer;
-  border-radius: 5px;
+  font-size: 16px;
 }
-    </style>
-</head>
-<body>
-    <h1>Make Your Tiffin Menu As You Wish</h1>
 
-<button id="weeklyBtn">Set Weekly Tiffin Menu</button>
+button:hover {
+  background: #ffbb00;
+}
+
+/* ========= RESPONSIVE ========= */
+
+@media (min-width: 768px) {
+
+  .meal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>Make Your Tiffin Menu As You Wish</h1>
 
 <div id="menuContainer"></div>
 
 <button id="saveMenuBtn">Set Menu</button>
+</div>
 
 <script src="maketiffinmenu.js"></script>
+
 </body>
 </html>

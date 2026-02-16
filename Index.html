@@ -236,7 +236,7 @@ footer {
 .logout-btn {
   margin-top: 25px;
   width: 100%;
-  background-color: #d9534f;
+  background-color: #c51f19;
   border: none;
   color: white;
   padding: 10px;
@@ -247,7 +247,7 @@ footer {
 }
 
 .logout-btn:hover {
-  background-color: #b52b27;
+  background-color: #ad221d;
 }
 /* Subscription Details Styles */
 .subscription-section {
@@ -331,7 +331,7 @@ footer {
 }
 
 .manage-subscription-btn:first-of-type {
-  background: #28a745;
+  background: #049e28;
   color: white;
 }
 
@@ -357,6 +357,48 @@ footer {
 .profile-overlay.active {
   display: block;
 }
+
+
+/* ===== TIFFIN MENU BUTTON ===== */
+
+.tiffin-menu-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #e6b42b, #d19f14);
+  color: #0c2f2c;
+  padding: 14px 22px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+ 
+  margin-top: 15px;
+}
+
+/* Hover Effect */
+.tiffin-menu-btn:hover {
+  transform: translateY(-3px);
+
+  background: linear-gradient(135deg,#af8616, #cc980a);
+}
+
+/* Active Click Effect */
+.tiffin-menu-btn:active {
+  transform: scale(0.97);
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .tiffin-menu-btn {
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+    padding: 12px;
+  }
+}
+
 
   </style>
 </head>
@@ -417,7 +459,7 @@ if (!token || !user) {
     <button class="manage-subscription-btn" onclick="window.location.href='tiffinservice.html'">
       <i class="fas fa-plus"></i> Add New Tiffin Service
     </button>
-    <button onclick="openMenu()">Tiffin Menu</button>
+    <button class="tiffin-menu-btn" onclick="openMenu()">Tiffin Menu</button>
   </div>
 
   <button class="logout-btn" onclick="logout()">Logout</button>

@@ -308,8 +308,6 @@ function deleteNonVeg(id) {
     .catch(() => alert("Failed to delete veg item"));
 }
 
-
-/* ========= TIFFIN BOOKINGS (ADMIN) ========= */
 function loadTiffinBookings() {
   const content = document.getElementById("content");
   content.innerHTML = "<h2>Loading Tiffin Bookings...</h2>";
@@ -320,7 +318,7 @@ function loadTiffinBookings() {
     }
   })
   .then(res => res.json())
-  .then(bookings => {
+  .then(async bookings => {
 
     let html = `
       <h2>Tiffin Subscriptions</h2>
@@ -342,7 +340,8 @@ function loadTiffinBookings() {
         </tr>
     `;
 
-    bookings.forEach(b => {
+    for (const b of bookings) {
+
       html += `
         <tr>
           <td>${b.userName || ""}</td>
@@ -353,55 +352,57 @@ function loadTiffinBookings() {
           <td>${b.city || ""}</td>
           <td>${b.state || ""}</td>
           <td>${b.address || ""}</td>
-          <td>${new Date(b.startDate).toLocaleDateString()}</td>
+          <td>${b.startDate ? new Date(b.startDate).toLocaleDateString() : ""}</td>
           <td>${b.planName}</td>
           <td>${b.status}</td>
           <td>${b.paymentStatus}</td>
-<td>
-  ${
-    b.status === "pending"
-      ? `<button onclick="activateTiffin('${b._id}')">Activate</button>`
-      : `<span style="color:green;font-weight:bold">Active</span>`
-  }
-  <br/>
-  <button style="background:red;color:white;margin-top:5px"
-          onclick="deleteTiffinBooking('${b._id}')">
-    Delete
-  </button>
-</td>
+          <td>
+            ${
+              b.status === "pending"
+              ? `<button onclick="activateTiffin('${b._id}')">Activate</button>`
+              : `<span style="color:green;font-weight:bold">Active</span>`
+            }
+            <br/>
+            <button style="background:red;color:white;margin-top:5px"
+              onclick="deleteTiffinBooking('${b._id}')">
+              Delete
+            </button>
+          </td>
         </tr>
       `;
-    });
+
+
+      try {
+        const menuRes = await fetch(`${API_BASE}/api/tiffin-menus/${b._id}`);
+        const menu = await menuRes.json();
+
+        if (menu && menu.days) {
+          menu.days.forEach(d => {
+            html += `
+              <tr>
+                <td colspan="13">
+                  <b>Day ${d.dayNumber}</b><br>
+                  Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
+                  Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
+                  Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
+                </td>
+              </tr>
+            `;
+          });
+        }
+
+      } catch (err) {
+        console.log("No menu found for booking", b._id);
+      }
+    }
 
     html += "</table>";
     content.innerHTML = html;
+
   })
   .catch(() => {
     content.innerHTML = "<p>Failed to load bookings</p>";
   });
-
-  fetch(`${API_BASE}/api/tiffin-menus/${b._id}`)
-.then(res => res.json())
-.then(menu => {
-
-  if (!menu) return;
-
-  menu.days.forEach(d => {
-
-    html += `
-      <tr>
-        <td colspan="13">
-          <b>Day ${d.dayNumber}</b><br>
-          Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
-          Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
-          Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
-        </td>
-      </tr>
-    `;
-  });
-
-});
-
 }
 
 function deleteTiffinBooking(id) {

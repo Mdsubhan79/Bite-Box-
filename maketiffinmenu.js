@@ -4,50 +4,94 @@ const bookingId = params.get("bookingId");
 
 const container = document.getElementById("menuContainer");
 
-document.getElementById("weeklyBtn").onclick = () => {
+init();
 
-  container.innerHTML = "";
+function init() {
+  generateDays();
+  lockPastDays();
+}
+
+/* ================== GENERATE DAYS ================== */
+
+function generateDays() {
 
   for (let day = 1; day <= 7; day++) {
 
     container.innerHTML += `
-      <div class="day-card" id="day${day}">
-        <h2>Day ${day}</h2>
+      <div class="day-card">
+        <div class="day-header" onclick="toggleDay(${day})">
+          Day ${day}
+        </div>
 
-        ${createMealSection("Breakfast", day)}
-        ${createMealSection("Lunch", day)}
-        ${createMealSection("Dinner", day)}
+        <div class="day-content" id="dayContent${day}">
+          ${createMealSection("breakfast", day)}
+          ${createMealSection("lunch", day)}
+          ${createMealSection("dinner", day)}
+        </div>
       </div>
     `;
   }
+}
 
-  lockPastDays();
-};
+/* ================== TOGGLE ACCORDION ================== */
+
+function toggleDay(day) {
+
+  for (let i = 1; i <= 7; i++) {
+    const content = document.getElementById(`dayContent${i}`);
+    if (i === day) {
+      content.classList.toggle("active");
+    } else {
+      content.classList.remove("active");
+    }
+  }
+}
+
+/* ================== CREATE MEAL ================== */
 
 function createMealSection(meal, day) {
 
   return `
-    <h4>${meal}</h4>
+    <div class="meal-section">
+      <h4>${meal.toUpperCase()}</h4>
 
-    <select multiple id="${meal.toLowerCase()}Items${day}">
-      <option>Item 1</option>
-      <option>Item 2</option>
-      <option>Item 3</option>
-      <option>Item 4</option>
-    </select>
+      <select multiple id="${meal}Items${day}">
+        <option>Paneer</option>
+        <option>Rice</option>
+        <option>Dal</option>
+        <option>Roti</option>
+      </select>
 
-    <select id="${meal.toLowerCase()}Time${day}">
-      <option>7:00AM-7:30AM</option>
-      <option>7:30AM-8:00AM</option>
-      <option>8:00AM-8:30AM</option>
-      <option value="custom">Make Your Own</option>
-    </select>
+      <select id="${meal}Time${day}">
+        <option>7:00AM-7:30AM</option>
+        <option>7:30AM-8:00AM</option>
+        <option>8:00AM-8:30AM</option>
+        <option value="custom">Make Your Own</option>
+      </select>
 
-    <input type="text" id="custom${meal}${day}" placeholder="Custom time">
+      <input type="text"
+             id="custom${meal}${day}"
+             placeholder="Enter custom time"
+             style="display:none;" />
+
+    </div>
   `;
 }
 
-document.getElementById("saveBtn").onclick = async () => {
+/* ================== SHOW CUSTOM TIME ================== */
+
+document.addEventListener("change", function(e){
+
+  if (e.target.value === "custom") {
+    const id = e.target.id.replace("Time", "");
+    document.getElementById("custom" + id).style.display = "block";
+  }
+
+});
+
+/* ================== SAVE MENU ================== */
+
+document.getElementById("saveMenuBtn").onclick = async () => {
 
   const days = [];
 
@@ -67,21 +111,27 @@ document.getElementById("saveBtn").onclick = async () => {
     body: JSON.stringify({ bookingId, days })
   });
 
+  alert("Menu Saved Successfully!");
   window.location.href = "index.html";
 };
 
+/* ================== GET MEAL DATA ================== */
+
 function getMealData(meal, day) {
 
-  const items = [...document.getElementById(`${meal}Items${day}`).selectedOptions].map(o => o.value);
+  const items = [...document.getElementById(`${meal}Items${day}`).selectedOptions]
+    .map(o => o.value);
 
   const timeSelect = document.getElementById(`${meal}Time${day}`).value;
 
   const time = timeSelect === "custom"
-    ? document.getElementById(`custom${meal.charAt(0).toUpperCase() + meal.slice(1)}${day}`).value
+    ? document.getElementById(`custom${meal}${day}`).value
     : timeSelect;
 
   return { items, time };
 }
+
+/* ================== LOCK PAST DAYS ================== */
 
 async function lockPastDays() {
 
@@ -93,9 +143,9 @@ async function lockPastDays() {
 
   const diff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
 
-  for (let i = 1; i <= diff + 1; i++) {
+  for (let i = 1; i <= diff; i++) {
 
-    const block = document.getElementById(`day${i}`);
+    const block = document.getElementById(`dayContent${i}`);
     if (!block) continue;
 
     block.querySelectorAll("select, input").forEach(el => {

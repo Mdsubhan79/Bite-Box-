@@ -828,20 +828,23 @@ const bookingData = {
     const data = await res.json();
 
 if (data.success) {
-  window.location.href = `maketiffinmenu.html?bookingId=${data.booking._id}`;
-} else {
-      alert(data.message || "Booking failed");
-    }
+  const modal = document.getElementById("confirmationModal");
+  modal.style.display = "flex";
 
-  } catch (err) {
-    console.log(err);
-    alert("Server error");
+  document.getElementById("modalCloseBtn").onclick = function() {
+    window.location.href = `maketiffinmenu.html?bookingId=${data.booking._id}`;
+  };
+} else {
+      alert("Booking failed: " + data.message);
+    }
+  } catch (error) {
+    console.error("Error booking tiffin:", error);
+    alert("An error occurred while booking. Please try again.");
   }
 });
 
-// Close modal
 document.getElementById("modalCloseBtn").onclick = function() {
-  window.location.href = "index.html";
+  window.location.href = `maketiffinmenu.html?bookingId=${data.booking._id}`;
 };
 </script>
 
