@@ -362,7 +362,7 @@ function loadTiffinBookings() {
   ${
     b.status === "pending"
       ? `<button onclick="activateTiffin('${b._id}')">Activate</button>`
-      : `<span style="color:green;font-weight:bold">Active</span>`
+      : `<span style="color:#146400;font-weight:bold">Active</span>`
   }
   <br/>
 
@@ -371,7 +371,7 @@ function loadTiffinBookings() {
     onclick="deleteTiffinBooking('${b._id}')">
     Delete
   </button>
-  
+
   <br/>
 
  <button onclick="toggleMenu('${b._id}')" 
