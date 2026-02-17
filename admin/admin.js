@@ -34,6 +34,10 @@ function loadPage(page) {
     case "tiffinBookings":
   loadTiffinBookings();
   break;
+    
+    case "defaultMenu":
+  loadDefaultMenu();
+  break;
 
     case "orders":
        loadOrders();
@@ -595,6 +599,136 @@ function addTiffin() {
     alert("Server error");
   });
 }
+
+
+function loadDefaultMenu() {
+
+  const content = document.getElementById("content");
+
+  content.innerHTML = `
+    <h2>Set Weekly Tiffin Menu</h2>
+    <div id="adminMenuContainer"></div>
+    <button class="setMenuBtn" onclick="saveDefaultMenu()">Set Tiffin Menu</button>
+  `;
+
+  const container = document.getElementById("adminMenuContainer");
+
+  for (let day = 1; day <= 7; day++) {
+
+    container.innerHTML += `
+      <div class="admin-day-card">
+        <div class="admin-day-header" onclick="toggleAdminDay(${day})">
+          Day ${day}
+        </div>
+
+        <div class="admin-day-body" id="adminDay${day}" style="display:none;">
+
+          ${createMealFields("breakfast", day)}
+          ${createMealFields("lunch", day)}
+          ${createMealFields("dinner", day)}
+
+        </div>
+      </div>
+    `;
+  }
+
+  loadExistingDefaultMenu();
+}
+
+function createMealFields(meal, day) {
+
+  return `
+    <h4>${meal.toUpperCase()}</h4>
+    <input type="text" id="${meal}Items${day}" 
+      placeholder="Items (comma separated like 1,2,3,4)">
+    <input type="text" id="${meal}Time${day}" 
+      placeholder="Timing (7:00AM-7:30AM)">
+  `;
+}
+
+
+function toggleAdminDay(day) {
+
+  for (let i = 1; i <= 7; i++) {
+    const el = document.getElementById(`adminDay${i}`);
+    if (el) el.style.display = "none";
+  }
+
+  document.getElementById(`adminDay${day}`).style.display = "block";
+}
+
+
+function saveDefaultMenu() {
+
+  const days = [];
+
+  for (let day = 1; day <= 7; day++) {
+
+    days.push({
+      dayNumber: day,
+      breakfast: {
+        items: document.getElementById(`breakfastItems${day}`).value.split(","),
+        time: document.getElementById(`breakfastTime${day}`).value
+      },
+      lunch: {
+        items: document.getElementById(`lunchItems${day}`).value.split(","),
+        time: document.getElementById(`lunchTime${day}`).value
+      },
+      dinner: {
+        items: document.getElementById(`dinnerItems${day}`).value.split(","),
+        time: document.getElementById(`dinnerTime${day}`).value
+      }
+    });
+  }
+
+  fetch(`${API_BASE}/api/admin/default-menu`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    },
+    body: JSON.stringify({ days })
+  })
+  .then(() => alert("Default Tiffin Menu Saved Successfully"));
+}
+
+
+function loadExistingDefaultMenu() {
+
+  fetch(`${API_BASE}/api/admin/default-menu`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  })
+  .then(res => res.json())
+  .then(menu => {
+
+    if (!menu) return;
+
+    menu.days.forEach(d => {
+
+      document.getElementById(`breakfastItems${d.dayNumber}`).value =
+        d.breakfast.items.join(",");
+
+      document.getElementById(`breakfastTime${d.dayNumber}`).value =
+        d.breakfast.time;
+
+      document.getElementById(`lunchItems${d.dayNumber}`).value =
+        d.lunch.items.join(",");
+
+      document.getElementById(`lunchTime${d.dayNumber}`).value =
+        d.lunch.time;
+
+      document.getElementById(`dinnerItems${d.dayNumber}`).value =
+        d.dinner.items.join(",");
+
+      document.getElementById(`dinnerTime${d.dayNumber}`).value =
+        d.dinner.time;
+    });
+  });
+}
+
+
 
 /* ========= USERS LIST ========= */
 function loadUsers() {

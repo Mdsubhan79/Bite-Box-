@@ -153,3 +153,37 @@ async function lockPastDays() {
     });
   }
 }
+
+
+async function loadDefaultMenu() {
+
+  const res = await fetch(`${API_BASE}/api/admin/default-menu`);
+  const menu = await res.json();
+
+  if (!menu) return;
+
+  menu.days.forEach(d => {
+
+    document.getElementById(`breakfastItems${d.dayNumber}`).value =
+      d.breakfast.items.join(",");
+
+    document.getElementById(`breakfastTime${d.dayNumber}`).value =
+      d.breakfast.time;
+
+    document.getElementById(`lunchItems${d.dayNumber}`).value =
+      d.lunch.items.join(",");
+
+    document.getElementById(`lunchTime${d.dayNumber}`).value =
+      d.lunch.time;
+
+    document.getElementById(`dinnerItems${d.dayNumber}`).value =
+      d.dinner.items.join(",");
+
+    document.getElementById(`dinnerTime${d.dayNumber}`).value =
+      d.dinner.time;
+  });
+}
+
+window.onload = function() {
+  loadDefaultMenu();
+};
