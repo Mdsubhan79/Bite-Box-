@@ -6,9 +6,12 @@ const container = document.getElementById("menuContainer");
 
 init();
 
-function init() {
+/* ================== INIT ================== */
+
+async function init() {
   generateDays();
-  lockPastDays();
+  await loadAdminDefaultMenu();   // ✅ FIXED
+  await lockPastDays();
 }
 
 /* ================== GENERATE DAYS ================== */
@@ -73,7 +76,6 @@ function createMealSection(meal, day) {
              id="custom${meal}${day}"
              placeholder="Enter custom time"
              style="display:none;" />
-
     </div>
   `;
 }
@@ -86,7 +88,6 @@ document.addEventListener("change", function(e){
     const id = e.target.id.replace("Time", "");
     document.getElementById("custom" + id).style.display = "block";
   }
-
 });
 
 /* ================== SAVE MENU ================== */
@@ -138,6 +139,8 @@ async function lockPastDays() {
   const res = await fetch(`${API_BASE}/api/tiffin-bookings/${bookingId}`);
   const booking = await res.json();
 
+  if (!booking || !booking.startDate) return;
+
   const startDate = new Date(booking.startDate);
   const today = new Date();
 
@@ -154,36 +157,64 @@ async function lockPastDays() {
   }
 }
 
+/* ================== LOAD ADMIN DEFAULT MENU (FIXED) ================== */
 
-async function loadDefaultMenu() {
+async function loadAdminDefaultMenu() {
 
-  const res = await fetch(`${API_BASE}/api/admin/default-menu`);
-  const menu = await res.json();
+  try {
 
-  if (!menu) return;
+    const res = await fetch(`${API_BASE}/api/default-menu`);
+    const menu = await res.json();
 
-  menu.days.forEach(d => {
+    if (!menu || !menu.days) return;
 
-    document.getElementById(`breakfastItems${d.dayNumber}`).value =
-      d.breakfast.items.join(",");
+    menu.days.forEach(d => {
 
-    document.getElementById(`breakfastTime${d.dayNumber}`).value =
-      d.breakfast.time;
+      const day = d.dayNumber;
 
-    document.getElementById(`lunchItems${d.dayNumber}`).value =
-      d.lunch.items.join(",");
+      setMealData("breakfast", day, d.breakfast);
+      setMealData("lunch", day, d.lunch);
+      setMealData("dinner", day, d.dinner);
 
-    document.getElementById(`lunchTime${d.dayNumber}`).value =
-      d.lunch.time;
+    });
 
-    document.getElementById(`dinnerItems${d.dayNumber}`).value =
-      d.dinner.items.join(",");
-
-    document.getElementById(`dinnerTime${d.dayNumber}`).value =
-      d.dinner.time;
-  });
+  } catch (err) {
+    console.log("No default menu found");
+  }
 }
 
-window.onload = function() {
-  loadDefaultMenu();
-};
+/* ================== FIXED MULTI-SELECT LOADER ================== */
+
+function setMealData(meal, day, mealData) {
+
+  if (!mealData) return;
+
+  const select = document.getElementById(`${meal}Items${day}`);
+  const timeSelect = document.getElementById(`${meal}Time${day}`);
+
+  if (!select || !timeSelect) return;
+
+  // Clear old selection
+  Array.from(select.options).forEach(option => {
+    option.selected = false;
+  });
+
+  // Select correct items
+  mealData.items.forEach(item => {
+    Array.from(select.options).forEach(option => {
+      if (option.value.trim() === item.trim()) {
+        option.selected = true;
+      }
+    });
+  });
+
+  // Set time
+  timeSelect.value = mealData.time;
+
+  // If custom time
+  if (!Array.from(timeSelect.options).some(o => o.value === mealData.time)) {
+    timeSelect.value = "custom";
+    document.getElementById(`custom${meal}${day}`).style.display = "block";
+    document.getElementById(`custom${meal}${day}`).value = mealData.time;
+  }
+}

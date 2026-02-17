@@ -361,8 +361,7 @@ function loadTiffinBookings() {
           <td>${b.planName}</td>
           <td>${b.status}</td>
           <td>${b.paymentStatus}</td>
-          <td>
-           <td>
+   <td>
   ${
     b.status === "pending"
       ? `<button onclick="activateTiffin('${b._id}')">Activate</button>`
@@ -370,7 +369,6 @@ function loadTiffinBookings() {
   }
   <br/>
 
- 
   <button style="background:red;color:white;margin-top:5px"
     onclick="deleteTiffinBooking('${b._id}')">
     Delete
@@ -378,7 +376,7 @@ function loadTiffinBookings() {
 
   <br/>
 
- <button onclick="toggleMenu('${b._id}')" 
+  <button onclick="toggleMenu('${b._id}')" 
           style="background:#10332F;color:white;margin-top:5px">
     See Menu
   </button>
@@ -533,7 +531,7 @@ function deleteTiffin(id) {
   .then(res => res.json())
   .then(() => {
     alert("Plan Deleted");
-    loadTiffins(); // ✅ Auto refresh
+    loadTiffins(); 
   })
   .catch(() => alert("Delete failed"));
 }
@@ -592,7 +590,7 @@ function addTiffin() {
     }
 
     alert("Tiffin Added Successfully");
-    loadTiffins();   // ✅ Auto refresh
+    loadTiffins();   
   })
   .catch(err => {
     console.error(err);
@@ -681,7 +679,7 @@ function saveDefaultMenu() {
     });
   }
 
-  fetch(`${API_BASE}/api/admin/default-menu`, {
+  fetch(`${API_BASE}/api/default-menu`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
