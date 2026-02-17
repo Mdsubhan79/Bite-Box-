@@ -178,39 +178,52 @@ async function loadAdminDefaultMenu() {
     console.log("No default menu found");
   }
 }
+
+
 function setMealData(meal, day, mealData) {
 
   if (!mealData) return;
 
   const select = document.getElementById(`${meal}Items${day}`);
   const timeSelect = document.getElementById(`${meal}Time${day}`);
+  const customInput = document.getElementById(`custom${meal}${day}`);
 
   if (!select || !timeSelect) return;
 
-  
+  /* ================= ITEMS ================= */
+
+  // Clear old options
   select.innerHTML = "";
 
-
+  // Add admin items dynamically
   mealData.items.forEach(item => {
-
     const option = document.createElement("option");
     option.value = item.trim();
     option.textContent = item.trim();
-    option.selected = true;
-
+    option.selected = false;   
     select.appendChild(option);
-
   });
 
-  
-  timeSelect.value = mealData.time;
+  /* ================= TIME ================= */
 
- 
-  if (!Array.from(timeSelect.options).some(o => o.value === mealData.time)) {
+  if (!mealData.time) return;
 
+  const timeValues = mealData.time.split(",").map(t => t.trim());
+
+  // Reset dropdown
+  timeSelect.value = "";
+
+  // If only ONE time and it exists in dropdown
+  if (timeValues.length === 1 &&
+      Array.from(timeSelect.options).some(o => o.value === timeValues[0])) {
+
+    timeSelect.value = timeValues[0];
+    customInput.style.display = "none";
+    customInput.value = "";
+
+  } else {
+    // Multiple times OR not in dropdown → custom
     timeSelect.value = "custom";
-
-    const customInput = document.getElementById(`custom${meal}${day}`);
     customInput.style.display = "block";
     customInput.value = mealData.time;
   }
