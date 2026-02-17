@@ -200,27 +200,33 @@ function setMealData(meal, day, mealData) {
     select.appendChild(option);
   });
 
-  /* ================= TIME ================= */
 
-  if (!mealData.time) return;
+if (!mealData.time) return;
 
-  const timeValues = mealData.time.split(",").map(t => t.trim());
+// Clear old options
+timeSelect.innerHTML = "";
 
-  // Reset dropdown
-  timeSelect.value = "";
+// Split admin times
+const timeValues = mealData.time.split(",").map(t => t.trim());
 
-  // If only ONE time and it exists in dropdown
-  if (timeValues.length === 1 &&
-      Array.from(timeSelect.options).some(o => o.value === timeValues[0])) {
+// Add each admin time as selectable option
+timeValues.forEach(t => {
+  const option = document.createElement("option");
+  option.value = t;
+  option.textContent = t;
+  timeSelect.appendChild(option);
+});
 
-    timeSelect.value = timeValues[0];
-    customInput.style.display = "none";
-    customInput.value = "";
+// Add custom option
+const customOption = document.createElement("option");
+customOption.value = "custom";
+customOption.textContent = "Make Your Own";
+timeSelect.appendChild(customOption);
 
-  } else {
-    // Multiple times OR not in dropdown → custom
-    timeSelect.value = "custom";
-    customInput.style.display = "block";
-    customInput.value = mealData.time;
-  }
+// Default select first time
+timeSelect.value = timeValues[0];
+
+// Hide custom field initially
+customInput.style.display = "none";
+customInput.value = "";
 }
