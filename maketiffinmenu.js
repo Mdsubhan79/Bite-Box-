@@ -62,10 +62,6 @@ function createMealSection(meal, day) {
       </select>
 
       <select id="${meal}Time${day}">
-        <option>7:00AM-7:30AM</option>
-        <option>7:30AM-8:00AM</option>
-        <option>8:00AM-8:30AM</option>
-        <option value="custom">Make Your Own</option>
       </select>
 
       <input type="text"
