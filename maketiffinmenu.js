@@ -59,10 +59,6 @@ function createMealSection(meal, day) {
       <h4>${meal.toUpperCase()}</h4>
 
       <select multiple id="${meal}Items${day}">
-        <option>Paneer</option>
-        <option>Rice</option>
-        <option>Dal</option>
-        <option>Roti</option>
       </select>
 
       <select id="${meal}Time${day}">
@@ -182,9 +178,6 @@ async function loadAdminDefaultMenu() {
     console.log("No default menu found");
   }
 }
-
-/* ================== FIXED MULTI-SELECT LOADER ================== */
-
 function setMealData(meal, day, mealData) {
 
   if (!mealData) return;
@@ -194,27 +187,31 @@ function setMealData(meal, day, mealData) {
 
   if (!select || !timeSelect) return;
 
-  // Clear old selection
-  Array.from(select.options).forEach(option => {
-    option.selected = false;
-  });
+  
+  select.innerHTML = "";
 
-  // Select correct items
+
   mealData.items.forEach(item => {
-    Array.from(select.options).forEach(option => {
-      if (option.value.trim() === item.trim()) {
-        option.selected = true;
-      }
-    });
+
+    const option = document.createElement("option");
+    option.value = item.trim();
+    option.textContent = item.trim();
+    option.selected = true;
+
+    select.appendChild(option);
+
   });
 
-  // Set time
+  
   timeSelect.value = mealData.time;
 
-  // If custom time
+ 
   if (!Array.from(timeSelect.options).some(o => o.value === mealData.time)) {
+
     timeSelect.value = "custom";
-    document.getElementById(`custom${meal}${day}`).style.display = "block";
-    document.getElementById(`custom${meal}${day}`).value = mealData.time;
+
+    const customInput = document.getElementById(`custom${meal}${day}`);
+    customInput.style.display = "block";
+    customInput.value = mealData.time;
   }
 }
