@@ -9,6 +9,7 @@ init();
 /* ================== INIT ================== */
 
 async function init() {
+  await loadSummary();
   generateDays();
   await loadAdminDefaultMenu();   // ✅ FIXED
   await lockPastDays();
@@ -138,7 +139,9 @@ async function lockPastDays() {
 
   const diff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
 
-  for (let i = 1; i <= diff; i++) {
+  const lockUntil = diff + 2; 
+
+  for (let i = 1; i <= lockUntil; i++) {
 
     const block = document.getElementById(`dayContent${i}`);
     if (!block) continue;
@@ -146,10 +149,13 @@ async function lockPastDays() {
     block.querySelectorAll("select, input").forEach(el => {
       el.disabled = true;
     });
+
+    // Optional UI
+    block.style.opacity = "0.5";
   }
 }
 
-/* ================== LOAD ADMIN DEFAULT MENU (FIXED) ================== */
+/* ==================LOAD ADMIN DEFAULT MENU================== */
 
 async function loadAdminDefaultMenu() {
 
@@ -187,11 +193,9 @@ function setMealData(meal, day, mealData) {
   if (!select || !timeSelect) return;
 
   /* ================= ITEMS ================= */
-
-  // Clear old options
   select.innerHTML = "";
 
-  // Add admin items dynamically
+
   mealData.items.forEach(item => {
     const option = document.createElement("option");
     option.value = item.trim();
@@ -203,13 +207,13 @@ function setMealData(meal, day, mealData) {
 
 if (!mealData.time) return;
 
-// Clear old options
+
 timeSelect.innerHTML = "";
 
-// Split admin times
+
 const timeValues = mealData.time.split(",").map(t => t.trim());
 
-// Add each admin time as selectable option
+
 timeValues.forEach(t => {
   const option = document.createElement("option");
   option.value = t;
@@ -217,16 +221,58 @@ timeValues.forEach(t => {
   timeSelect.appendChild(option);
 });
 
-// Add custom option
 const customOption = document.createElement("option");
 customOption.value = "custom";
 customOption.textContent = "Make Your Own";
 timeSelect.appendChild(customOption);
 
-// Default select first time
 timeSelect.value = timeValues[0];
 
-// Hide custom field initially
+
 customInput.style.display = "none";
 customInput.value = "";
 }
+// Reset menu 
+
+async function loadSummary() {
+
+  const res = await fetch(`${API_BASE}/api/tiffin-menus/${bookingId}`);
+  const data = await res.json();
+
+  if (!data || !data.days) return;
+
+  const box = document.getElementById("summaryBox");
+
+  box.innerHTML = "<h2>Your Weekly Menu</h2>";
+
+  data.days.forEach(d => {
+
+    box.innerHTML += `
+      <div style="background:#fff;padding:10px;margin-bottom:10px;border-radius:8px;">
+        <b>Day ${d.dayNumber}</b><br>
+
+        Breakfast: ${d.breakfast.items.join(", ")} 
+        (${d.breakfast.time})<br>
+
+        Lunch: ${d.lunch.items.join(", ")} 
+        (${d.lunch.time})<br>
+
+        Dinner: ${d.dinner.items.join(", ")} 
+        (${d.dinner.time})
+      </div>
+    `;
+  });
+
+  // remake button
+  document.getElementById("remakeBtn").style.display = "block";
+}
+
+document.getElementById("remakeBtn").onclick = () => {
+
+  // Hide summary
+  document.getElementById("summaryBox").style.display = "none";
+  document.getElementById("remakeBtn").style.display = "none";
+
+  // Show menu editor
+  document.getElementById("menuContainer").style.display = "block";
+};
