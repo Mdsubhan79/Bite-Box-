@@ -274,5 +274,5 @@ document.getElementById("remakeBtn").onclick = () => {
   document.getElementById("remakeBtn").style.display = "none";
 
   // Show menu editor
-  document.getElementById("menuContainer").style.display = "block";
+  document.getElementById("menuContainer").style.display = "none";
 };
