@@ -210,7 +210,7 @@ function setMealData(meal, day, mealData) {
     const option = document.createElement("option");
     option.value = item.trim();
     option.textContent = item.trim();
-    option.selected = false;   
+    option.selected = true;   
     select.appendChild(option);
   });
 
@@ -250,6 +250,8 @@ async function loadSummary() {
     const res = await fetch(`${API_BASE}/api/tiffin-menus/${bookingId}`);
     if (!res.ok) {
   document.getElementById("menuContainer").style.display = "block";
+  menuSection.style.display = "block";
+  menuSection.style.display = "none";
   return;
 }
 
@@ -301,3 +303,20 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
 });
+
+
+const showSummaryBtn = document.getElementById("showSummaryBtn");
+const showSetMenuBtn = document.getElementById("showSetMenuBtn");
+
+const summarySection = document.getElementById("summarySection");
+const menuSection = document.getElementById("menuSection");
+
+showSummaryBtn.onclick = () => {
+  summarySection.style.display = "block";
+  menuSection.style.display = "none";
+};
+
+showSetMenuBtn.onclick = () => {
+  summarySection.style.display = "none";
+  menuSection.style.display = "block";
+};

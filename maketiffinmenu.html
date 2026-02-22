@@ -105,15 +105,23 @@ button:hover {
 <div class="container">
 <h1>Make Your Tiffin Menu As You Wish</h1>
 
-<div id="summaryBox"></div>
+<div style="text-align:center; margin-bottom:20px;">
+  <button id="showSummaryBtn">Show Selected Menu</button>
+  <button id="showSetMenuBtn">Set Menu</button>
+</div>
 
-<div id="menuContainer" style="display: none;"></div>
+<div id="summarySection" style="display:none;">
+  <div id="summaryBox"></div>
+</div>
+
+<div id="menuSection" style="display:none;">
+  <div id="menuContainer"></div>
+  <button id="saveMenuBtn">Save Menu</button>
+</div>
+
 <button id="remakeBtn" style="display:none;">
   Reset Menu
 </button>
-
-<button id="saveMenuBtn">Set Menu</button>
-</div>
 
 <script src="maketiffinmenu.js"></script>
 
