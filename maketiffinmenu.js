@@ -9,10 +9,11 @@ init();
 /* ================== INIT ================== */
 
 async function init() {
-  await loadSummary();
+ 
   generateDays();
-  await loadAdminDefaultMenu();   // ✅ FIXED
+  await loadAdminDefaultMenu();  
   await lockPastDays();
+  await loadSummary();
 }
 
 /* ================== GENERATE DAYS ================== */
@@ -232,47 +233,57 @@ timeSelect.value = timeValues[0];
 customInput.style.display = "none";
 customInput.value = "";
 }
-// Reset menu 
 
 async function loadSummary() {
 
-  const res = await fetch(`${API_BASE}/api/tiffin-menus/${bookingId}`);
-  const data = await res.json();
+  try {
 
-  if (!data || !data.days) return;
+    const res = await fetch(`${API_BASE}/api/tiffin-menus/${bookingId}`);
+    const data = await res.json();
 
-  const box = document.getElementById("summaryBox");
+    if (!data || !data.days) {
+    
+      document.getElementById("menuContainer").style.display = "block";
+      return;
+    }
 
-  box.innerHTML = "<h2>Your Weekly Menu</h2>";
+    const box = document.getElementById("summaryBox");
+    box.innerHTML = "<h2>Your Weekly Menu</h2>";
 
-  data.days.forEach(d => {
+    data.days.forEach(d => {
 
-    box.innerHTML += `
-      <div style="background:#fff;padding:10px;margin-bottom:10px;border-radius:8px;">
-        <b>Day ${d.dayNumber}</b><br>
+      box.innerHTML += `
+        <div style="background:#fff;padding:10px;margin-bottom:10px;border-radius:8px;">
+          <b>Day ${d.dayNumber}</b><br>
+          Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
+          Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
+          Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
+        </div>
+      `;
+    });
 
-        Breakfast: ${d.breakfast.items.join(", ")} 
-        (${d.breakfast.time})<br>
+    document.getElementById("remakeBtn").style.display = "block";
 
-        Lunch: ${d.lunch.items.join(", ")} 
-        (${d.lunch.time})<br>
+  } catch (err) {
 
-        Dinner: ${d.dinner.items.join(", ")} 
-        (${d.dinner.time})
-      </div>
-    `;
-  });
+    console.log("Summary error:", err);
 
-  // remake button
-  document.getElementById("remakeBtn").style.display = "block";
+  
+    document.getElementById("menuContainer").style.display = "block";
+  }
 }
 
-document.getElementById("remakeBtn").onclick = () => {
+document.addEventListener("DOMContentLoaded", function() {
 
-  // Hide summary
-  document.getElementById("summaryBox").style.display = "none";
-  document.getElementById("remakeBtn").style.display = "none";
+  const remakeBtn = document.getElementById("remakeBtn");
 
-  // Show menu editor
-  document.getElementById("menuContainer").style.display = "none";
-};
+  if (remakeBtn) {
+    remakeBtn.onclick = () => {
+
+      document.getElementById("summaryBox").style.display = "none";
+      remakeBtn.style.display = "none";
+      document.getElementById("menuContainer").style.display = "block";
+    };
+  }
+
+});
