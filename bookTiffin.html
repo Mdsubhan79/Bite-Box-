@@ -826,22 +826,30 @@ const bookingData = {
 
     const data = await res.json();
 
-if (data.success) {
+    if (data.success) {
+
+  const bookingId = data.booking._id;
+
+  if (!bookingId) {
+    alert("Booking ID missing!");
+    return;
+  }
+
   const modal = document.getElementById("confirmationModal");
   modal.style.display = "flex";
 
-  document.getElementById("modalCloseBtn").onclick = function() {
-    window.location.href = `maketiffinmenu.html?bookingId=${data.booking._id}`;
-  };
-} else {
-      alert("Booking failed: " + data.message);
-    }
-  } catch (error) {
-    console.error("Error booking tiffin:", error);
-    alert("An error occurred while booking. Please try again.");
-  }
-});
+  const closeBtn = document.getElementById("modalCloseBtn");
 
+  closeBtn.onclick = function () {
+    window.location.href =
+      `maketiffinmenu.html?bookingId=${bookingId}`;
+  };
+}
+    } catch (error) {
+        console.error("Booking failed:", error);
+        alert("An error occurred while booking. Please try again.");
+    }
+    });
 </script>
 
     <script>
