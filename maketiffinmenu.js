@@ -133,8 +133,14 @@ function getMealData(meal, day) {
 
 async function lockPastDays() {
 
-  const res = await fetch(`${API_BASE}/api/tiffin-bookings/${bookingId}`);
-  const booking = await res.json();
+const res = await fetch(`${API_BASE}/api/tiffin-bookings/${bookingId}`);
+
+if (!res.ok) {
+  console.log("Booking fetch failed");
+  return;
+}
+
+const booking = await res.json();
 
   if (!booking || !booking.startDate) return;
 
