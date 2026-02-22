@@ -160,7 +160,7 @@ const booking = await res.json();
       el.disabled = true;
     });
 
-    // Optional UI
+  
     block.style.opacity = "0.5";
   }
 }
@@ -210,7 +210,7 @@ function setMealData(meal, day, mealData) {
     const option = document.createElement("option");
     option.value = item.trim();
     option.textContent = item.trim();
-    option.selected = true;   
+    option.selected =false;   
     select.appendChild(option);
   });
 
@@ -289,18 +289,71 @@ async function loadSummary() {
     menuSection.style.display = "block";
   }
 }
+
+
+
 const showSummaryBtn = document.getElementById("showSummaryBtn");
+
 const showSetMenuBtn = document.getElementById("showSetMenuBtn");
 
 const summarySection = document.getElementById("summarySection");
 const menuSection = document.getElementById("menuSection");
 
-showSummaryBtn.onclick = () => {
-  summarySection.style.display = "block";
-  menuSection.style.display = "none";
-};
-
 showSetMenuBtn.onclick = () => {
   summarySection.style.display = "none";
   menuSection.style.display = "block";
+
+
+  for (let day = 1; day <= 7; day++) {
+    ["breakfast", "lunch", "dinner"].forEach(meal => {
+      const select = document.getElementById(`${meal}Items${day}`);
+      if (select) {
+        Array.from(select.options).forEach(option => {
+          option.selected = false;
+        });
+      }
+    });
+  }
 };
+
+
+
+const remakeBtn = document.getElementById("remakeBtn");
+
+if (remakeBtn) {
+  remakeBtn.onclick = () => {
+
+  
+    summarySection.style.display = "none";
+    menuSection.style.display = "block";
+    remakeBtn.style.display = "none";
+
+   
+    for (let day = 1; day <= 7; day++) {
+
+      ["breakfast", "lunch", "dinner"].forEach(meal => {
+
+        const select = document.getElementById(`${meal}Items${day}`);
+        const timeSelect = document.getElementById(`${meal}Time${day}`);
+        const customInput = document.getElementById(`custom${meal}${day}`);
+
+        if (select) {
+          Array.from(select.options).forEach(option => {
+            option.selected = false;
+          });
+        }
+
+        if (timeSelect) {
+          timeSelect.selectedIndex = 0;
+        }
+
+        if (customInput) {
+          customInput.value = "";
+          customInput.style.display = "none";
+        }
+
+      });
+    }
+
+  };
+}
