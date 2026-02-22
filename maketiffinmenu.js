@@ -242,24 +242,23 @@ timeSelect.value = timeValues[0];
 customInput.style.display = "none";
 customInput.value = "";
 }
-
 async function loadSummary() {
-
   try {
 
     const res = await fetch(`${API_BASE}/api/tiffin-menus/${bookingId}`);
-    if (!res.ok) {
-  document.getElementById("menuContainer").style.display = "block";
-  menuSection.style.display = "block";
-  menuSection.style.display = "none";
-  return;
-}
 
-const data = await res.json();
+    if (!res.ok) {
+      
+      summarySection.style.display = "none";
+      menuSection.style.display = "block";
+      return;
+    }
+
+    const data = await res.json();
 
     if (!data || !data.days) {
-    
-      document.getElementById("menuContainer").style.display = "block";
+      summarySection.style.display = "none";
+      menuSection.style.display = "block";
       return;
     }
 
@@ -267,7 +266,6 @@ const data = await res.json();
     box.innerHTML = "<h2>Your Weekly Menu</h2>";
 
     data.days.forEach(d => {
-
       box.innerHTML += `
         <div style="background:#fff;padding:10px;margin-bottom:10px;border-radius:8px;">
           <b>Day ${d.dayNumber}</b><br>
@@ -280,31 +278,17 @@ const data = await res.json();
 
     document.getElementById("remakeBtn").style.display = "block";
 
-  } catch (err) {
 
+    summarySection.style.display = "block";
+    menuSection.style.display = "none";
+
+  } catch (err) {
     console.log("Summary error:", err);
 
-  
-    document.getElementById("menuContainer").style.display = "block";
+    summarySection.style.display = "none";
+    menuSection.style.display = "block";
   }
 }
-
-document.addEventListener("DOMContentLoaded", function() {
-
-  const remakeBtn = document.getElementById("remakeBtn");
-
-  if (remakeBtn) {
-    remakeBtn.onclick = () => {
-
-      document.getElementById("summaryBox").style.display = "none";
-      remakeBtn.style.display = "none";
-      document.getElementById("menuContainer").style.display = "block";
-    };
-  }
-
-});
-
-
 const showSummaryBtn = document.getElementById("showSummaryBtn");
 const showSetMenuBtn = document.getElementById("showSetMenuBtn");
 
