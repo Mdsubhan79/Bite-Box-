@@ -290,19 +290,22 @@ async function loadSummary() {
   }
 }
 
-
-
 const showSummaryBtn = document.getElementById("showSummaryBtn");
-
 const showSetMenuBtn = document.getElementById("showSetMenuBtn");
-
 const summarySection = document.getElementById("summarySection");
 const menuSection = document.getElementById("menuSection");
+const remakeBtn = document.getElementById("remakeBtn");
+
+init();
+
+showSummaryBtn.onclick = () => {
+  summarySection.style.display = "block";
+  menuSection.style.display = "none";
+};
 
 showSetMenuBtn.onclick = () => {
   summarySection.style.display = "none";
   menuSection.style.display = "block";
-
 
   for (let day = 1; day <= 7; day++) {
     ["breakfast", "lunch", "dinner"].forEach(meal => {
@@ -316,19 +319,13 @@ showSetMenuBtn.onclick = () => {
   }
 };
 
-
-
-const remakeBtn = document.getElementById("remakeBtn");
-
 if (remakeBtn) {
   remakeBtn.onclick = () => {
 
-  
     summarySection.style.display = "none";
     menuSection.style.display = "block";
     remakeBtn.style.display = "none";
 
-   
     for (let day = 1; day <= 7; day++) {
 
       ["breakfast", "lunch", "dinner"].forEach(meal => {
@@ -354,6 +351,5 @@ if (remakeBtn) {
 
       });
     }
-
   };
 }
