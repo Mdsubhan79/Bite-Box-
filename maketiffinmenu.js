@@ -110,7 +110,7 @@ document.getElementById("saveMenuBtn").onclick = async () => {
   });
 
   alert("Menu Saved Successfully!");
-  window.location.href = "index.html";
+  window.location.href = `maketiffinmenu.html?bookingId=${bookingId}`;
 };
 
 /* ================== GET MEAL DATA ================== */
@@ -248,7 +248,12 @@ async function loadSummary() {
   try {
 
     const res = await fetch(`${API_BASE}/api/tiffin-menus/${bookingId}`);
-    const data = await res.json();
+    if (!res.ok) {
+  document.getElementById("menuContainer").style.display = "block";
+  return;
+}
+
+const data = await res.json();
 
     if (!data || !data.days) {
     
