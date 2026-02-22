@@ -783,14 +783,13 @@ if (!planId || !user) {
 
 let selectedPlan = null;
 
-// Fetch selected plan
 fetch(`${API_BASE}/api/tiffins/${planId}`)
   .then(res => res.json())
   .then(plan => {
     selectedPlan = plan;
   });
 
-// Handle booking form submit
+
 document.getElementById("bookingForm").addEventListener("submit", async function(e) {
   e.preventDefault();
 

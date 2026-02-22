@@ -1,7 +1,10 @@
 const API_BASE = "https://bbbackend-bng2.onrender.com";
 const params = new URLSearchParams(window.location.search);
 const bookingId = params.get("bookingId");
-
+if (!bookingId || bookingId === "null") {
+  console.log("No bookingId found");
+  document.getElementById("menuContainer").style.display = "block";
+}
 const container = document.getElementById("menuContainer");
 
 init();
