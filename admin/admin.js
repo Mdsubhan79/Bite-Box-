@@ -161,25 +161,22 @@ function addVeg() {
     formData.append("image", imageFile);
   }
 
-  fetch(`${API_BASE}/api/food/add`, {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("adminToken")
-      // ❌ DO NOT set Content-Type here
-    },
-    body: formData
-  })
-.then(res => res.json())
-.then(data => {
-  if (!data.success) {
-    alert("Failed to add veg item");
-    return;
+fetch(`${API_BASE}/api/food/add`, {
+  method: "POST",
+  body: formData
+})
+.then(async res => {
+  const data = await res.json();
+
+  if (!res.ok) {
+    alert(data.error);
+    throw new Error(data.error);
   }
-  loadVegMenu();
+
+  alert("Item added successfully!");
 })
 .catch(err => {
-  console.error("Veg add error:", err);
-  alert("Error adding veg item");
+  console.log("Veg add error:", err.message);
 });
 
 }
