@@ -94,20 +94,12 @@ document.addEventListener("change", function(e){
 
 /* ================== SAVE MENU ================== */
 
-const saveBtn = document.getElementById("saveMenuBtn");
-
-saveBtn.onclick = async () => {
-
-
-  if (summarySection.style.display === "block") {
-    summarySection.style.display = "none";
-    menuSection.style.display = "block";
-    return;
-  }
+document.getElementById("saveMenuBtn").onclick = async () => {
 
   const days = [];
 
   for (let day = 1; day <= 7; day++) {
+
     days.push({
       dayNumber: day,
       breakfast: getMealData("breakfast", day),
