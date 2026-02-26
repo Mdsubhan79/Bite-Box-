@@ -122,7 +122,8 @@ function loadVegMenu() {
     items.forEach(item => {
       html += `
         <tr>
-          <td>${item.name}</td>
+        <td><img src="${item.image}" alt="${item.name}" style="width:60px;height:60px;object-fit:cover;border-radius:6px;"><br>${item.name}</td>
+        
           <td>₹${item.price}</td>
           <td>${item.available ? "Yes" : "No"}</td>
           <td>
@@ -253,7 +254,7 @@ function loadNonVegMenu() {
     items.forEach(item => {
       html += `
         <tr>
-          <td>${item.name}</td>
+        <td><img src="${item.image}" alt="${item.name}" style="width:60px;height:60px;object-fit:cover;border-radius:6px;"><br>${item.name}</td>
           <td>₹${item.price}</td>
           <td>${item.available ? "Yes" : "No"}</td>
           <td>
