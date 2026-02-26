@@ -166,21 +166,30 @@ fetch(`${API_BASE}/api/food/add`, {
   body: formData
 })
 .then(async res => {
+
+  const contentType = res.headers.get("content-type");
+
+  if (!contentType || !contentType.includes("application/json")) {
+    const text = await res.text();
+    console.error("Server returned non-JSON:", text);
+    alert("Server error. Check backend logs.");
+    return;
+  }
+
   const data = await res.json();
 
   if (!res.ok) {
-    alert(data.error);
-    throw new Error(data.error);
+    alert(data.error || "Failed to add item");
+    return;
   }
 
   alert("Item added successfully!");
+
 })
 .catch(err => {
   console.log("Veg add error:", err.message);
 });
-
 }
-
 /* ========= DELETE VEG ========= */
 function deleteVeg(id) {
   if (!confirm("Delete this item?")) return;
