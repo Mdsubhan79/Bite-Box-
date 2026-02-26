@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title data-translate="tiffinService">Tiffin Service </title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="tiffin.css">
+  
        <link rel="icon" type="image/x-icon" href="briobite.png">
       <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -188,7 +188,7 @@ body {
   color: #F4C873;
 }
 
-/* Hamburger toggle (only visible on mobile) */
+
 .menu-toggle {
   display: none;
   flex-direction: column;
@@ -292,6 +292,12 @@ body {
     margin-bottom: 15px;
     color: #fdedce;
 }
+ .plan-details p:last-of-type {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 15px;
+  color: #ffcc33;
+}
 
 .plan-details ul {
     list-style-position: inside;
@@ -307,7 +313,7 @@ body {
 
 .book-now {
     background-color:#10332F ;
-    color:#E4C873 ;
+    color:#e6bc40 ;
     border: none;
     padding: 12px 30px;
     border-radius: 5px;
@@ -319,8 +325,7 @@ body {
 
 .book-now:hover {
     background-color:#0d443e ;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+ 
 }
 
 
@@ -610,7 +615,7 @@ fetch(`${API_BASE}/api/tiffins/${planId}`)
 </script>
 <script>
   document.getElementById('newsletterForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevent actual form submission
+    e.preventDefault(); 
     const emailInput = document.getElementById('newsletterEmail');
     const email = emailInput.value.trim();
 
@@ -673,7 +678,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (dropdownHeader && dropdownList) {
     dropdownHeader.addEventListener("click", () => {
-      // Only work on small screens
+     
       if (window.innerWidth < 768) {
         dropdownList.classList.toggle("active");
         dropdownHeader.classList.toggle("active");
