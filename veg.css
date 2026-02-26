@@ -261,7 +261,7 @@ body {
 
 
 .subscribe-btn {
-  background-color: #E4C873;
+  background-color: #dbb648;
   color: #10332F;
   border: none;
   padding: 10px 16px;
@@ -377,7 +377,7 @@ body {
 
 .card {
   width: 100%;
-  max-width: 115px; /* Adjusted for 250px container */
+  max-width: 115px; 
   padding: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
