@@ -7,8 +7,7 @@ if (!bookingId || bookingId === "null") {
 }
 
 const container = document.getElementById("menuContainer");
-const showSummaryBtn = document.getElementById("showSummaryBtn");
-const showSetMenuBtn = document.getElementById("showSetMenuBtn");
+
 
 const summarySection = document.getElementById("summarySection");
 const menuSection = document.getElementById("menuSection");
@@ -95,12 +94,20 @@ document.addEventListener("change", function(e){
 
 /* ================== SAVE MENU ================== */
 
-document.getElementById("saveMenuBtn").onclick = async () => {
+const saveBtn = document.getElementById("saveMenuBtn");
+
+saveBtn.onclick = async () => {
+
+
+  if (summarySection.style.display === "block") {
+    summarySection.style.display = "none";
+    menuSection.style.display = "block";
+    return;
+  }
 
   const days = [];
 
   for (let day = 1; day <= 7; day++) {
-
     days.push({
       dayNumber: day,
       breakfast: getMealData("breakfast", day),
@@ -294,23 +301,6 @@ async function loadSummary() {
   }
 }
 
-
-showSetMenuBtn.onclick = () => {
-  summarySection.style.display = "none";
-  menuSection.style.display = "block";
-
-
-  for (let day = 1; day <= 7; day++) {
-    ["breakfast", "lunch", "dinner"].forEach(meal => {
-      const select = document.getElementById(`${meal}Items${day}`);
-      if (select) {
-        Array.from(select.options).forEach(option => {
-          option.selected = false;
-        });
-      }
-    });
-  }
-};
 
 
 
