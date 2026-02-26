@@ -42,7 +42,7 @@ function escapeHtml(str) {
 
 function createFoodCard(item) {
   const imgSrc = item.image
-    ? `${BASE_URL}${item.image}`
+    ? item.image
     : 'https://via.placeholder.com/150';
 
   return `
