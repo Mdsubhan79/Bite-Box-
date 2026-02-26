@@ -230,11 +230,11 @@ footer button:hover {
     <div class="cart-container" id="cart-container">
         <h2 class="cart-title">Your Cart</h2>
         <div id="cart-items-container">
-            <!-- Cart items will be loaded here by JavaScript -->
+    
         </div>
         
         <div class="price-summary" id="price-summary">
-            <!-- Price summary will be loaded here by JavaScript -->
+      
         </div>
         
         <button class="checkout-btn" id="checkout-btn">Proceed to Checkout</button>
@@ -364,7 +364,7 @@ footer button:hover {
                 cartItemsContainer.appendChild(cartItem);
             });
             
-            // Render price summary
+        
             const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
             const discount = Math.round(subtotal * 0.05); 
             const total = subtotal - discount;
@@ -398,7 +398,7 @@ footer button:hover {
             if (itemIndex !== -1) {
                 cart[itemIndex].quantity += change;
                 
-                // Remove item if quantity reaches 0
+           
                 if (cart[itemIndex].quantity <= 0) {
                     cart.splice(itemIndex, 1);
                 }
@@ -408,11 +408,11 @@ footer button:hover {
             }
         }
         
-        // Initialize cart when page loads
+      
         document.addEventListener('DOMContentLoaded', () => {
             renderCart();
             
-            // Toggle dropdown menu
+        
         
   const menuToggle = document.getElementById('menuToggle');
   const dropdownMenu = document.getElementById('dropdownMenu');
