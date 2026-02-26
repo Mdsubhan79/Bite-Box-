@@ -157,39 +157,43 @@ function addVeg() {
   formData.append("item_type", "veg");
 
   const imageFile = document.getElementById("vegImage").files[0];
-  if (imageFile) {
-    formData.append("image", imageFile);
-  }
 
-fetch(`${API_BASE}/api/food/add`, {
-  method: "POST",
-  body: formData
-})
-.then(async res => {
-
-  const contentType = res.headers.get("content-type");
-
-  if (!contentType || !contentType.includes("application/json")) {
-    const text = await res.text();
-    console.error("Server returned non-JSON:", text);
-    alert("Server error. Check backend logs.");
+  if (!imageFile) {
+    alert("Please select an image");
     return;
   }
 
-  const data = await res.json();
 
-  if (!res.ok) {
-    alert(data.error || "Failed to add item");
+  if (imageFile.size > 1 * 1024 * 1024) {
+    alert("Image must be under 1MB");
     return;
   }
 
-  alert("Item added successfully!");
+  formData.append("image", imageFile);
 
-})
-.catch(err => {
-  console.log("Veg add error:", err.message);
-});
+  fetch(`${API_BASE}/api/food/add`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    },
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (!data.success) {
+      alert(data.error || "Failed to add item");
+      return;
+    }
+
+    alert("Item added successfully!");
+    loadVegMenu();
+  })
+  .catch(err => {
+    console.log("Veg add error:", err);
+    alert("Server error");
+  });
 }
+
 /* ========= DELETE VEG ========= */
 function deleteVeg(id) {
   if (!confirm("Delete this item?")) return;
@@ -284,22 +288,43 @@ function addNonVeg() {
   formData.append("item_type", "nonveg");
 
   const imageFile = document.getElementById("nonvegImage").files[0];
-  if (imageFile) {
-    formData.append("image", imageFile);
+
+  if (!imageFile) {
+    alert("Please select an image");
+    return;
   }
+
+  if (imageFile.size > 1 * 1024 * 1024) {
+    alert("Image must be under 1MB");
+    return;
+  }
+
+  formData.append("image", imageFile);
 
   fetch(`${API_BASE}/api/food/add`, {
     method: "POST",
     headers: {
       Authorization: "Bearer " + localStorage.getItem("adminToken")
-      // ❌ do NOT set Content-Type
     },
     body: formData
   })
-    .then(res => res.json())
-    .then(() => loadNonVegMenu())
-    .catch(err => console.error("Non-Veg add error:", err));
+  .then(res => res.json())
+  .then(data => {
+    if (!data.success) {
+      alert(data.error || "Failed to add item");
+      return;
+    }
+
+    alert("Item added successfully!");
+    loadNonVegMenu();
+  })
+  .catch(err => {
+    console.log("NonVeg add error:", err);
+    alert("Server error");
+  });
 }
+
+
 /* ========= DELETE NON-VEG ========= */
 function deleteNonVeg(id) {
   if (!confirm("Delete this item?")) return;
