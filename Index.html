@@ -377,19 +377,19 @@ footer {
   margin-top: 15px;
 }
 
-/* Hover Effect */
+
 .tiffin-menu-btn:hover {
   transform: translateY(-3px);
 
   background: linear-gradient(135deg,#af8616, #cc980a);
 }
 
-/* Active Click Effect */
+
 .tiffin-menu-btn:active {
   transform: scale(0.97);
 }
 
-/* Mobile Responsive */
+
 @media (max-width: 600px) {
   .tiffin-menu-btn {
     width: 100%;
@@ -406,14 +406,6 @@ footer {
 <body>
 
 
-<script>
-const token = localStorage.getItem("biteboxToken");
-const user = JSON.parse(localStorage.getItem("biteboxUser"));
-
-if (!token || !user) {
-  window.location.href = "login.html";
-}
-</script>
 
 <div class="overlay"></div>
 
@@ -459,11 +451,22 @@ if (!token || !user) {
     <button class="manage-subscription-btn" onclick="window.location.href='tiffinservice.html'">
       <i class="fas fa-plus"></i> Add New Tiffin Service
     </button>
-    <button class="tiffin-menu-btn" onclick="openMenu()">Tiffin Menu</button>
+    <button id="tiffinMenuBtn" class="tiffin-menu-btn" style="display: none;" >Tiffin Menu</button>
   </div>
 
   <button class="logout-btn" onclick="logout()">Logout</button>
 </div>
+
+
+<script>
+const token = localStorage.getItem("biteboxToken");
+const user = JSON.parse(localStorage.getItem("biteboxUser"));
+
+if (!token || !user) {
+  window.location.href = "login.html";
+}
+</script>
+
 
 <script>
   function openMenu() {
@@ -480,7 +483,7 @@ document.querySelector(".menu-btn").addEventListener("click", () => {
   window.location.href = "services.html";
 });
 
-/* PROFILE PANEL TOGGLE */
+
 const profileIcon = document.getElementById("profileIcon");
 const profilePanel = document.getElementById("profilePanel");
 const profileOverlay = document.getElementById("profileOverlay");
@@ -501,14 +504,14 @@ profileOverlay.onclick = () => {
   profileOverlay.classList.remove("active");
 };
 
-/* LOGOUT */
+
 function logout() {
   localStorage.removeItem("biteboxToken");
   localStorage.removeItem("biteboxUser");
   window.location.href = "login.html";
 }
 
-/* LOAD USER TIFFIN SUBSCRIPTIONS */
+/* LOAD SUBSCRIPTIONS */
 async function loadSubscriptions() {
   try {
     const res = await fetch("https://bbbackend-bng2.onrender.com/api/tiffin-bookings");
@@ -552,6 +555,42 @@ subscriptionDetails.innerHTML = userBookings.map(b => `
 
 loadSubscriptions();
 
+</script>
+
+<script>
+const API_BASE = "https://bbbackend-bng2.onrender.com";
+
+async function checkTiffinSubscription() {
+  try {
+    const res = await fetch(`${API_BASE}/api/tiffin-bookings`);
+    const bookings = await res.json();
+
+    const userBookings = bookings.filter(
+      b => b.userName === user.name
+    );
+
+    if (userBookings.length > 0) {
+
+      const activeBooking = userBookings[0];
+
+      // Save bookingId for later
+      localStorage.setItem("activeBookingId", activeBooking._id);
+
+      const btn = document.getElementById("tiffinMenuBtn");
+      btn.style.display = "block";
+
+      btn.onclick = () => {
+        window.location.href =
+          `maketiffinmenu.html?bookingId=${activeBooking._id}`;
+      };
+    }
+
+  } catch (err) {
+    console.log("Tiffin subscription check error", err);
+  }
+}
+
+checkTiffinSubscription();
 </script>
 
 </body>

@@ -116,7 +116,7 @@ document.getElementById("saveMenuBtn").onclick = async () => {
   });
 
   alert("Menu Saved Successfully!");
-  window.location.href = `maketiffinmenu.html?bookingId=${bookingId}`;
+  window.location.href = "index.html";
 };
 
 /* ================== GET MEAL DATA ================== */
@@ -248,13 +248,14 @@ timeSelect.value = timeValues[0];
 customInput.style.display = "none";
 customInput.value = "";
 }
+
 async function loadSummary() {
   try {
 
     const res = await fetch(`${API_BASE}/api/tiffin-menus/${bookingId}`);
 
     if (!res.ok) {
-      
+ 
       summarySection.style.display = "none";
       menuSection.style.display = "block";
       return;
@@ -268,6 +269,7 @@ async function loadSummary() {
       return;
     }
 
+  
     const box = document.getElementById("summaryBox");
     box.innerHTML = "<h2>Your Weekly Menu</h2>";
 
@@ -282,22 +284,15 @@ async function loadSummary() {
       `;
     });
 
-    document.getElementById("remakeBtn").style.display = "block";
-
-
     summarySection.style.display = "block";
     menuSection.style.display = "none";
+    remakeBtn.style.display = "block";
 
   } catch (err) {
-    console.log("Summary error:", err);
-
     summarySection.style.display = "none";
     menuSection.style.display = "block";
   }
 }
-
-
-
 
 
 showSetMenuBtn.onclick = () => {
@@ -322,7 +317,7 @@ showSetMenuBtn.onclick = () => {
 if (remakeBtn) {
   remakeBtn.onclick = () => {
 
-    // Show menu form
+    
     summarySection.style.display = "none";
     menuSection.style.display = "block";
     remakeBtn.style.display = "none";
