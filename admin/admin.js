@@ -164,8 +164,8 @@ function addVeg() {
   }
 
 
-  if (imageFile.size > 1 * 1024 * 1024) {
-    alert("Image must be under 1MB");
+  if (imageFile.size > 5 * 1024 * 1024) {
+    alert("Image must be under 5MB");
     return;
   }
 
@@ -294,8 +294,8 @@ function addNonVeg() {
     return;
   }
 
-  if (imageFile.size > 1 * 1024 * 1024) {
-    alert("Image must be under 1MB");
+  if (imageFile.size > 5 * 1024 * 1024) {
+    alert("Image must be under 5MB");
     return;
   }
 
