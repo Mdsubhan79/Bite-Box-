@@ -273,10 +273,6 @@ footer button:hover {
   updateOpenStatus();
 </script>
 
-  <script src="script.js"></script>
-
-
-
 
 <script>
   document.getElementById('newsletterForm').addEventListener('submit', function(e) {
@@ -337,7 +333,69 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<script>
+  // In your veg.js, update add to cart function
+function addToCart(item) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Check if item already in cart
+    const existingItem = cart.find(i => i.name === item.name);
+    
+    if (existingItem) {
+        existingItem.quantity = (existingItem.quantity || 1) + 1;
+    } else {
+        cart.push({
+            ...item,
+            quantity: 1,
+            category: 'veg'
+        });
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Show notification
+    showNotification('Item added to cart!');
+    
+    // Update cart count in header
+    updateCartCount();
+}
 
+// Show notification function
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
 
+// Update cart count in header
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    
+    const cartCountElement = document.getElementById('cartCount');
+    if (cartCountElement) {
+        cartCountElement.textContent = count;
+        cartCountElement.style.display = count > 0 ? 'inline' : 'none';
+    }
+}
+</script>
+<script src="script.js"></script>
 </body>
 </html>

@@ -916,3 +916,192 @@ function fetchAuth(url, options = {}) {
     }
   });
 }
+
+
+const ws = new WebSocket('wss:https://bbbackend-bng2.onrender.com');
+
+ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    
+    if (data.type === 'NEW_ORDER') {
+        showNotification('New order received!');
+        loadOrders();
+    } else if (data.type === 'ORDER_UPDATED') {
+        updateOrderInUI(data.order);
+    }
+};
+
+
+async function loadOrders() {
+    const status = document.getElementById('statusFilter').value;
+    const date = document.getElementById('dateFilter').value;
+    
+    try {
+        const response = await fetch(`https://bbbackend-bng2.onrender.com/api/orders/admin/all?status=${status}&date=${date}`);
+        const data = await response.json();
+        
+        displayOrders(data.orders);
+        updateStats(data.stats);
+    } catch (error) {
+        console.error('Error loading orders:', error);
+    }
+}
+
+
+function displayOrders(orders) {
+    const container = document.getElementById('ordersList');
+    container.innerHTML = '';
+    
+    orders.forEach(order => {
+        const timeSinceOrder = new Date() - new Date(order.orderTime);
+        const canDelete = timeSinceOrder < 5 * 60 * 1000; // 5 minutes
+        
+        container.innerHTML += `
+            <div class="order-card" id="order-${order._id}">
+                <div class="order-header">
+                    <h3>Order #${order._id.slice(-6)}</h3>
+                    <span class="status ${order.orderStatus}">${order.orderStatus}</span>
+                </div>
+                
+                <div class="customer-info">
+                    <p><strong>${order.customerDetails.name}</strong> - ${order.customerDetails.phone}</p>
+                    <p>📍 ${order.customerDetails.address}</p>
+                    ${order.customerDetails.landmark ? `<p>📍 Landmark: ${order.customerDetails.landmark}</p>` : ''}
+                </div>
+                
+                <div class="order-items-mini">
+                    ${order.items.map(item => `
+                        <p>${item.name} x${item.quantity} - ₹${item.price * item.quantity}</p>
+                    `).join('')}
+                </div>
+                
+                <p class="total"><strong>Total: ₹${order.totalAmount}</strong></p>
+                <p class="time">🕐 ${new Date(order.orderTime).toLocaleString()}</p>
+                
+                <div class="admin-actions">
+                    <select onchange="updateOrderStatus('${order._id}', 'status', this.value)">
+                        <option value="pending" ${order.orderStatus === 'pending' ? 'selected' : ''}>Pending</option>
+                        <option value="confirmed" ${order.orderStatus === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                        <option value="preparing" ${order.orderStatus === 'preparing' ? 'selected' : ''}>Preparing</option>
+                        <option value="out-for-delivery" ${order.orderStatus === 'out-for-delivery' ? 'selected' : ''}>Out for Delivery</option>
+                        <option value="delivered" ${order.orderStatus === 'delivered' ? 'selected' : ''}>Delivered</option>
+                    </select>
+                    
+                    <select onchange="updateOrderStatus('${order._id}', 'payment', this.value)">
+                        <option value="pending" ${order.paymentStatus === 'pending' ? 'selected' : ''}>Payment Pending</option>
+                        <option value="paid" ${order.paymentStatus === 'paid' ? 'selected' : ''}>Paid</option>
+                    </select>
+                    
+                    <input type="text" placeholder="Delivery time (e.g., 25-30 min)" 
+                           value="${order.deliveryEstimate || '25-30 minutes'}"
+                           onchange="updateDeliveryTime('${order._id}', this.value)">
+                    
+                    <button onclick="deleteOrder('${order._id}')" ${!canDelete ? 'disabled' : ''}>
+                        Delete Order
+                    </button>
+                </div>
+                
+                <div class="admin-notes">
+                    <textarea placeholder="Add notes/reason for customer..." 
+                              onchange="addAdminNotes('${order._id}', this.value)">${order.adminNotes || ''}</textarea>
+                </div>
+            </div>
+        `;
+    });
+}
+
+
+async function updateOrderStatus(orderId, type, value) {
+    try {
+        const response = await fetch(`https://bbbackend-bng2.onrender.com/api/orders/admin/update/${orderId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                [type === 'status' ? 'status' : 'paymentStatus']: value
+            })
+        });
+        
+        if (response.ok) {
+            showNotification('Order updated successfully');
+        }
+    } catch (error) {
+        console.error('Error updating order:', error);
+    }
+}
+
+
+async function updateDeliveryTime(orderId, time) {
+    try {
+        await fetch(`https://bbbackend-bng2.onrender.com/api/orders/admin/update/${orderId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ deliveryEstimate: time })
+        });
+    } catch (error) {
+        console.error('Error updating delivery time:', error);
+    }
+}
+
+
+async function deleteOrder(orderId) {
+    const reason = prompt('Enter reason for deletion (will be shown to customer):');
+    if (reason === null) return;
+    
+    try {
+        const response = await fetch(`https://bbbackend-bng2.onrender.com/api/orders/admin/update/${orderId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                action: 'delete',
+                adminNotes: reason 
+            })
+        });
+        
+        if (response.ok) {
+            showNotification('Order deleted successfully');
+            loadOrders();
+        }
+    } catch (error) {
+        console.error('Error deleting order:', error);
+    }
+}
+
+
+async function addAdminNotes(orderId, notes) {
+    try {
+        await fetch(`https://bbbackend-bng2.onrender.com/api/orders/admin/update/${orderId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ adminNotes: notes })
+        });
+    } catch (error) {
+        console.error('Error adding notes:', error);
+    }
+}
+
+
+function updateStats(stats) {
+    document.getElementById('deliveredCount').textContent = stats.deliveredLast10Days;
+}
+
+
+function showNotification(message) {
+    if (Notification.permission === 'granted') {
+        new Notification('Bite Box Admin', { body: message });
+    }
+}
+
+
+if (Notification.permission !== 'denied') {
+    Notification.requestPermission();
+}
+
+
+document.getElementById('statusFilter').addEventListener('change', loadOrders);
+document.getElementById('dateFilter').addEventListener('change', loadOrders);
+
+
+setInterval(loadOrders, 30000);
+
+
+loadOrders();
