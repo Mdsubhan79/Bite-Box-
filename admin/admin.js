@@ -208,7 +208,7 @@ function deleteVeg(id) {
 .then(data => {
   if (!data.success) throw new Error("Delete failed");
   alert("Item deleted");
-  loadVegMenu(); // or loadNonVegMenu
+  loadVegMenu(); 
 })
     .catch(() => alert("Failed to delete veg item"));
 }

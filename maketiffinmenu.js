@@ -17,7 +17,7 @@ init();
 /* ================== INIT ================== */
 
 async function init() {
- 
+ menuSection.style.display = "block";
   generateDays();
   await loadAdminDefaultMenu();  
   await lockPastDays();
@@ -94,7 +94,13 @@ document.addEventListener("change", function(e){
 
 /* ================== SAVE MENU ================== */
 
-document.getElementById("saveMenuBtn").onclick = async () => {
+document.addEventListener("DOMContentLoaded", () => {
+
+const saveBtn = document.getElementById("saveMenuBtn");
+
+if (!saveBtn) return;
+
+saveBtn.addEventListener("click", async () => {
 
   const days = [];
 
@@ -106,17 +112,38 @@ document.getElementById("saveMenuBtn").onclick = async () => {
       lunch: getMealData("lunch", day),
       dinner: getMealData("dinner", day)
     });
+
   }
 
-  await fetch(`${API_BASE}/api/tiffin-menus`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ bookingId, days })
-  });
+  try {
 
-  alert("Menu Saved Successfully!");
-  window.location.href = "index.html";
-};
+    const res = await fetch(`${API_BASE}/api/tiffin-menus`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        bookingId: bookingId,
+        days: days
+      })
+    });
+
+    const data = await res.json();
+    console.log("Menu saved:", data);
+
+    alert("Menu Saved Successfully!");
+    window.location.href = "index.html";
+
+  } catch (err) {
+
+    console.error("Save menu error:", err);
+    alert("Menu save failed");
+
+  }
+
+});
+
+});
 
 /* ================== GET MEAL DATA ================== */
 
