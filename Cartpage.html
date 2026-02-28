@@ -326,7 +326,9 @@ footer button:hover {
         const cartCountElement = document.getElementById('cart-count');
         
         function renderCart() {
-            cartCountElement.textContent = cart.reduce((total, item) => total + item.quantity, 0);
+            if (cartCountElement) {
+                cartCountElement.textContent = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            }
             
             if (cart.length === 0) {
                 cartItemsContainer.innerHTML = `
@@ -390,6 +392,9 @@ footer button:hover {
                     <span>₹${total}</span>
                 </div>
             `;
+            
+            // Make sure checkout button is visible
+            document.getElementById('checkout-btn').style.display = 'block';
         }
         
         function updateQuantity(itemName, change) {
@@ -412,29 +417,36 @@ footer button:hover {
         document.addEventListener('DOMContentLoaded', () => {
             renderCart();
             
-        
-        
-  const menuToggle = document.getElementById('menuToggle');
-  const dropdownMenu = document.getElementById('dropdownMenu');
+            const menuToggle = document.getElementById('menuToggle');
+            const dropdownMenu = document.getElementById('dropdownMenu');
 
-  menuToggle.addEventListener('click', () => {
-    dropdownMenu.classList.toggle('show');
-  });
-
+            if (menuToggle) {
+                menuToggle.addEventListener('click', () => {
+                    dropdownMenu.classList.toggle('show');
+                });
+            }
             
-            // Checkout button
-document.getElementById('checkout-btn').addEventListener('click', function() {
-    const cart = getCart();
-    if (cart.length === 0) {
-        alert('Your cart is empty!');
-        return;
-    }
-    
-    
-    if (confirm('🕐 Your order will be added to chef list. Please fill your details.\n\nNote: Order can be cancelled within 5 minutes only.')) {
-        window.location.href = 'orderdetail.html';
-    }
-});
+            // Checkout button - FIXED (removed getCart() and used local cart variable)
+            const checkoutBtn = document.getElementById('checkout-btn');
+            if (checkoutBtn) {
+                checkoutBtn.addEventListener('click', function() {
+                    // Use the local cart variable instead of getCart()
+                    if (cart.length === 0) {
+                        alert('Your cart is empty!');
+                        return;
+                    }
+                    
+                    // Calculate total
+                    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    
+                    // Show confirmation with 5-minute warning
+                    if (confirm('🕐 Your order will be added to chef list. Please fill your details.\n\nNote: Order can be cancelled within 5 minutes only.')) {
+                        // Save order total for the order details page
+                        localStorage.setItem('orderTotal', total);
+                        window.location.href = 'orderdetail.html';
+                    }
+                });
+            }
         });
     </script>
     <script>
