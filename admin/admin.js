@@ -416,28 +416,44 @@ function loadTiffinBookings() {
       `;
 
 
-      try {
-        const menuRes = await fetch(`${API_BASE}/api/tiffin-menus/${b._id}`);
-        const menu = await menuRes.json();
+try {
 
-        if (menu && menu.days) {
-          menu.days.forEach(d => {
-           html += `
-  <tr class="menuRow-${b._id}" style="display:none;">
-    <td colspan="13">
-      <b>Day ${d.dayNumber}</b><br>
-      Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
-      Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
-      Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
-    </td>
-  </tr>
-`;
-          });
-        }
+  const menuRes = await fetch(`${API_BASE}/api/tiffin-menus/${b._id}`);
 
-      } catch (err) {
-        console.log("No menu found for booking", b._id);
-      }
+  if (!menuRes.ok) {
+    html += `
+      <tr class="menuRow-${b._id}" style="display:none;">
+        <td colspan="13" style="color:red;">
+          User has not created menu yet
+        </td>
+      </tr>
+    `;
+  } else {
+
+    const menu = await menuRes.json();
+
+    if (menu && menu.days) {
+
+      menu.days.forEach(d => {
+        html += `
+        <tr class="menuRow-${b._id}" style="display:none;">
+          <td colspan="13">
+            <b>Day ${d.dayNumber}</b><br>
+            Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
+            Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
+            Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
+          </td>
+        </tr>
+        `;
+      });
+
+    }
+
+  }
+
+} catch (err) {
+  console.log("Menu fetch error", err);
+}
     }
 
     html += "</table>";
@@ -459,8 +475,11 @@ function toggleMenu(bookingId) {
     } else {
       row.style.display = "none";
     }
-
+   
   });
+   {
+console.log("Toggled menu row", row);
+    }
 }
 
 
