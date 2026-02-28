@@ -4,111 +4,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brio bite - Your Cart</title>
-     <link rel="icon" type="image/x-icon" href="briobite.png">
+    <link rel="icon" type="image/x-icon" href="briobite.png">
     <link rel="stylesheet" href="cart.css">
-   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
     <style>
- footer {
-    background-color: #222;
-    color: white;
-    padding: 40px 20px 20px;
-    margin-top: 50px;
-}
+        footer {
+            background-color: #222;
+            color: white;
+            padding: 40px 20px 20px;
+            margin-top: 50px;
+        }
 
-.footer-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-    max-width: 1200px;
-    margin: auto;
-}
-@media (max-width:300px) {
-  .menu-toggle {
-    display: block;
-    position: absolute;
-    top: 85px;
-    right: 20px;
-    z-index: 9999;
-    cursor: pointer;
-  }
-}
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        
+        @media (max-width:300px) {
+            .menu-toggle {
+                display: block;
+                position: absolute;
+                top: 85px;
+                right: 20px;
+                z-index: 9999;
+                cursor: pointer;
+            }
+        }
 
-.footer-section h3 {
-    color: #ff6b6b;
-    margin-bottom: 10px;
-}
-#footerAboutTitle{
-  font-family: 'Lucida Handwriting', cursive;
-}
+        .footer-section h3 {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+        
+        #footerAboutTitle {
+            font-family: 'Lucida Handwriting', cursive;
+        }
 
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
 
+        .footer-section ul li {
+            margin-bottom: 8px;
+        }
 
-.footer-section ul {
-    list-style: none;
-    padding: 0;
-}
+        .footer-section ul li i {
+            margin-right: 8px;
+        }
 
-.footer-section ul li {
-    margin-bottom: 8px;
-}
+        .footer-section ul li a {
+            color: #ccc;
+            text-decoration: none;
+        }
 
-.footer-section ul li i {
-    margin-right: 8px;
-}
+        .footer-section ul li a:hover {
+            text-decoration: underline;
+        }
 
-.footer-section ul li a {
-    color: #ccc;
-    text-decoration: none;
-}
+        .social-links a {
+            color: white;
+            margin-right: 10px;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
 
-.footer-section ul li a:hover {
-    text-decoration: underline;
-}
+        .social-links a:hover {
+            color: #ff6b6b;
+        }
 
-.social-links a {
-    color: white;
-    margin-right: 10px;
-    font-size: 1.2rem;
-    transition: color 0.3s ease;
-}
+        footer form {
+            display: flex;
+            flex-direction: column;
+        }
 
-.social-links a:hover {
-    color: #ff6b6b;
-}
+        footer input[type="email"] {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: none;
+        }
 
-footer form {
-    display: flex;
-    flex-direction: column;
-}
+        footer button {
+            background-color: #ff6b6b;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-footer input[type="email"] {
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: none;
-}
+        footer button:hover {
+            background-color: #e05555;
+        }
 
-footer button {
-    background-color: #ff6b6b;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-footer button:hover {
-    background-color: #e05555;
-}
-
-.copyright {
-    text-align: center;
-    margin-top: 30px;
-    font-size: 0.9rem;
-    color: #bbb;
-}
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #bbb;
+        }
 
         @media (max-width: 768px) {
             .login-container {
@@ -120,84 +119,212 @@ footer button:hover {
                 text-align: center;
             }
         }
+        
         .back-btn {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background-color: #ff6b6b;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-    text-decoration: none;
-}
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            z-index: 9998;
+        }
 
-.back-btn:hover {
-    background-color: #ff5252;
-    transform: translateX(-3px);
-}
+        .back-btn:hover {
+            background-color: #ff5252;
+            transform: translateX(-3px);
+        }
 
-.footer-dropdown-header {
-  display: flex;
-  justify-content: center;
-  gap: 7px;
-  align-items: center;
-  cursor: pointer;
-  color: #ff6b6b;
-  margin-bottom: 10px;
-  transition: color 0.3s ease;
-}
+        .footer-dropdown-header {
+            display: flex;
+            justify-content: center;
+            gap: 7px;
+            align-items: center;
+            cursor: pointer;
+            color: #ff6b6b;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
 
-.footer-dropdown-header:hover {
-  color: #ffa6a6;
-}
+        .footer-dropdown-header:hover {
+            color: #ffa6a6;
+        }
 
-.footer-dropdown-header i {
-  transition: transform 0.3s ease;
-}
+        .footer-dropdown-header i {
+            transition: transform 0.3s ease;
+        }
 
+        .footer-dropdown-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.4s ease;
+        }
 
-.footer-dropdown-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height 0.4s ease;
-}
+        .footer-dropdown-list.active {
+            max-height: 600px; 
+        }
 
+        .footer-dropdown-header.active i {
+            transform: rotate(180deg);
+        }
 
-.footer-dropdown-list.active {
-  max-height: 600px; 
-}
+        @media (min-width: 768px) {
+            .footer-dropdown-list {
+                max-height: none !important;
+            }
 
+            .footer-dropdown-header {
+                cursor: default;
+            }
 
-.footer-dropdown-header.active i {
-  transform: rotate(180deg);
-}
+            .footer-dropdown-header i {
+                display: none;
+            }
+        }
 
+        /* Cart container styles */
+        .cart-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
 
-@media (min-width: 768px) {
-  .footer-dropdown-list {
-    max-height: none !important;
-  }
+        .cart-title {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2em;
+        }
 
-  .footer-dropdown-header {
-    cursor: default;
-  }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
 
-  .footer-dropdown-header i {
-    display: none;
-  }
-}
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
+        .item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .item-name {
+            font-weight: 600;
+        }
+
+        .item-price {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .quantity {
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .price-summary {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .summary-title {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .total-row {
+            font-weight: bold;
+            font-size: 1.2em;
+            border-top: 2px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .checkout-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 50px;
+        }
+
+        .empty-cart h3 {
+            margin: 20px 0 10px;
+            color: #666;
+        }
+
+        .empty-cart p {
+            color: #999;
+            margin-bottom: 20px;
+        }
     </style>
-    
 </head>
 <body>
     <!-- Navbar -->
@@ -206,138 +333,167 @@ footer button:hover {
             <div class="nav-logo">Brio bite</div>
             <div class="nav-tagline">One last step before your Bite Box delight!</div>
         </div>
-          <div class="dropdown-menu" id="dropdownMenu">
-    <a href="index.html">Home</a>
-    <a href="veg.html">Veg</a>
-    <a href="non-veg.html">Non Veg</a>
-    <a href="tiffin.html">Tiffin Service</a>
-    <a href="aboutus.html">About Us</a>
-    <a href="contactus.html">Contact Us</a>
-    <a href="terms&privay.html">Terms & Policy</a>
-     
-  </div>
+        <div class="dropdown-menu" id="dropdownMenu">
+            <a href="index.html">Home</a>
+            <a href="veg.html">Veg</a>
+            <a href="non-veg.html">Non Veg</a>
+            <a href="tiffin.html">Tiffin Service</a>
+            <a href="aboutus.html">About Us</a>
+            <a href="contactus.html">Contact Us</a>
+            <a href="terms&privay.html">Terms & Policy</a>
+        </div>
         <div class="menu-toggle" id="menuToggle">
             <div class="menu-line"></div>
             <div class="menu-line"></div>
             <div class="menu-line"></div>
-            
         </div>
-         <span class="cart-countt" id="cart-count"></span>
-        
+        <span class="cart-countt" id="cart-count"></span>
     </nav>
     
     <!-- Cart Container -->
     <div class="cart-container" id="cart-container">
         <h2 class="cart-title">Your Cart</h2>
-        <div id="cart-items-container">
-    
-        </div>
+        <div id="cart-items-container"></div>
         
-        <div class="price-summary" id="price-summary">
-      
-        </div>
+        <div class="price-summary" id="price-summary"></div>
         
         <button class="checkout-btn" id="checkout-btn">Proceed to Checkout</button>
     </div>
     
-   <a>
-        
-    <button onclick="goback()" class="back-btn"> <i class="fas fa-arrow-left"></i><span id="backTextVeg" data-translate="backToMain"></span></button>
-    
+    <a>
+        <button onclick="goback()" class="back-btn"> 
+            <i class="fas fa-arrow-left"></i>
+            <span id="backTextVeg" data-translate="backToMain">Back</span>
+        </button>
     </a>
-    <script>
-        function goback(){
-            window.history.back();
-        }
-    </script>
     
     <!-- Footer -->
-  <footer id="mainFooter">
-    <div class="footer-container">
-      <div class="footer-section">
-        <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Brio Bite</h3>
-        <p id="footerAboutText" data-translate="footerAboutText">
-          Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.
-        </p>
-        <div class="social-links">
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-twitter"></i></a>
-          <a href="#"><i class="fab fa-whatsapp"></i></a>
+    <footer id="mainFooter">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Brio Bite</h3>
+                <p id="footerAboutText" data-translate="footerAboutText">
+                    Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.
+                </p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3 id="footerContactTitle" data-translate="footerContactTitle">Contact Info</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress" data-translate="footerAddress">Clement Town, Dehradun</span></li>
+                    <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91 9627024287</span></li>
+                    <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.briobite@gmail.com</span></li>
+                    <li>
+                        <i class="fas fa-clock"></i> 
+                        <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span> 
+                        <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <div class="footer-section quick-links">
+                    <h3 id="footerLinksTitle" data-translate="footerLinksTitle" class="footer-dropdown-header">
+                        Quick Links <i class="fas fa-chevron-down"></i>
+                    </h3>
+                    <ul class="footer-dropdown-list">
+                        <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
+                        <li><a href="services.html" id="footerServicesLink" data-translate="footerServicesLink">Our Services</a></li>
+                        <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
+                        <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
+                        <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
+                        <li><a href="catering.html" id="footerCateringServicesLink" data-translate="footerCateringServicesLink">Catering Services</a></li>
+                        <li><a href="highprotien.html" id="footerHighprotienLink" data-translate="footerHighProtienLink">High-Protein Meals</a></li>
+                        <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
+                        <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+                        <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
+                        <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
+                        <li><a href="#" id="logoutBtn">Close your BrioBite Account</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3 id="footerNewsletterTitle" data-translate="footerNewsletterTitle">Newsletter</h3>
+                <p id="footerNewsletterText" data-translate="footerNewsletterText">Subscribe for updates and special offers!</p>
+                <form id="newsletterForm">
+                    <input type="email" id="newsletterEmail" placeholder="Enter your email" data-translate-placeholder="newsletterPlaceholder" required>
+                    <button type="submit" id="newsletterSubmit" data-translate="subscribeBtn">Subscribe</button>
+                </form>
+            </div>
         </div>
-      </div>
-       <div class="footer-section">
-        <h3 id="footerContactTitle" data-translate="footerContactTitle">Contact Info</h3>
-        <ul>
-          <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress" data-translate="footerAddress">Clement Town, Dehradun</span></li>
-          <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91 9627024287</span></li>
-          <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.briobite@gmail.com</span></li>
-           <li>
-  <i class="fas fa-clock"></i> 
-  <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span> 
-  <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span>
-</li>
-        </ul>
-      </div>
-      
-      <div class="footer-section">
-        <div class="footer-section quick-links">
-  <h3 id="footerLinksTitle" data-translate="footerLinksTitle" class="footer-dropdown-header">
-    Quick Links <i class="fas fa-chevron-down"></i>
-  </h3>
-  <ul class="footer-dropdown-list">
-    <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
-    <li><a href="services.html" id="footerServicesLink" data-translate="footerServicesLink">Our Services</a></li>
-    <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
-    <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
-    <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
-    <li><a href="catering.html" id="footerCateringServicesLink" data-translate="footerCateringServicesLink">Catering Services</a></li>
-    <li><a href="highprotien.html" id="footerHighprotienLink" data-translate="footerHighProtienLink">High-Protein Meals</a></li>
-    <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
-    <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
-    <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
-    <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
-    <li><a href="#" id="logoutBtn">Close your BrioBite Account</a></li>
-  </ul>
-</div>
-      
-     
-      
-      <div class="footer-section">
-        <h3 id="footerNewsletterTitle" data-translate="footerNewsletterTitle">Newsletter</h3>
-        <p id="footerNewsletterText" data-translate="footerNewsletterText">Subscribe for updates and special offers!</p>
-        <form id="newsletterForm">
-          <input type="email" id="newsletterEmail" placeholder="Enter your email" data-translate-placeholder="newsletterPlaceholder" required>
-          <button type="submit" id="newsletterSubmit" data-translate="subscribeBtn">Subscribe</button>
-        </form>
-      </div>
-    </div>
+        
+        <div class="copyright">
+            <p id="copyrightText" data-translate="copyrightText">&copy; 2026 Brio bite. All Rights Reserved.</p>
+        </div>
+    </footer>
     
-    <div class="copyright">
-      <p id="copyrightText" data-translate="copyrightText">&copy; 2026 Brio bite. All Rights Reserved.</p>
+    <!-- Floating Order Tracker -->
+    <div class="floating-tracker" id="floatingTracker">
+        <i class="fas fa-utensils"></i>
     </div>
-  </footer>
-    
+
+    <!-- Tracker Popup -->
+    <div class="tracker-popup" id="trackerPopup">
+        <div class="popup-header">
+            <span><i class="fas fa-shopping-bag"></i> Your Order</span>
+            <button id="closePopup"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="popup-content">
+            <div class="timer" id="cancellationTimer"></div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            
+            <div class="progress-steps" id="progressSteps"></div>
+            
+            <div id="orderDetails" style="margin: 20px 0;"></div>
+            
+            <div class="admin-message" id="adminMessage"></div>
+            
+            <button class="cancel-btn" id="cancelOrderBtn">
+                <i class="fas fa-times-circle"></i> Cancel Order
+            </button>
+            
+            <button class="reorder-btn" id="reorderBtn">
+                <i class="fas fa-redo-alt"></i> Reorder Now
+            </button>
+        </div>
+    </div>
+
+    <!-- Include tracker CSS and JS -->
+    <link rel="stylesheet" href="tracker.css">
+    <script src="tracker.js"></script>
+
     <script>
-        // Load cart from localStorage
+        // ===== CART FUNCTIONALITY =====
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         const cartItemsContainer = document.getElementById('cart-items-container');
         const priceSummary = document.getElementById('price-summary');
         const cartCountElement = document.getElementById('cart-count');
         
         function renderCart() {
-            cartCountElement.textContent = cart.reduce((total, item) => total + item.quantity, 0);
+            if (cartCountElement) {
+                cartCountElement.textContent = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            }
             
             if (cart.length === 0) {
                 cartItemsContainer.innerHTML = `
                     <div class="empty-cart">
                         <h3>Your cart is empty</h3>
                         <p>Add some delicious items from our menu!</p>
-                        <a href="veg.html" class="checkout-btn" style="display: inline-block; text-decoration: none;">Browse Menu</a>
+                        <a href="veg.html" class="checkout-btn" style="display: inline-block; text-decoration: none; width: auto; padding: 12px 30px;">Browse Menu</a>
                     </div>
                 `;
                 priceSummary.innerHTML = '';
-                document.getElementById('checkout-btn').style.display = 'none';
+                const checkoutBtn = document.getElementById('checkout-btn');
+                if (checkoutBtn) checkoutBtn.style.display = 'none';
                 return;
             }
             
@@ -350,21 +506,20 @@ footer button:hover {
                     <div class="item-info">
                         <img src="${item.image || 'https://via.placeholder.com/60'}" alt="${item.name}" class="item-image">
                         <div class="item-details">
-                            
                             <div class="item-name">${item.name}</div>
                             <div class="item-price">₹${item.price}</div>
                         </div>
                     </div>
                     <div class="quantity-control">
-                        <button class="quantity-btn" onclick="updateQuantity('${item.name}', -1)">-</button>
+                        <button class="quantity-btn" onclick="updateQuantity('${item.name.replace(/'/g, "\\'")}', -1)">-</button>
                         <span class="quantity">${item.quantity}</span>
-                        <button class="quantity-btn" onclick="updateQuantity('${item.name}', 1)">+</button>
+                        <button class="quantity-btn" onclick="updateQuantity('${item.name.replace(/'/g, "\\'")}', 1)">+</button>
                     </div>
                 `;
                 cartItemsContainer.appendChild(cartItem);
             });
             
-        
+            // Calculate totals
             const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
             const discount = Math.round(subtotal * 0.05); 
             const total = subtotal - discount;
@@ -373,8 +528,8 @@ footer button:hover {
                 <h3 class="summary-title">Order Summary</h3>
                 ${cart.map(item => `
                     <div class="price-row">
-                        <span>${item.name}</span>
-                        <span>₹${item.price * item.quantity} (${item.quantity} × ₹${item.price})</span>
+                        <span>${item.name} x${item.quantity}</span>
+                        <span>₹${item.price * item.quantity}</span>
                     </div>
                 `).join('')}
                 <div class="price-row">
@@ -390,6 +545,10 @@ footer button:hover {
                     <span>₹${total}</span>
                 </div>
             `;
+            
+            // Show checkout button
+            const checkoutBtn = document.getElementById('checkout-btn');
+            if (checkoutBtn) checkoutBtn.style.display = 'block';
         }
         
         function updateQuantity(itemName, change) {
@@ -398,7 +557,6 @@ footer button:hover {
             if (itemIndex !== -1) {
                 cart[itemIndex].quantity += change;
                 
-           
                 if (cart[itemIndex].quantity <= 0) {
                     cart.splice(itemIndex, 1);
                 }
@@ -408,144 +566,121 @@ footer button:hover {
             }
         }
         
-      
-        document.addEventListener('DOMContentLoaded', () => {
+        function goback() {
+            window.history.back();
+        }
+        
+        // ===== EVENT LISTENERS =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Render cart
             renderCart();
             
-        
-        
-  const menuToggle = document.getElementById('menuToggle');
-  const dropdownMenu = document.getElementById('dropdownMenu');
-
-  menuToggle.addEventListener('click', () => {
-    dropdownMenu.classList.toggle('show');
-  });
-
+            // Menu toggle
+            const menuToggle = document.getElementById('menuToggle');
+            const dropdownMenu = document.getElementById('dropdownMenu');
             
-            // Checkout button
-document.getElementById('checkout-btn').addEventListener('click', function() {
-    const cart = getCart();
-    if (cart.length === 0) {
-        alert('Your cart is empty!');
-        return;
-    }
-    
-    
-    if (confirm('🕐 Your order will be added to chef list. Please fill your details.\n\nNote: Order can be cancelled within 5 minutes only.')) {
-        window.location.href = 'orderdetail.html';
-    }
-});
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    dropdownMenu.classList.toggle('show');
+                });
+            }
+            
+            // CHECKOUT BUTTON - SINGLE EVENT LISTENER (FIXED)
+            const checkoutBtn = document.getElementById('checkout-btn');
+            if (checkoutBtn) {
+                // Remove any existing listeners by cloning and replacing
+                const newCheckoutBtn = checkoutBtn.cloneNode(true);
+                checkoutBtn.parentNode.replaceChild(newCheckoutBtn, checkoutBtn);
+                
+                // Add fresh event listener
+                newCheckoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Get current cart
+                    const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
+                    
+                    if (currentCart.length === 0) {
+                        alert('Your cart is empty!');
+                        return;
+                    }
+                    
+                    // Calculate total
+                    const total = currentCart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    
+                    // Show confirmation with 5-minute warning
+                    if (confirm('🕐 Your order will be added to chef list. Please fill your details.\n\nNote: Order can be cancelled within 5 minutes only.')) {
+                        // Save order total
+                        localStorage.setItem('orderTotal', total);
+                        
+                        // Redirect to order details page
+                        window.location.href = 'orderdetail.html';
+                    }
+                });
+            }
+        });
+        
+        // ===== OTHER FUNCTIONALITY =====
+        document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            const emailInput = document.getElementById('newsletterEmail');
+            const email = emailInput.value.trim();
+
+            if (email === '') {
+                alert('Please enter your email.');
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            alert('Thank you for subscribing!');
+            emailInput.value = ''; 
+        });
+        
+        function updateOpenStatus() {
+            const now = new Date();
+            const hour = now.getHours();
+            const isOpen = hour >= 7 && hour < 22;
+            const statusElement = document.getElementById("openStatus");
+            if (statusElement) {
+                statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
+                statusElement.style.color = isOpen ? "green" : "red";
+            }
+        }
+        updateOpenStatus();
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const logoutBtn = document.getElementById("logoutBtn");
+            
+            if (logoutBtn) {
+                logoutBtn.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    if (confirm("Are you sure you want to log out?")) {
+                        localStorage.removeItem("biteboxUser");
+                        localStorage.removeItem("biteboxToken");
+                        localStorage.removeItem("activeOrderId");
+                        window.location.href = "login.html";
+                    }
+                });
+            }
+        });
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            const dropdownHeader = document.querySelector(".footer-dropdown-header");
+            const dropdownList = document.querySelector(".footer-dropdown-list");
+
+            if (dropdownHeader && dropdownList) {
+                dropdownHeader.addEventListener("click", () => {
+                    if (window.innerWidth < 768) {
+                        dropdownList.classList.toggle("active");
+                        dropdownHeader.classList.toggle("active");
+                    }
+                });
+            }
         });
     </script>
-    <script>
-  document.getElementById('newsletterForm').addEventListener('submit', function(e) {
-    e.preventDefault(); 
-    const emailInput = document.getElementById('newsletterEmail');
-    const email = emailInput.value.trim();
-
-    if (email === '') {
-      alert('Please enter your email.');
-      return;
-    }
-
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert('Please enter a valid email address.');
-      return;
-    }
-
-    alert('Thank you for subscribing!');
-    emailInput.value = ''; 
-  });
-</script>
-<script>
-  function updateOpenStatus() {
-    const now = new Date();
-    const hour = now.getHours();
-
-    
-    const isOpen = hour >= 7 && hour < 22;
-
-    const statusElement = document.getElementById("openStatus");
-    statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
-    statusElement.style.color = isOpen ? "green" : "red";
-  }
-
-  
-  updateOpenStatus();
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const logoutBtn = document.getElementById("logoutBtn");
-  
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", function(e) {
-      e.preventDefault();
-      if (confirm("Are you sure you want to log out?")) {
-   
-        localStorage.removeItem("biteboxUser");
-      
-        window.location.href = "login.html";
-      }
-    });
-  } else {
-    console.error("Logout button not found!");
-  }
-});
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const dropdownHeader = document.querySelector(".footer-dropdown-header");
-  const dropdownList = document.querySelector(".footer-dropdown-list");
-
-  if (dropdownHeader && dropdownList) {
-    dropdownHeader.addEventListener("click", () => {
-      // Only work on small screens
-      if (window.innerWidth < 768) {
-        dropdownList.classList.toggle("active");
-        dropdownHeader.classList.toggle("active");
-      }
-    });
-  }
-});
-</script>
-<!-- Floating Order Tracker -->
-<div class="floating-tracker" id="floatingTracker">
-    <i class="fas fa-utensils"></i>
-</div>
-
-<!-- Tracker Popup -->
-<div class="tracker-popup" id="trackerPopup">
-    <div class="popup-header">
-        <span><i class="fas fa-shopping-bag"></i> Your Order</span>
-        <button id="closePopup"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="popup-content">
-        <div class="timer" id="cancellationTimer"></div>
-        
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-        </div>
-        
-        <div class="progress-steps" id="progressSteps"></div>
-        
-        <div id="orderDetails" style="margin: 20px 0;"></div>
-        
-        <div class="admin-message" id="adminMessage"></div>
-        
-        <button class="cancel-btn" id="cancelOrderBtn">
-            <i class="fas fa-times-circle"></i> Cancel Order
-        </button>
-        
-        <button class="reorder-btn" id="reorderBtn">
-            <i class="fas fa-redo-alt"></i> Reorder Now
-        </button>
-    </div>
-</div>
-
-<!-- Include tracker CSS and JS -->
-<link rel="stylesheet" href="tracker.css">
-<script src="tracker.js"></script>
 </body>
 </html>
