@@ -30,30 +30,9 @@
 
   <!-- Content -->
   <main class="content" id="content">
-    <h1>Admin Dashboard</h1>
-    <p>Select a section</p>
+    <!-- This is where the orders section will appear when you click on "Orders" in sidebar -->
   </main>
-<!-- Add this in the content area where you want orders to appear -->
-<div class="stats-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;" id="orderStats"></div>
 
-<div style="margin: 20px 0; display: flex; gap: 10px;">
-    <select id="statusFilter" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-        <option value="all">All Orders</option>
-        <option value="pending">Pending</option>
-        <option value="confirmed">Confirmed</option>
-        <option value="preparing">Preparing</option>
-        <option value="out-for-delivery">Out for Delivery</option>
-        <option value="delivered">Delivered</option>
-        <option value="cancelled">Cancelled</option>
-    </select>
-    
-    <select id="dateFilter" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-        <option value="all">All Time</option>
-        <option value="today">Today</option>
-    </select>
-</div>
-
-<div id="ordersList" style="margin-top: 20px;"></div>
 </div>
 
 <script src="admin.js"></script>

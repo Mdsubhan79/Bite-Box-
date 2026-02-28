@@ -8,8 +8,6 @@ if (!token || token === "undefined") {
   window.location.href = "login.html";
 }
 
-
-
 /* ========= PAGE NAVIGATION ========= */
 function loadPage(page) {
   const content = document.getElementById("content");
@@ -477,9 +475,6 @@ function toggleMenu(bookingId) {
     }
    
   });
-   {
-console.log("Toggled menu row", row);
-    }
 }
 
 
@@ -825,101 +820,7 @@ function loadUsers() {
     });
 }
 
-
-
-
-/* ========= ORDERS MANAGEMENT ========= */
-function loadOrders() {
-  const content = document.getElementById("content");
-  content.innerHTML = "<h2>Loading orders...</h2>";
-
-  fetch(`${API_BASE}/api/admin/orders`, {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("adminToken")
-    }
-  })
-    .then(res => {
-      if (res.status === 401) {
-        logoutAdmin();
-        throw new Error("Unauthorized");
-      }
-      return res.json();
-    })
-    .then(orders => {
-      let html = `
-        <h2>Orders</h2>
-        <table>
-          <tr>
-            <th>User</th>
-            <th>Amount</th>
-            <th>Status</th>
-            <th>Date</th>
-            <th>Action</th>
-          </tr>
-      `;
-
-      orders.forEach(order => {
-        html += `
-          <tr>
-              <td>${order.userId?.name || "Guest"}</td>
-              <td>₹${order.totalPrice}</td>
-            <td>
-              <select onchange="updateOrderStatus('${order._id}', this.value)">
-                <option ${order.status === "pending" ? "selected" : ""}>pending</option>
-                <option ${order.status === "confirmed" ? "selected" : ""}>confirmed</option>
-                <option ${order.status === "delivered" ? "selected" : ""}>delivered</option>
-                <option ${order.status === "cancelled" ? "selected" : ""}>cancelled</option>
-              </select>
-            </td>
-            <td>${new Date(order.createdAt).toLocaleString()}</td>
-            <td>✔</td>
-          </tr>
-        `;
-      });
-
-      html += "</table>";
-      content.innerHTML = html;
-    })
-    .catch(err => {
-      console.error("Orders error:", err);
-      content.innerHTML = "<p>Failed to load orders. Try again.</p>";
-    });
-}
-
-function updateOrderStatus(id, status) {
-  fetch(`${API_BASE}/api/admin/orders/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + localStorage.getItem("adminToken")
-    },
-    body: JSON.stringify({ status })
-  })
-    .then(res => {
-      if (res.status === 401) {
-        logoutAdmin();
-        throw new Error("Unauthorized");
-      }
-      return res.json();
-    })
-    .then(() => loadOrders())
-    .catch(err => console.error(err));
-}
-
-
-function fetchAuth(url, options = {}) {
-  return fetch(url, {
-    ...options,
-    headers: {
-      ...options.headers,
-      Authorization: "Bearer " + localStorage.getItem("adminToken")
-    }
-  });
-}
-
-
-
-// Add these functions to your admin.js
+/* ========= ORDERS MANAGEMENT - ADVANCED VERSION ========= */
 
 let adminWS = null;
 
@@ -933,10 +834,18 @@ function initializeAdminWebSocket() {
         
         if (data.type === 'NEW_ORDER') {
             showAdminNotification('New order received!');
-            loadOrders();
+            // Reload orders if we're on the orders page
+            if (document.getElementById('ordersList')) {
+                loadOrders();
+            }
         } else if (data.type === 'ORDER_UPDATED') {
+            // Update specific order in UI
             updateOrderInUI(data.order);
         }
+    };
+
+    adminWS.onerror = (error) => {
+        console.error('WebSocket error:', error);
     };
 }
 
@@ -945,40 +854,126 @@ function showAdminNotification(message) {
     if (Notification.permission === 'granted') {
         new Notification('Brio Bite Admin', { 
             body: message,
-            icon: '../briobite.png'
+            icon: 'briobite.png'
         });
     }
 }
 
-// Load orders
+// Main load orders function
 async function loadOrders() {
+    const content = document.getElementById("content");
+    
+    // Get filter values if they exist
     const status = document.getElementById('statusFilter')?.value || 'all';
     const date = document.getElementById('dateFilter')?.value || 'all';
     
+    // Show loading state
+    content.innerHTML = `
+        <div style="text-align: center; padding: 50px;">
+            <h2>Loading orders...</h2>
+            <div class="spinner"></div>
+        </div>
+    `;
+
     try {
-        const response = await fetch(`${BASE_URL}/api/admin/orders?status=${status}&date=${date}`);
+        const response = await fetch(`${API_BASE}/api/admin/orders?status=${status}&date=${date}`, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("adminToken")
+            }
+        });
+
+        if (response.status === 401) {
+            logoutAdmin();
+            return;
+        }
+
         const data = await response.json();
         
-        displayOrders(data.orders);
-        updateOrderStats(data.stats);
+        // Render the complete orders page with filters
+        renderOrdersPage(data.orders, data.stats);
+        
     } catch (error) {
         console.error('Error loading orders:', error);
+        content.innerHTML = `
+            <h2>Orders</h2>
+            <p style="color: red; text-align: center;">Failed to load orders. Please try again.</p>
+            <button onclick="loadOrders()" style="display: block; margin: 20px auto;">Retry</button>
+        `;
     }
 }
 
-// Display orders
+// Render complete orders page with filters and stats
+function renderOrdersPage(orders, stats) {
+    const content = document.getElementById("content");
+    
+    // Create the HTML structure
+    let html = `
+        <h2>Orders Management</h2>
+        
+        <!-- Statistics Cards -->
+        <div class="stats-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;" id="orderStats">
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+                <h4>Today's Orders</h4>
+                <p style="font-size: 32px; font-weight: bold;">${stats?.todayOrders || 0}</p>
+            </div>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+                <h4>Last 10 Days</h4>
+                <p style="font-size: 32px; font-weight: bold;">${stats?.deliveredLast10Days || 0}</p>
+            </div>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+                <h4>Total Orders</h4>
+                <p style="font-size: 32px; font-weight: bold;">${stats?.totalOrders || 0}</p>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div style="margin: 20px 0; display: flex; gap: 10px;">
+            <select id="statusFilter" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                <option value="all">All Orders</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="preparing">Preparing</option>
+                <option value="out-for-delivery">Out for Delivery</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+            
+            <select id="dateFilter" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+            </select>
+            
+            <button onclick="loadOrders()" style="padding: 8px 15px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Apply Filters
+            </button>
+        </div>
+
+        <div id="ordersList" style="margin-top: 20px;"></div>
+    `;
+    
+    content.innerHTML = html;
+    
+    // Display orders
+    displayOrders(orders);
+    
+    // Add event listeners to filters
+    document.getElementById('statusFilter').addEventListener('change', loadOrders);
+    document.getElementById('dateFilter').addEventListener('change', loadOrders);
+}
+
+// Display orders in the container
 function displayOrders(orders) {
     const container = document.getElementById('ordersList');
     if (!container) return;
     
-    if (orders.length === 0) {
-        container.innerHTML = '<p style="text-align: center; padding: 50px;">No orders found</p>';
+    if (!orders || orders.length === 0) {
+        container.innerHTML = '<p style="text-align: center; padding: 50px; color: #666;">No orders found</p>';
         return;
     }
     
     container.innerHTML = orders.map(order => {
         const timeSinceOrder = new Date() - new Date(order.orderTime);
-        const canDelete = timeSinceOrder < 5 * 60 * 1000;
+        const canDelete = timeSinceOrder < 5 * 60 * 1000; // 5 minutes
         
         return `
             <div class="order-card" id="order-${order._id}" style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
@@ -990,25 +985,27 @@ function displayOrders(orders) {
                 </div>
                 
                 <div style="margin-bottom: 15px;">
-                    <p><i class="fas fa-user"></i> <strong>${order.customerDetails.name}</strong></p>
-                    <p><i class="fas fa-phone"></i> ${order.customerDetails.phone}</p>
-                    <p><i class="fas fa-map-marker-alt"></i> ${order.customerDetails.address}</p>
-                    ${order.customerDetails.landmark ? `<p><i class="fas fa-flag"></i> ${order.customerDetails.landmark}</p>` : ''}
+                    <p><strong>👤 Name:</strong> ${order.customerDetails?.name || 'N/A'}</p>
+                    <p><strong>📞 Phone:</strong> ${order.customerDetails?.phone || 'N/A'}</p>
+                    <p><strong>📍 Address:</strong> ${order.customerDetails?.address || 'N/A'}</p>
+                    ${order.customerDetails?.landmark ? `<p><strong>🏷️ Landmark:</strong> ${order.customerDetails.landmark}</p>` : ''}
                 </div>
                 
                 <div style="margin-bottom: 15px;">
                     <h4>Items:</h4>
                     ${order.items.map(item => `
-                        <p style="display: flex; justify-content: space-between;">
+                        <p style="display: flex; justify-content: space-between; margin: 5px 0;">
                             <span>${item.name} x${item.quantity}</span>
                             <span>₹${item.price * item.quantity}</span>
                         </p>
                     `).join('')}
-                    <p style="font-weight: bold; margin-top: 10px;">Total: ₹${order.totalAmount}</p>
+                    <p style="font-weight: bold; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;">
+                        Total: ₹${order.totalAmount}
+                    </p>
                 </div>
                 
                 <p style="color: #666; margin-bottom: 15px;">
-                    <i class="fas fa-clock"></i> Ordered: ${new Date(order.orderTime).toLocaleString()}
+                    <strong>🕐 Ordered:</strong> ${new Date(order.orderTime).toLocaleString()}
                 </p>
                 
                 <div style="display: grid; gap: 10px;">
@@ -1018,6 +1015,7 @@ function displayOrders(orders) {
                         <option value="preparing" ${order.orderStatus === 'preparing' ? 'selected' : ''}>Preparing</option>
                         <option value="out-for-delivery" ${order.orderStatus === 'out-for-delivery' ? 'selected' : ''}>Out for Delivery</option>
                         <option value="delivered" ${order.orderStatus === 'delivered' ? 'selected' : ''}>Delivered</option>
+                        <option value="cancelled" ${order.orderStatus === 'cancelled' ? 'selected' : ''}>Cancelled</option>
                     </select>
                     
                     <select onchange="updateOrderStatus('${order._id}', 'payment', this.value)" style="padding: 8px;">
@@ -1025,17 +1023,20 @@ function displayOrders(orders) {
                         <option value="paid" ${order.paymentStatus === 'paid' ? 'selected' : ''}>Paid</option>
                     </select>
                     
-                    <input type="text" placeholder="Delivery time" value="${order.deliveryEstimate || '25-30 minutes'}" 
-                           onchange="updateDeliveryTime('${order._id}', this.value)" style="padding: 8px;">
+                    <input type="text" placeholder="Delivery time (e.g., 25-30 min)" 
+                           value="${order.deliveryEstimate || '25-30 minutes'}"
+                           onchange="updateDeliveryTime('${order._id}', this.value)"
+                           style="padding: 8px;">
                     
                     <button onclick="deleteOrder('${order._id}')" ${!canDelete ? 'disabled' : ''} 
-                            style="padding: 8px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            style="padding: 8px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; ${!canDelete ? 'opacity: 0.5;' : ''}">
                         Delete Order
                     </button>
                 </div>
                 
-                <textarea placeholder="Admin notes/reason" onchange="addAdminNotes('${order._id}', this.value)" 
-                          style="width: 100%; padding: 8px; margin-top: 10px; border: 1px solid #ddd; border-radius: 5px;">${order.adminNotes || ''}</textarea>
+                <textarea placeholder="Admin notes/reason for customer..." 
+                          onchange="addAdminNotes('${order._id}', this.value)"
+                          style="width: 100%; padding: 8px; margin-top: 10px; border: 1px solid #ddd; border-radius: 5px; min-height: 60px;">${order.adminNotes || ''}</textarea>
             </div>
         `;
     }).join('');
@@ -1057,63 +1058,92 @@ function getStatusColor(status) {
 // Update order status
 async function updateOrderStatus(orderId, type, value) {
     try {
-        const response = await fetch(`${BASE_URL}/api/admin/orders/${orderId}`, {
+        const response = await fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                Authorization: "Bearer " + localStorage.getItem("adminToken")
+            },
             body: JSON.stringify({
                 [type === 'status' ? 'status' : 'paymentStatus']: value
             })
         });
+
+        if (response.status === 401) {
+            logoutAdmin();
+            return;
+        }
         
         if (response.ok) {
-            showAdminNotification('Order updated');
+            showAdminNotification('Order updated successfully');
+            // Reload orders to show updated data
+            loadOrders();
         }
     } catch (error) {
         console.error('Error updating order:', error);
+        alert('Error updating order. Please try again.');
     }
 }
 
 // Update delivery time
 async function updateDeliveryTime(orderId, time) {
+    if (!time.trim()) return;
+    
     try {
-        await fetch(`${BASE_URL}/api/admin/orders/${orderId}`, {
+        const response = await fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                Authorization: "Bearer " + localStorage.getItem("adminToken")
+            },
             body: JSON.stringify({ deliveryEstimate: time })
         });
+
+        if (response.ok) {
+            showAdminNotification('Delivery time updated');
+        }
     } catch (error) {
         console.error('Error updating delivery time:', error);
     }
 }
 
-// Delete order
+// Delete order with reason
 async function deleteOrder(orderId) {
     const reason = prompt('Enter reason for deletion (will be shown to customer):');
     if (!reason) return;
     
     try {
-        await fetch(`${BASE_URL}/api/admin/orders/${orderId}`, {
+        const response = await fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                Authorization: "Bearer " + localStorage.getItem("adminToken")
+            },
             body: JSON.stringify({ 
                 action: 'delete',
                 adminNotes: reason 
             })
         });
         
-        showAdminNotification('Order deleted');
-        loadOrders();
+        if (response.ok) {
+            showAdminNotification('Order deleted successfully');
+            loadOrders(); // Reload orders
+        }
     } catch (error) {
         console.error('Error deleting order:', error);
+        alert('Error deleting order. Please try again.');
     }
 }
 
 // Add admin notes
 async function addAdminNotes(orderId, notes) {
     try {
-        await fetch(`${BASE_URL}/api/admin/orders/${orderId}`, {
+        await fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                Authorization: "Bearer " + localStorage.getItem("adminToken")
+            },
             body: JSON.stringify({ adminNotes: notes })
         });
     } catch (error) {
@@ -1121,46 +1151,77 @@ async function addAdminNotes(orderId, notes) {
     }
 }
 
-// Update order stats
-function updateOrderStats(stats) {
-    const container = document.getElementById('orderStats');
-    if (!container) return;
-    
-    container.innerHTML = `
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
-            <h4>Today's Orders</h4>
-            <p style="font-size: 32px; font-weight: bold;">${stats?.todayOrders || 0}</p>
-        </div>
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
-            <h4>Last 10 Days</h4>
-            <p style="font-size: 32px; font-weight: bold;">${stats?.deliveredLast10Days || 0}</p>
-        </div>
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
-            <h4>Total Orders</h4>
-            <p style="font-size: 32px; font-weight: bold;">${stats?.totalOrders || 0}</p>
-        </div>
-    `;
-}
-
-// Update order in UI
+// Update order in UI (for real-time updates)
 function updateOrderInUI(updatedOrder) {
     const orderCard = document.getElementById(`order-${updatedOrder._id}`);
     if (orderCard) {
-        loadOrders(); // Simple refresh
+        // Simple refresh - reload all orders to keep consistency
+        loadOrders();
     }
 }
 
-// Initialize admin page
-document.addEventListener('DOMContentLoaded', () => {
+// Keep the simple update function for backward compatibility
+function updateOrderStatusSimple(id, status) {
+  fetch(`${API_BASE}/api/admin/orders/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    },
+    body: JSON.stringify({ status })
+  })
+    .then(res => {
+      if (res.status === 401) {
+        logoutAdmin();
+        throw new Error("Unauthorized");
+      }
+      return res.json();
+    })
+    .then(() => loadOrders())
+    .catch(err => console.error(err));
+}
+
+// Utility function for authenticated fetch
+function fetchAuth(url, options = {}) {
+  return fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  });
+}
+
+// Initialize WebSocket and notifications when admin page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Request notification permission
     if (Notification.permission !== 'denied') {
         Notification.requestPermission();
     }
     
+    // Initialize WebSocket for real-time updates
     initializeAdminWebSocket();
-    loadOrders();
-    
-    document.getElementById('statusFilter')?.addEventListener('change', loadOrders);
-    document.getElementById('dateFilter')?.addEventListener('change', loadOrders);
-    
-    setInterval(loadOrders, 30000); // Refresh every 30 seconds
 });
+
+// Make all functions global
+window.updateOrderStatus = updateOrderStatus;
+window.updateOrderStatusSimple = updateOrderStatusSimple;
+window.updateDeliveryTime = updateDeliveryTime;
+window.deleteOrder = deleteOrder;
+window.addAdminNotes = addAdminNotes;
+window.loadPage = loadPage;
+window.logoutAdmin = logoutAdmin;
+window.showAddVegForm = showAddVegForm;
+window.addVeg = addVeg;
+window.deleteVeg = deleteVeg;
+window.showAddNonVegForm = showAddNonVegForm;
+window.addNonVeg = addNonVeg;
+window.deleteNonVeg = deleteNonVeg;
+window.activateTiffin = activateTiffin;
+window.deleteTiffinBooking = deleteTiffinBooking;
+window.toggleMenu = toggleMenu;
+window.deleteTiffin = deleteTiffin;
+window.showAddTiffinForm = showAddTiffinForm;
+window.addTiffin = addTiffin;
+window.toggleAdminDay = toggleAdminDay;
+window.saveDefaultMenu = saveDefaultMenu;
