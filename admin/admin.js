@@ -918,68 +918,101 @@ function fetchAuth(url, options = {}) {
 }
 
 
-const ws = new WebSocket('wss:https://bbbackend-bng2.onrender.com');
 
-ws.onmessage = (event) => {
-    const data = JSON.parse(event.data);
+// Add these functions to your admin.js
+
+let adminWS = null;
+
+// Initialize WebSocket for admin
+function initializeAdminWebSocket() {
+    const wsUrl = 'wss://bbbackend-bng2.onrender.com';
+    adminWS = new WebSocket(wsUrl);
     
-    if (data.type === 'NEW_ORDER') {
-        showNotification('New order received!');
-        loadOrders();
-    } else if (data.type === 'ORDER_UPDATED') {
-        updateOrderInUI(data.order);
+    adminWS.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        
+        if (data.type === 'NEW_ORDER') {
+            showAdminNotification('New order received!');
+            loadOrders();
+        } else if (data.type === 'ORDER_UPDATED') {
+            updateOrderInUI(data.order);
+        }
+    };
+}
+
+// Show admin notification
+function showAdminNotification(message) {
+    if (Notification.permission === 'granted') {
+        new Notification('Brio Bite Admin', { 
+            body: message,
+            icon: '../briobite.png'
+        });
     }
-};
+}
 
-
+// Load orders
 async function loadOrders() {
-    const status = document.getElementById('statusFilter').value;
-    const date = document.getElementById('dateFilter').value;
+    const status = document.getElementById('statusFilter')?.value || 'all';
+    const date = document.getElementById('dateFilter')?.value || 'all';
     
     try {
-        const response = await fetch(`https://bbbackend-bng2.onrender.com/api/orders/admin/all?status=${status}&date=${date}`);
+        const response = await fetch(`${BASE_URL}/api/admin/orders?status=${status}&date=${date}`);
         const data = await response.json();
         
         displayOrders(data.orders);
-        updateStats(data.stats);
+        updateOrderStats(data.stats);
     } catch (error) {
         console.error('Error loading orders:', error);
     }
 }
 
-
+// Display orders
 function displayOrders(orders) {
     const container = document.getElementById('ordersList');
-    container.innerHTML = '';
+    if (!container) return;
     
-    orders.forEach(order => {
+    if (orders.length === 0) {
+        container.innerHTML = '<p style="text-align: center; padding: 50px;">No orders found</p>';
+        return;
+    }
+    
+    container.innerHTML = orders.map(order => {
         const timeSinceOrder = new Date() - new Date(order.orderTime);
-        const canDelete = timeSinceOrder < 5 * 60 * 1000; // 5 minutes
+        const canDelete = timeSinceOrder < 5 * 60 * 1000;
         
-        container.innerHTML += `
-            <div class="order-card" id="order-${order._id}">
-                <div class="order-header">
+        return `
+            <div class="order-card" id="order-${order._id}" style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h3>Order #${order._id.slice(-6)}</h3>
-                    <span class="status ${order.orderStatus}">${order.orderStatus}</span>
+                    <span style="padding: 5px 10px; border-radius: 5px; background: ${getStatusColor(order.orderStatus)}; color: white;">
+                        ${order.orderStatus}
+                    </span>
                 </div>
                 
-                <div class="customer-info">
-                    <p><strong>${order.customerDetails.name}</strong> - ${order.customerDetails.phone}</p>
-                    <p>📍 ${order.customerDetails.address}</p>
-                    ${order.customerDetails.landmark ? `<p>📍 Landmark: ${order.customerDetails.landmark}</p>` : ''}
+                <div style="margin-bottom: 15px;">
+                    <p><i class="fas fa-user"></i> <strong>${order.customerDetails.name}</strong></p>
+                    <p><i class="fas fa-phone"></i> ${order.customerDetails.phone}</p>
+                    <p><i class="fas fa-map-marker-alt"></i> ${order.customerDetails.address}</p>
+                    ${order.customerDetails.landmark ? `<p><i class="fas fa-flag"></i> ${order.customerDetails.landmark}</p>` : ''}
                 </div>
                 
-                <div class="order-items-mini">
+                <div style="margin-bottom: 15px;">
+                    <h4>Items:</h4>
                     ${order.items.map(item => `
-                        <p>${item.name} x${item.quantity} - ₹${item.price * item.quantity}</p>
+                        <p style="display: flex; justify-content: space-between;">
+                            <span>${item.name} x${item.quantity}</span>
+                            <span>₹${item.price * item.quantity}</span>
+                        </p>
                     `).join('')}
+                    <p style="font-weight: bold; margin-top: 10px;">Total: ₹${order.totalAmount}</p>
                 </div>
                 
-                <p class="total"><strong>Total: ₹${order.totalAmount}</strong></p>
-                <p class="time">🕐 ${new Date(order.orderTime).toLocaleString()}</p>
+                <p style="color: #666; margin-bottom: 15px;">
+                    <i class="fas fa-clock"></i> Ordered: ${new Date(order.orderTime).toLocaleString()}
+                </p>
                 
-                <div class="admin-actions">
-                    <select onchange="updateOrderStatus('${order._id}', 'status', this.value)">
+                <div style="display: grid; gap: 10px;">
+                    <select onchange="updateOrderStatus('${order._id}', 'status', this.value)" style="padding: 8px;">
                         <option value="pending" ${order.orderStatus === 'pending' ? 'selected' : ''}>Pending</option>
                         <option value="confirmed" ${order.orderStatus === 'confirmed' ? 'selected' : ''}>Confirmed</option>
                         <option value="preparing" ${order.orderStatus === 'preparing' ? 'selected' : ''}>Preparing</option>
@@ -987,33 +1020,44 @@ function displayOrders(orders) {
                         <option value="delivered" ${order.orderStatus === 'delivered' ? 'selected' : ''}>Delivered</option>
                     </select>
                     
-                    <select onchange="updateOrderStatus('${order._id}', 'payment', this.value)">
+                    <select onchange="updateOrderStatus('${order._id}', 'payment', this.value)" style="padding: 8px;">
                         <option value="pending" ${order.paymentStatus === 'pending' ? 'selected' : ''}>Payment Pending</option>
                         <option value="paid" ${order.paymentStatus === 'paid' ? 'selected' : ''}>Paid</option>
                     </select>
                     
-                    <input type="text" placeholder="Delivery time (e.g., 25-30 min)" 
-                           value="${order.deliveryEstimate || '25-30 minutes'}"
-                           onchange="updateDeliveryTime('${order._id}', this.value)">
+                    <input type="text" placeholder="Delivery time" value="${order.deliveryEstimate || '25-30 minutes'}" 
+                           onchange="updateDeliveryTime('${order._id}', this.value)" style="padding: 8px;">
                     
-                    <button onclick="deleteOrder('${order._id}')" ${!canDelete ? 'disabled' : ''}>
+                    <button onclick="deleteOrder('${order._id}')" ${!canDelete ? 'disabled' : ''} 
+                            style="padding: 8px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">
                         Delete Order
                     </button>
                 </div>
                 
-                <div class="admin-notes">
-                    <textarea placeholder="Add notes/reason for customer..." 
-                              onchange="addAdminNotes('${order._id}', this.value)">${order.adminNotes || ''}</textarea>
-                </div>
+                <textarea placeholder="Admin notes/reason" onchange="addAdminNotes('${order._id}', this.value)" 
+                          style="width: 100%; padding: 8px; margin-top: 10px; border: 1px solid #ddd; border-radius: 5px;">${order.adminNotes || ''}</textarea>
             </div>
         `;
-    });
+    }).join('');
 }
 
+// Get status color
+function getStatusColor(status) {
+    const colors = {
+        'pending': '#ffc107',
+        'confirmed': '#17a2b8',
+        'preparing': '#fd7e14',
+        'out-for-delivery': '#007bff',
+        'delivered': '#28a745',
+        'cancelled': '#dc3545'
+    };
+    return colors[status] || '#6c757d';
+}
 
+// Update order status
 async function updateOrderStatus(orderId, type, value) {
     try {
-        const response = await fetch(`https://bbbackend-bng2.onrender.com/api/orders/admin/update/${orderId}`, {
+        const response = await fetch(`${BASE_URL}/api/admin/orders/${orderId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1022,17 +1066,17 @@ async function updateOrderStatus(orderId, type, value) {
         });
         
         if (response.ok) {
-            showNotification('Order updated successfully');
+            showAdminNotification('Order updated');
         }
     } catch (error) {
         console.error('Error updating order:', error);
     }
 }
 
-
+// Update delivery time
 async function updateDeliveryTime(orderId, time) {
     try {
-        await fetch(`https://bbbackend-bng2.onrender.com/api/orders/admin/update/${orderId}`, {
+        await fetch(`${BASE_URL}/api/admin/orders/${orderId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ deliveryEstimate: time })
@@ -1042,13 +1086,13 @@ async function updateDeliveryTime(orderId, time) {
     }
 }
 
-
+// Delete order
 async function deleteOrder(orderId) {
     const reason = prompt('Enter reason for deletion (will be shown to customer):');
-    if (reason === null) return;
+    if (!reason) return;
     
     try {
-        const response = await fetch(`https://bbbackend-bng2.onrender.com/api/orders/admin/update/${orderId}`, {
+        await fetch(`${BASE_URL}/api/admin/orders/${orderId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
@@ -1057,19 +1101,17 @@ async function deleteOrder(orderId) {
             })
         });
         
-        if (response.ok) {
-            showNotification('Order deleted successfully');
-            loadOrders();
-        }
+        showAdminNotification('Order deleted');
+        loadOrders();
     } catch (error) {
         console.error('Error deleting order:', error);
     }
 }
 
-
+// Add admin notes
 async function addAdminNotes(orderId, notes) {
     try {
-        await fetch(`https://bbbackend-bng2.onrender.com/api/orders/admin/update/${orderId}`, {
+        await fetch(`${BASE_URL}/api/admin/orders/${orderId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ adminNotes: notes })
@@ -1079,29 +1121,46 @@ async function addAdminNotes(orderId, notes) {
     }
 }
 
-
-function updateStats(stats) {
-    document.getElementById('deliveredCount').textContent = stats.deliveredLast10Days;
+// Update order stats
+function updateOrderStats(stats) {
+    const container = document.getElementById('orderStats');
+    if (!container) return;
+    
+    container.innerHTML = `
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+            <h4>Today's Orders</h4>
+            <p style="font-size: 32px; font-weight: bold;">${stats?.todayOrders || 0}</p>
+        </div>
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+            <h4>Last 10 Days</h4>
+            <p style="font-size: 32px; font-weight: bold;">${stats?.deliveredLast10Days || 0}</p>
+        </div>
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+            <h4>Total Orders</h4>
+            <p style="font-size: 32px; font-weight: bold;">${stats?.totalOrders || 0}</p>
+        </div>
+    `;
 }
 
-
-function showNotification(message) {
-    if (Notification.permission === 'granted') {
-        new Notification('Bite Box Admin', { body: message });
+// Update order in UI
+function updateOrderInUI(updatedOrder) {
+    const orderCard = document.getElementById(`order-${updatedOrder._id}`);
+    if (orderCard) {
+        loadOrders(); // Simple refresh
     }
 }
 
-
-if (Notification.permission !== 'denied') {
-    Notification.requestPermission();
-}
-
-
-document.getElementById('statusFilter').addEventListener('change', loadOrders);
-document.getElementById('dateFilter').addEventListener('change', loadOrders);
-
-
-setInterval(loadOrders, 30000);
-
-
-loadOrders();
+// Initialize admin page
+document.addEventListener('DOMContentLoaded', () => {
+    if (Notification.permission !== 'denied') {
+        Notification.requestPermission();
+    }
+    
+    initializeAdminWebSocket();
+    loadOrders();
+    
+    document.getElementById('statusFilter')?.addEventListener('change', loadOrders);
+    document.getElementById('dateFilter')?.addEventListener('change', loadOrders);
+    
+    setInterval(loadOrders, 30000); // Refresh every 30 seconds
+});

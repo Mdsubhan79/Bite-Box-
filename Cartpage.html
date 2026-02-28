@@ -423,12 +423,18 @@ footer button:hover {
 
             
             // Checkout button
-            document.getElementById('checkout-btn').addEventListener('click', function() {
-                alert('Order placed successfully!');
-                localStorage.removeItem('cart');
-                cart = [];
-                renderCart();
-            });
+document.getElementById('checkout-btn').addEventListener('click', function() {
+    const cart = getCart();
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+    }
+    
+    
+    if (confirm('🕐 Your order will be added to chef list. Please fill your details.\n\nNote: Order can be cancelled within 5 minutes only.')) {
+        window.location.href = 'orderdetail.html';
+    }
+});
         });
     </script>
     <script>
@@ -504,5 +510,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
+
 </body>
 </html>
