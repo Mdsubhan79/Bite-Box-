@@ -35,7 +35,7 @@ background:#0e2b28;
 color:white;
 position:fixed;
 height:100vh;
-left:0;
+right:0;
 top:0;
 transition:0.3s ease;
 z-index:1000;
