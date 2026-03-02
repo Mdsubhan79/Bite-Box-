@@ -1,23 +1,60 @@
+// orderdetail.js - FIXED VERSION
 
+const API_BASE = "https://bbbackend-bng2.onrender.com";
 const cart = getCart();
 let activeOrder = null;
 let timerInterval = null;
 
+// Create order function (was missing!)
+async function createOrder(orderData) {
+    const response = await fetch(`${API_BASE}/api/orders/create`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+    });
+    
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create order');
+    }
+    
+    return await response.json();
+}
+
+// Get active order function (was missing!)
+async function getActiveOrder() {
+    const userId = localStorage.getItem('userId') || 'guest';
+    try {
+        const response = await fetch(`${API_BASE}/api/orders/active/${userId}`);
+        if (!response.ok) return null;
+        return await response.json();
+    } catch (error) {
+        console.error('Error getting active order:', error);
+        return null;
+    }
+}
+
 // Display order items
 function displayOrderItems() {
     const container = document.getElementById('orderItems');
+    if (!container) return;
+    
     let total = 0;
     
     if (cart.length === 0) {
         container.innerHTML = '<p style="text-align: center; color: #666;">Your cart is empty. <a href="veg.html">Browse items</a></p>';
         document.getElementById('totalPrice').innerHTML = 'Total: ₹0';
-        document.querySelector('.order-now-btn').disabled = true;
+        const orderBtn = document.querySelector('.order-now-btn');
+        if (orderBtn) orderBtn.disabled = true;
         return;
     }
     
     container.innerHTML = '';
     cart.forEach((item, index) => {
-        const itemTotal = item.price * (item.quantity || 1);
+        const quantity = item.quantity || 1;
+        const itemTotal = item.price * quantity;
         total += itemTotal;
         
         container.innerHTML += `
@@ -25,7 +62,7 @@ function displayOrderItems() {
                 <div>
                     <strong>${item.name}</strong>
                     <br>
-                    <small>₹${item.price} × ${item.quantity || 1}</small>
+                    <small>₹${item.price} × ${quantity}</small>
                 </div>
                 <div>
                     <strong>₹${itemTotal}</strong>
@@ -45,6 +82,8 @@ function updateOrderPopup(order) {
     const progressSteps = document.getElementById('progressSteps');
     const orderDetails = document.getElementById('orderDetails');
     const cancelBtn = document.getElementById('cancelOrderBtn');
+    
+    if (!progressFill || !progressSteps || !orderDetails) return;
     
     // Update progress bar
     const progressMap = {
@@ -74,7 +113,7 @@ function updateOrderPopup(order) {
         <p><i class="fas fa-box"></i> <strong>Items:</strong> ${order.items.length}</p>
         <p><i class="fas fa-rupee-sign"></i> <strong>Total:</strong> ₹${order.totalAmount}</p>
         <p><i class="fas fa-clock"></i> <strong>Status:</strong> ${order.orderStatus.replace(/-/g, ' ')}</p>
-        <p><i class="fas fa-credit-card"></i> <strong>Payment:</strong> ${order.paymentStatus}</p>
+        <p><i class="fas fa-credit-card"></i> <strong>Payment:</strong> ${order.paymentStatus || 'pending'}</p>
         <p><i class="fas fa-motorcycle"></i> <strong>Delivery:</strong> ${order.deliveryEstimate || '25-30 minutes'}</p>
     `;
     
@@ -87,7 +126,7 @@ function updateCancellationTimer(order) {
     const timerElement = document.getElementById('cancellationTimer');
     const cancelBtn = document.getElementById('cancelOrderBtn');
     
-    if (!order.cancellationDeadline) return;
+    if (!timerElement || !cancelBtn || !order.cancellationDeadline) return;
     
     const deadline = new Date(order.cancellationDeadline);
     
@@ -117,6 +156,8 @@ function handleOrderDeletion(reason) {
     const cancelBtn = document.getElementById('cancelOrderBtn');
     const reorderBtn = document.getElementById('reorderBtn');
     
+    if (!adminMessage || !cancelBtn || !reorderBtn) return;
+    
     adminMessage.style.display = 'block';
     adminMessage.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${reason || 'Order cancelled by admin'}`;
     cancelBtn.style.display = 'none';
@@ -132,75 +173,50 @@ function handleOrderDeletion(reason) {
     clearInterval(timerInterval);
 }
 
-
-let tracker = null;
+// Initialize tracker elements after DOM loads
 document.addEventListener('DOMContentLoaded', () => {
-    tracker = document.getElementById('floatingTracker');
-}
-);
-let isDragging = false;
-let currentX, currentY, initialX, initialY;
-let xOffset = 0, yOffset = 0;
-
-tracker.addEventListener('mousedown', dragStart);
-document.addEventListener('mousemove', drag);
-document.addEventListener('mouseup', dragEnd);
-
-function dragStart(e) {
-    initialX = e.clientX - xOffset;
-    initialY = e.clientY - yOffset;
-    isDragging = true;
-    tracker.style.cursor = 'grabbing';
-}
-
-function dragEnd() {
-    isDragging = false;
-    tracker.style.cursor = 'grab';
-}
-
-function drag(e) {
-    if (isDragging) {
-        e.preventDefault();
-        currentX = e.clientX - initialX;
-        currentY = e.clientY - initialY;
-        xOffset = currentX;
-        yOffset = currentY;
-        tracker.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
-    }
-}
-
-// Click tracker to show popup
-tracker.addEventListener('click', (e) => {
-    if (!isDragging) {
-        document.getElementById('trackerPopup').classList.toggle('active');
-    }
-});
-
-// Close popup
-document.getElementById('closePopup').addEventListener('click', () => {
-    document.getElementById('trackerPopup').classList.remove('active');
-});
-
-// Cancel order
-document.getElementById('cancelOrderBtn').addEventListener('click', async () => {
-    const orderId = localStorage.getItem('activeOrderId');
+    displayOrderItems();
     
-    if (confirm('Are you sure you want to cancel this order?')) {
-        try {
-            await cancelOrder(orderId);
-            alert('Order cancelled successfully');
-            document.getElementById('trackerPopup').classList.remove('active');
-            setTimeout(() => {
-                tracker.style.display = 'none';
-            }, 2000);
-        } catch (error) {
-            alert(error.message || 'Error cancelling order');
+    // Check for existing active order
+    if (localStorage.getItem('activeOrderId')) {
+        const tracker = document.getElementById('floatingTracker');
+        if (tracker) {
+            tracker.style.display = 'flex';
+            getActiveOrder().then(order => {
+                if (order) {
+                    updateOrderPopup(order);
+                    if (typeof initializeWebSocket === 'function') {
+                        initializeWebSocket(order._id);
+                    }
+                }
+            });
         }
     }
+    
+    // Setup form submission
+    const orderForm = document.getElementById('orderForm');
+    if (orderForm) {
+        orderForm.addEventListener('submit', handleOrderSubmit);
+    }
+    
+    // Setup cancel button
+    const cancelBtn = document.getElementById('cancelOrderBtn');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', handleCancelOrder);
+    }
+    
+    // Setup close popup button
+    const closeBtn = document.getElementById('closePopup');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            const popup = document.getElementById('trackerPopup');
+            if (popup) popup.classList.remove('active');
+        });
+    }
 });
 
-// Handle form submission
-document.getElementById('orderForm').addEventListener('submit', async (e) => {
+// Handle order submission
+async function handleOrderSubmit(e) {
     e.preventDefault();
     
     // Validate phone
@@ -210,16 +226,23 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
         return;
     }
     
+    // Get user ID
+    let userId = localStorage.getItem('userId');
+    if (!userId) {
+        userId = 'user_' + Date.now();
+        localStorage.setItem('userId', userId);
+    }
+    
     const orderData = {
-        userId: 'user_' + Date.now(),
+        userId: userId,
         items: cart,
         customerDetails: {
             name: document.getElementById('fullName').value,
             phone: phone,
             address: document.getElementById('address').value,
-            landmark: document.getElementById('landmark').value
+            landmark: document.getElementById('landmark').value || ''
         },
-        totalAmount: parseFloat(localStorage.getItem('orderTotal'))
+        totalAmount: parseFloat(localStorage.getItem('orderTotal') || '0')
     };
     
     try {
@@ -231,47 +254,61 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
         localStorage.removeItem('cart');
         
         alert('✅ Order placed successfully! Track your order using the floating tracker.');
-        window.location.href = 'services.html';
-        tracker.style.display = 'flex';
+        
+        // Show tracker
+        const tracker = document.getElementById('floatingTracker');
+        if (tracker) {
+            tracker.style.display = 'flex';
+        }
+        
         updateOrderPopup(order);
         
-        // Setup WebSocket for real-time updates
-        initializeWebSocket(order._id);
-        setWebSocketCallbacks({
-            onOrderUpdate: updateOrderPopup,
-            onOrderDelete: handleOrderDeletion,
-            onOrderCancel: () => {
-                alert('Order was cancelled');
-                tracker.style.display = 'none';
-                document.getElementById('trackerPopup').classList.remove('active');
-            }
-        });
+        // Redirect or stay
+        setTimeout(() => {
+            window.location.href = 'services.html';
+        }, 2000);
         
     } catch (error) {
-        alert('Error placing order. Please try again.');
+        console.error('Order error:', error);
+        alert('Error placing order: ' + error.message);
     }
-});
+}
 
-// Initialize page
-displayOrderItems();
-
-// Check for existing active order
-if (localStorage.getItem('activeOrderId')) {
-    tracker.style.display = 'flex';
-    getActiveOrder().then(order => {
-        if (order) {
-            updateOrderPopup(order);
-            initializeWebSocket(order._id);
-            setWebSocketCallbacks({
-                onOrderUpdate: updateOrderPopup,
-                onOrderDelete: handleOrderDeletion
+// Handle cancel order
+async function handleCancelOrder() {
+    const orderId = localStorage.getItem('activeOrderId');
+    
+    if (!orderId) return;
+    
+    if (confirm('Are you sure you want to cancel this order?')) {
+        try {
+            const response = await fetch(`${API_BASE}/api/orders/cancel/${orderId}`, {
+                method: 'POST'
             });
+            
+            if (response.ok) {
+                alert('Order cancelled successfully');
+                const popup = document.getElementById('trackerPopup');
+                const tracker = document.getElementById('floatingTracker');
+                
+                if (popup) popup.classList.remove('active');
+                if (tracker) {
+                    setTimeout(() => {
+                        tracker.style.display = 'none';
+                    }, 2000);
+                }
+                localStorage.removeItem('activeOrderId');
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Cannot cancel order. Time limit expired.');
+            }
+        } catch (error) {
+            alert('Error cancelling order');
         }
-    });
+    }
 }
 
 // Clean up
 window.addEventListener('beforeunload', () => {
     if (timerInterval) clearInterval(timerInterval);
-    closeWebSocket();
 });
