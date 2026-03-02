@@ -3,11 +3,7 @@
     'use strict';
     
     
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initTracker);
-    } else {
-        initTracker();
-    }
+
     function initTracker() {
 
     const orderId = localStorage.getItem('activeOrderId');

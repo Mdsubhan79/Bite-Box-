@@ -820,7 +820,7 @@ function loadUsers() {
     });
 }
 
-/* ========= ORDERS MANAGEMENT - ADVANCED VERSION ========= */
+
 
 let adminWS = null;
 
@@ -900,6 +900,7 @@ async function loadOrders() {
             <button onclick="loadOrders()" style="display: block; margin: 20px auto;">Retry</button>
         `;
     }
+    setInterval(loadOrders, 5000);
 }
 
 // Render complete orders page with filters and stats

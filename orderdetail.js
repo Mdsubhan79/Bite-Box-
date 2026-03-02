@@ -231,8 +231,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
         localStorage.removeItem('cart');
         
         alert('✅ Order placed successfully! Track your order using the floating tracker.');
-        
-        // Show tracker and setup WebSocket
+        window.location.href = 'services.html';
         tracker.style.display = 'flex';
         updateOrderPopup(order);
         
