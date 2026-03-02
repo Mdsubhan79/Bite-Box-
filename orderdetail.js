@@ -1,6 +1,4 @@
-// orderdetail.js
 
-// Get cart from localStorage using script.js functions
 const cart = getCart();
 let activeOrder = null;
 let timerInterval = null;
@@ -134,8 +132,12 @@ function handleOrderDeletion(reason) {
     clearInterval(timerInterval);
 }
 
-// Make tracker draggable
-const tracker = document.getElementById('floatingTracker');
+
+let tracker = null;
+document.addEventListener('DOMContentLoaded', () => {
+    tracker = document.getElementById('floatingTracker');
+}
+);
 let isDragging = false;
 let currentX, currentY, initialX, initialY;
 let xOffset = 0, yOffset = 0;

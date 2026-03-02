@@ -2,32 +2,29 @@
 (function() {
     'use strict';
     
-    // Wait for DOM to be ready
+    
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initTracker);
     } else {
         initTracker();
     }
-    
     function initTracker() {
-        // Check if tracker already exists (prevent duplicates)
-        if (document.getElementById('floatingTracker')) {
-            return;
-        }
-        
-        // Only show tracker if there's an active order
-        const orderId = localStorage.getItem('activeOrderId');
-        if (!orderId) {
-            return;
-        }
-        
-        // Create tracker HTML
-        createTrackerElements();
-        
-       
-        initializeTracker();
-    }
+
+    const orderId = localStorage.getItem('activeOrderId');
+
     
+    if (!orderId) {
+        return;
+    }
+
+    
+    if (!document.getElementById('floatingTracker')) {
+        createTrackerElements();
+    }
+
+    initializeTracker();
+}
+
     function createTrackerElements() {
         // Create floating tracker button
         const tracker = document.createElement('div');
