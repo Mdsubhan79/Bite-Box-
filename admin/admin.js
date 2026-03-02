@@ -1083,36 +1083,39 @@ function viewOrderDetails(orderId) {
     alert(`Viewing order #${orderId} - Full details feature coming soon!`);
 }
 
-// Delete order
+// Soft delete order
 function deleteOrder(orderId) {
-    if (!confirm("Are you sure you want to delete this order?")) return;
+    if (!confirm("⚠️ Are you sure you want to cancel this order?")) return;
+    
+    const reason = prompt("Enter reason for cancellation (will be shown to customer):");
     
     fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
-        method: "DELETE",
+        method: "PUT", 
         headers: {
+            "Content-Type": "application/json",
             "Authorization": "Bearer " + localStorage.getItem("adminToken")
-        }
+        },
+        body: JSON.stringify({ 
+            action: 'delete',
+            adminNotes: reason 
+        })
     })
     .then(res => {
         if (res.status === 401) {
             logoutAdmin();
             throw new Error("Unauthorized");
         }
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-        }
         return res.json();
     })
     .then(() => {
-        alert("Order deleted successfully!");
-        loadOrders(); // Reload orders
+        alert("✅ Order cancelled successfully!");
+        loadOrders();
     })
     .catch(err => {
-        console.error("Error deleting order:", err);
-        alert("Failed to delete order: " + err.message);
+        console.error("Error cancelling order:", err);
+        alert("❌ Failed to cancel order");
     });
 }
-
 //functions global
 window.loadOrders = loadOrders;
 window.viewOrderDetails = viewOrderDetails;

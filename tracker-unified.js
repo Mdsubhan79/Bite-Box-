@@ -336,38 +336,119 @@
         };
     }
     
-    async function cancelOrder() {
-        const orderId = localStorage.getItem('activeOrderId');
+// Cancel order function - FIXED VERSION
+async function cancelOrder() {
+    const orderId = localStorage.getItem('activeOrderId');
+    
+    if (!orderId) {
+        alert('No active order found');
+        return;
+    }
+    
+    if (!confirm('Are you sure you want to cancel this order? You can only cancel within 5 minutes of placing the order.')) {
+        return;
+    }
+    
+    // Show loading state on cancel button
+    const cancelBtn = document.getElementById('cancelOrderBtn');
+    const originalText = cancelBtn ? cancelBtn.innerHTML : 'Cancel Order';
+    if (cancelBtn) {
+        cancelBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cancelling...';
+        cancelBtn.disabled = true;
+    }
+    
+    try {
+        console.log('Cancelling order:', orderId); // Debug log
         
-        if (!orderId) return;
+        const response = await fetch(`${API_BASE}/api/orders/cancel/${orderId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
         
-        if (confirm('Are you sure you want to cancel this order?')) {
-            try {
-                const response = await fetch(`${API_BASE}/api/orders/cancel/${orderId}`, {
-                    method: 'POST'
-                });
-                
-                if (response.ok) {
-                    alert('Order cancelled successfully');
-                    const popup = document.getElementById('trackerPopup');
-                    const tracker = document.getElementById('floatingTracker');
-                    
-                    if (popup) popup.classList.remove('active');
-                    if (tracker) {
-                        setTimeout(() => {
-                            tracker.remove();
-                        }, 2000);
+        // Log response for debugging
+        console.log('Cancel response status:', response.status);
+        
+        const data = await response.json();
+        console.log('Cancel response data:', data);
+        
+        if (response.ok) {
+            alert('✅ Order cancelled successfully');
+            
+            // Update UI
+            const popup = document.getElementById('trackerPopup');
+            const tracker = document.getElementById('floatingTracker');
+            const orderDetails = document.getElementById('orderDetails');
+            
+            if (orderDetails) {
+                orderDetails.innerHTML = '<p style="color: #dc3545; text-align: center;">Order has been cancelled</p>';
+            }
+            
+            // Update progress bar
+            const progressFill = document.getElementById('progressFill');
+            if (progressFill) progressFill.style.width = '0%';
+            
+            // Hide cancel button, show reorder button
+            const reorderBtn = document.getElementById('reorderBtn');
+            if (cancelBtn) cancelBtn.style.display = 'none';
+            if (reorderBtn) {
+                reorderBtn.style.display = 'block';
+                reorderBtn.onclick = () => {
+                    if (activeOrder && activeOrder.items) {
+                        localStorage.setItem('cart', JSON.stringify(activeOrder.items));
+                        window.location.href = 'orderdetail.html';
                     }
-                    localStorage.removeItem('activeOrderId');
-                } else {
-                    const data = await response.json();
-                    alert(data.error || 'Cannot cancel order. Time limit expired.');
+                };
+            }
+            
+            // Hide timer
+            const timerElement = document.getElementById('cancellationTimer');
+            if (timerElement) timerElement.style.display = 'none';
+            
+            // Remove order ID from localStorage after 2 seconds
+            setTimeout(() => {
+                localStorage.removeItem('activeOrderId');
+                if (tracker) {
+                    tracker.style.display = 'none';
                 }
-            } catch (error) {
-                alert('Error cancelling order');
+                if (popup) {
+                    popup.classList.remove('active');
+                }
+            }, 3000);
+            
+        } else {
+            // Handle specific error messages
+            let errorMessage = data.error || 'Cannot cancel order';
+            
+            if (response.status === 400) {
+                if (errorMessage.includes('time')) {
+                    errorMessage = '⏰ Cancellation time expired (5 minutes limit)';
+                }
+            } else if (response.status === 404) {
+                errorMessage = 'Order not found';
+                localStorage.removeItem('activeOrderId');
+            }
+            
+            alert('❌ ' + errorMessage);
+            
+            // Reset button
+            if (cancelBtn) {
+                cancelBtn.innerHTML = originalText;
+                cancelBtn.disabled = false;
             }
         }
+    } catch (error) {
+        console.error('Error cancelling order:', error);
+        alert('❌ Network error. Please check your connection and try again.');
+        
+        // Reset button
+        if (cancelBtn) {
+            cancelBtn.innerHTML = originalText;
+            cancelBtn.disabled = false;
+        }
     }
+}
     
     function reorderItems() {
         if (activeOrder && activeOrder.items) {

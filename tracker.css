@@ -1,22 +1,20 @@
-/* tracker.css - Global Order Tracker Styles */
 
-/* Floating Tracker */
 .floating-tracker {
     position: fixed;
     bottom: 30px;
     right: 30px;
     width: 70px;
     height: 70px;
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+    background: linear-gradient(135deg, #911515 0%, #e93636 100%);
     border-radius: 50%;
     cursor: move;
     z-index: 9999;
-    display: none; /* Hidden by default */
+    display: none;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: rgb(231, 231, 231);
     font-size: 30px;
-    box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+    
     animation: pulse 2s infinite;
     user-select: none;
     transition: transform 0.2s ease;
@@ -36,7 +34,7 @@
     bottom: 120px;
     right: 30px;
     width: 350px;
-    background: white;
+    background: rgb(255, 255, 230);
     border-radius: 20px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     z-index: 10000;
@@ -51,8 +49,8 @@
 /* Popup Header */
 .popup-header {
     padding: 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: linear-gradient(135deg, #10332F 0%, #107267 100%);
+    color: #F4D35E;
     border-radius: 20px 20px 0 0;
     display: flex;
     justify-content: space-between;
@@ -87,7 +85,7 @@
     background: rgba(255,255,255,0.1);
 }
 
-/* Popup Content */
+
 .popup-content {
     padding: 20px;
 }
@@ -97,17 +95,17 @@
     text-align: center;
     margin: 15px 0;
     font-size: 1.2em;
-    color: #ff6b6b;
+    color: #ff6262;
     font-weight: bold;
     padding: 10px;
     background: #fff3f3;
     border-radius: 10px;
 }
 
-/* Progress Bar */
+
 .progress-bar {
     height: 10px;
-    background: #f0f0f0;
+    background: #cffdc6;
     border-radius: 5px;
     overflow: hidden;
     margin: 20px 0;
@@ -125,7 +123,7 @@
     display: flex;
     justify-content: space-between;
     font-size: 10px;
-    color: #666;
+    color: #1b1b1b;
     margin: 10px 0;
     position: relative;
 }
@@ -215,7 +213,7 @@
 }
 
 .cancel-btn:disabled {
-    background: #ccc;
+    background: #ff4c4c;
     cursor: not-allowed;
     opacity: 0.6;
 }
