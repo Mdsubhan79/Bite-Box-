@@ -688,39 +688,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
-<!-- Floating Order Tracker -->
-<div class="floating-tracker" id="floatingTracker">
-    <i class="fas fa-utensils"></i>
-</div>
-
-<!-- Tracker Popup -->
-<div class="tracker-popup" id="trackerPopup">
-    <div class="popup-header">
-        <span><i class="fas fa-shopping-bag"></i> Your Order</span>
-        <button id="closePopup"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="popup-content">
-        <div class="timer" id="cancellationTimer"></div>
-        
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-        </div>
-        
-        <div class="progress-steps" id="progressSteps"></div>
-        
-        <div id="orderDetails" style="margin: 20px 0;"></div>
-        
-        <div class="admin-message" id="adminMessage"></div>
-        
-        <button class="cancel-btn" id="cancelOrderBtn">
-            <i class="fas fa-times-circle"></i> Cancel Order
-        </button>
-        
-        <button class="reorder-btn" id="reorderBtn">
-            <i class="fas fa-redo-alt"></i> Reorder Now
-        </button>
-    </div>
-</div>
 <script defer src="script.js"></script>
 
 <script src="tracker-unified.js"></script>

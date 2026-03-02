@@ -1,4 +1,3 @@
-// tracker-unified.js - Global Order Tracker for ALL Pages
 
 (function() {
     'use strict';
@@ -25,7 +24,7 @@
         // Create tracker HTML
         createTrackerElements();
         
-        // Initialize tracker functionality
+       
         initializeTracker();
     }
     
