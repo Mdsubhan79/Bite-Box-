@@ -1,26 +1,49 @@
+// tracker-unified.js - FIXED VERSION
 
 (function() {
     'use strict';
     
+    const API_BASE = "https://bbbackend-bng2.onrender.com";
     
-
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTracker);
+    } else {
+        initTracker();
+    }
+    
+    // Also check when localStorage changes (order placed on another tab)
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'activeOrderId') {
+            initTracker();
+        }
+    });
+    
     function initTracker() {
-
-    const orderId = localStorage.getItem('activeOrderId');
-
-    
-    if (!orderId) {
-        return;
+        const orderId = localStorage.getItem('activeOrderId');
+        
+        // Remove existing tracker if no order
+        if (!orderId) {
+            removeTracker();
+            return;
+        }
+        
+        // Create tracker if it doesn't exist
+        if (!document.getElementById('floatingTracker')) {
+            createTrackerElements();
+        }
+        
+        initializeTracker(orderId);
     }
-
     
-    if (!document.getElementById('floatingTracker')) {
-        createTrackerElements();
+    function removeTracker() {
+        const tracker = document.getElementById('floatingTracker');
+        const popup = document.getElementById('trackerPopup');
+        
+        if (tracker) tracker.remove();
+        if (popup) popup.remove();
     }
-
-    initializeTracker();
-}
-
+    
     function createTrackerElements() {
         // Create floating tracker button
         const tracker = document.createElement('div');
@@ -65,7 +88,7 @@
     let currentX, currentY, initialX, initialY;
     let xOffset = 0, yOffset = 0;
     
-    function initializeTracker() {
+    function initializeTracker(orderId) {
         const tracker = document.getElementById('floatingTracker');
         const popup = document.getElementById('trackerPopup');
         const closeBtn = document.getElementById('closePopup');
@@ -74,19 +97,11 @@
         
         if (!tracker) return;
         
-        // Check for active order
-        const orderId = localStorage.getItem('activeOrderId');
-        const userData = localStorage.getItem('biteboxUser');
-        const userId = userData ? JSON.parse(userData).email : 'guest';
+        tracker.style.display = 'flex';
         
-        if (orderId) {
-            tracker.style.display = 'flex';
-            loadOrderDetails(orderId, userId);
-            initializeWebSocket(orderId);
-        } else {
-            tracker.style.display = 'none';
-            return;
-        }
+        // Load order details
+        loadOrderDetails(orderId);
+        initializeWebSocket(orderId);
         
         // Event Listeners
         if (tracker) {
@@ -127,9 +142,14 @@
     }
     
     // Load order details from API
-    async function loadOrderDetails(orderId, userId) {
+    async function loadOrderDetails(orderId) {
         try {
-            const response = await fetch(`https://bbbackend-bng2.onrender.com/api/orders/active/${userId}`);
+            const response = await fetch(`${API_BASE}/api/orders/${orderId}`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
             const order = await response.json();
             
             if (order) {
@@ -137,20 +157,17 @@
                 updatePopup(order);
                 startCancellationTimer(order);
             } else {
-                // No active order found
                 localStorage.removeItem('activeOrderId');
-                hideTracker();
+                removeTracker();
             }
         } catch (error) {
             console.error('Error loading order:', error);
-            // If API fails, show limited info
-            updatePopupFromLocal();
+            updatePopupFromLocal(orderId);
         }
     }
     
-    function updatePopupFromLocal() {
+    function updatePopupFromLocal(orderId) {
         const orderDetails = document.getElementById('orderDetails');
-        const orderId = localStorage.getItem('activeOrderId');
         
         if (orderDetails && orderId) {
             orderDetails.innerHTML = `
@@ -168,7 +185,7 @@
         const adminMessage = document.getElementById('adminMessage');
         const cancelBtn = document.getElementById('cancelOrderBtn');
         const reorderBtn = document.getElementById('reorderBtn');
-        const tracker = document.getElementById('floatingTracker');
+        const timerElement = document.getElementById('cancellationTimer');
         
         if (!orderDetails) return;
         
@@ -234,12 +251,9 @@
             }
         }
         
-        // Hide tracker after delivery
-        if (order.orderStatus === 'delivered' && tracker) {
-            setTimeout(() => {
-                tracker.style.display = 'none';
-                localStorage.removeItem('activeOrderId');
-            }, 10000);
+        // Hide timer for delivered/cancelled orders
+        if (timerElement && (order.orderStatus === 'delivered' || order.orderStatus === 'cancelled')) {
+            timerElement.style.display = 'none';
         }
     }
     
@@ -247,8 +261,9 @@
         const timerElement = document.getElementById('cancellationTimer');
         const cancelBtn = document.getElementById('cancelOrderBtn');
         
-        if (!timerElement || !order.cancellationDeadline) return;
+        if (!timerElement || !cancelBtn || !order.cancellationDeadline) return;
         
+        timerElement.style.display = 'block';
         const deadline = new Date(order.cancellationDeadline);
         
         function updateTimer() {
@@ -257,7 +272,7 @@
             
             if (timeLeft <= 0) {
                 timerElement.innerHTML = '⏰ Cancellation time expired';
-                if (cancelBtn) cancelBtn.disabled = true;
+                cancelBtn.disabled = true;
                 if (trackerInterval) {
                     clearInterval(trackerInterval);
                     trackerInterval = null;
@@ -266,7 +281,7 @@
                 const minutes = Math.floor(timeLeft / 60000);
                 const seconds = Math.floor((timeLeft % 60000) / 1000);
                 timerElement.innerHTML = `⏱️ Cancel within: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-                if (cancelBtn) cancelBtn.disabled = false;
+                cancelBtn.disabled = false;
             }
         }
         
@@ -279,27 +294,31 @@
         trackerWS = new WebSocket(wsUrl);
         
         trackerWS.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            
-            if (data.type === 'ORDER_UPDATED' && data.order._id === orderId) {
-                activeOrder = data.order;
-                updatePopup(data.order);
-            } else if (data.type === 'ORDER_DELETED' && data.orderId === orderId) {
-                const adminMessage = document.getElementById('adminMessage');
-                const cancelBtn = document.getElementById('cancelOrderBtn');
-                const reorderBtn = document.getElementById('reorderBtn');
+            try {
+                const data = JSON.parse(event.data);
                 
-                if (adminMessage) {
-                    adminMessage.style.display = 'block';
-                    adminMessage.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${data.reason || 'Order cancelled by admin'}`;
+                if (data.type === 'ORDER_UPDATED' && data.order._id === orderId) {
+                    activeOrder = data.order;
+                    updatePopup(data.order);
+                } else if (data.type === 'ORDER_DELETED' && data.orderId === orderId) {
+                    const adminMessage = document.getElementById('adminMessage');
+                    const cancelBtn = document.getElementById('cancelOrderBtn');
+                    const reorderBtn = document.getElementById('reorderBtn');
+                    
+                    if (adminMessage) {
+                        adminMessage.style.display = 'block';
+                        adminMessage.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${data.reason || 'Order cancelled by admin'}`;
+                    }
+                    if (cancelBtn) cancelBtn.style.display = 'none';
+                    if (reorderBtn) reorderBtn.style.display = 'block';
+                    
+                    if (trackerInterval) {
+                        clearInterval(trackerInterval);
+                        trackerInterval = null;
+                    }
                 }
-                if (cancelBtn) cancelBtn.style.display = 'none';
-                if (reorderBtn) reorderBtn.style.display = 'block';
-                
-                if (trackerInterval) {
-                    clearInterval(trackerInterval);
-                    trackerInterval = null;
-                }
+            } catch (error) {
+                console.error('WebSocket message error:', error);
             }
         };
         
@@ -324,7 +343,7 @@
         
         if (confirm('Are you sure you want to cancel this order?')) {
             try {
-                const response = await fetch(`https://bbbackend-bng2.onrender.com/api/orders/cancel/${orderId}`, {
+                const response = await fetch(`${API_BASE}/api/orders/cancel/${orderId}`, {
                     method: 'POST'
                 });
                 
@@ -334,10 +353,12 @@
                     const tracker = document.getElementById('floatingTracker');
                     
                     if (popup) popup.classList.remove('active');
-                    setTimeout(() => {
-                        if (tracker) tracker.style.display = 'none';
-                        localStorage.removeItem('activeOrderId');
-                    }, 2000);
+                    if (tracker) {
+                        setTimeout(() => {
+                            tracker.remove();
+                        }, 2000);
+                    }
+                    localStorage.removeItem('activeOrderId');
                 } else {
                     const data = await response.json();
                     alert(data.error || 'Cannot cancel order. Time limit expired.');
@@ -352,13 +373,6 @@
         if (activeOrder && activeOrder.items) {
             localStorage.setItem('cart', JSON.stringify(activeOrder.items));
             window.location.href = 'orderdetail.html';
-        }
-    }
-    
-    function hideTracker() {
-        const tracker = document.getElementById('floatingTracker');
-        if (tracker) {
-            tracker.style.display = 'none';
         }
     }
     
