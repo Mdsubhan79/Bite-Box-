@@ -2,39 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>Brio Bite Admin</title>
-     <link rel="icon" type="image/x-icon" href="briobite.png">
+  <link rel="icon" type="image/x-icon" href="briobite.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+  <!-- Mobile Menu Toggle -->
+  <div class="mobile-menu-toggle" id="mobileMenuToggle">
+    <i class="fas fa-bars"></i>
+  </div>
 
-<div class="admin-wrapper">
+  <div class="admin-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2><i class="fas fa-utensils"></i> Brio Bite</h2>
+        <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
+      </div>
+      <ul>
+        <li onclick="loadPage('dashboard')"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></li>
+        <li onclick="loadPage('veg')"><i class="fas fa-leaf"></i> <span>Veg Menu</span></li>
+        <li onclick="loadPage('nonveg')"><i class="fas fa-drumstick-bite"></i> <span>Non-Veg Menu</span></li>
+        <li onclick="loadPage('tiffin')"><i class="fas fa-box"></i> <span>Tiffin Services</span></li>
+        <li onclick="loadPage('tiffinBookings')"><i class="fas fa-calendar-check"></i> <span>Tiffin Bookings</span></li>
+        <li onclick="loadPage('defaultMenu')"><i class="fas fa-edit"></i> <span>Set Tiffin Menu</span></li>
+        <li onclick="loadPage('orders')"><i class="fas fa-shopping-cart"></i> <span>Orders</span></li>
+        <li onclick="loadPage('users')"><i class="fas fa-users"></i> <span>Users</span></li>
+        <li onclick="loadPage('settings')"><i class="fas fa-cog"></i> <span>Settings</span></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button onclick="logoutAdmin()" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </aside>
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <h2>Brio Bite</h2>
-    <ul>
-      <li onclick="loadPage('dashboard')">Dashboard</li>
-      <li onclick="loadPage('veg')">Veg Menu</li>
-      <li onclick="loadPage('nonveg')">Non-Veg Menu</li>
-      <li onclick="loadPage('tiffin')">Tiffin Services</li>
-      <li onclick="loadPage('tiffinBookings')">Tiffin Bookings</li>
-      <li onclick="loadPage('defaultMenu')">Set Tiffin Menu</li>
-      <li onclick="loadPage('orders')">Orders</li>
-      <li onclick="loadPage('users')">Users</li>
-      <li onclick="loadPage('settings')">Settings</li>
-    </ul>
-  </aside>
+    <!-- Content -->
+    <main class="content" id="content">
+      <div class="content-header">
+        <h1 id="pageTitle">Dashboard</h1>
+        <div class="header-actions">
+          <span class="admin-badge"><i class="fas fa-user-shield"></i> Admin</span>
+        </div>
+      </div>
+      <div class="content-body" id="contentBody">
+        <!-- Dynamic content loads here -->
+      </div>
+    </main>
+  </div>
 
-  <!-- Content -->
-  <main class="content" id="content">
-    <!-- This is where the orders section will appear when you click on "Orders" in sidebar -->
-  </main>
-
-</div>
-
-<script src="admin.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.add('active');
+    });
+    
+    document.getElementById('closeSidebar').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.remove('active');
+    });
+    
+    // Close sidebar when clicking on a menu item (mobile)
+    document.querySelectorAll('.sidebar ul li').forEach(item => {
+      item.addEventListener('click', function() {
+        if (window.innerWidth <= 768) {
+          document.getElementById('sidebar').classList.remove('active');
+        }
+      });
+    });
+  </script>
 </body>
 </html>

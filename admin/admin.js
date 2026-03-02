@@ -57,6 +57,27 @@ function loadPage(page) {
   }
 }
 
+function makeTableMobileResponsive(tableId) {
+  const table = document.getElementById(tableId);
+  if (!table) return;
+  
+  const headers = [];
+  const headerCells = table.querySelectorAll('thead th');
+  
+  headerCells.forEach(header => {
+    headers.push(header.textContent.trim());
+  });
+  
+  const rows = table.querySelectorAll('tbody tr');
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    cells.forEach((cell, index) => {
+      if (headers[index]) {
+        cell.setAttribute('data-label', headers[index]);
+      }
+    });
+  });
+}
 /* ========= DASHBOARD OVERVIEW ========= */
 
 function loadDashboard() {
@@ -1078,42 +1099,53 @@ function updateOrderStatus(orderId, status) {
 }
 
 // View order details
-function viewOrderDetails(orderId) {
-    // You can implement a modal to show full order details
+function viewOrderDetails(orderId) { 
     alert(`Viewing order #${orderId} - Full details feature coming soon!`);
 }
 
-// Soft delete order
+// Delete order
 function deleteOrder(orderId) {
-    if (!confirm("⚠️ Are you sure you want to cancel this order?")) return;
+    if (!confirm("⚠️ Are you sure you want to permanently delete this order?")) return;
     
-    const reason = prompt("Enter reason for cancellation (will be shown to customer):");
+    const reason = prompt("Enter reason for deletion (optional):");
+    
+    // Show loading state on button
+    const deleteBtn = event?.target;
+    const originalText = deleteBtn?.innerHTML;
+    if (deleteBtn) {
+        deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+        deleteBtn.disabled = true;
+    }
     
     fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
-        method: "PUT", 
+        method: "DELETE",
         headers: {
-            "Content-Type": "application/json",
             "Authorization": "Bearer " + localStorage.getItem("adminToken")
-        },
-        body: JSON.stringify({ 
-            action: 'delete',
-            adminNotes: reason 
-        })
+        }
     })
-    .then(res => {
+    .then(async res => {
         if (res.status === 401) {
             logoutAdmin();
             throw new Error("Unauthorized");
         }
+        if (!res.ok) {
+            const error = await res.json();
+            throw new Error(error.error || `HTTP error! status: ${res.status}`);
+        }
         return res.json();
     })
-    .then(() => {
-        alert("✅ Order cancelled successfully!");
-        loadOrders();
+    .then(data => {
+        alert("✅ Order deleted successfully!");
+        loadOrders(); // Reload orders
     })
     .catch(err => {
-        console.error("Error cancelling order:", err);
-        alert("❌ Failed to cancel order");
+        console.error("Error deleting order:", err);
+        alert("❌ Failed to delete order: " + err.message);
+        // Reset button
+        if (deleteBtn) {
+            deleteBtn.innerHTML = originalText;
+            deleteBtn.disabled = false;
+        }
     });
 }
 //functions global
