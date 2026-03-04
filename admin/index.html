@@ -69,6 +69,14 @@
           document.getElementById('sidebar').classList.remove('active');
         }
       });
+      document.addEventListener('click', function(e) {
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('mobileMenuToggle');
+
+  if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+    sidebar.classList.remove('active');
+  }
+});
     });
   </script>
 </body>
