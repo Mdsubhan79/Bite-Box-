@@ -162,6 +162,7 @@
 #orderDetails {
     margin: 20px 0;
     padding: 15px;
+    color: #1a1a1a;
     background: #f8f9fa;
     border-radius: 10px;
 }
@@ -174,14 +175,14 @@
 }
 
 #orderDetails p strong {
-    color: #333;
+    color: #000000;
 }
 
 /* Admin Message */
 .admin-message {
     margin: 15px 0;
     padding: 12px;
-    background: #fff3cd;
+    background: #004417;
     border-left: 4px solid #ffc107;
     border-radius: 5px;
     display: none;
@@ -268,7 +269,7 @@
     }
 }
 
-/* Mobile Responsive */
+
 @media (max-width: 768px) {
     .tracker-popup {
         width: 300px;

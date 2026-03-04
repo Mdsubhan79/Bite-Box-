@@ -1,18 +1,17 @@
-// tracker-unified.js - FIXED VERSION
+
 
 (function() {
     'use strict';
     
     const API_BASE = "https://bbbackend-bng2.onrender.com";
-    
-    // Initialize when DOM is ready
+   
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initTracker);
     } else {
         initTracker();
     }
     
-    // Also check when localStorage changes (order placed on another tab)
+ 
     window.addEventListener('storage', function(e) {
         if (e.key === 'activeOrderId') {
             initTracker();
@@ -22,13 +21,13 @@
     function initTracker() {
         const orderId = localStorage.getItem('activeOrderId');
         
-        // Remove existing tracker if no order
+      
         if (!orderId) {
             removeTracker();
             return;
         }
         
-        // Create tracker if it doesn't exist
+    
         if (!document.getElementById('floatingTracker')) {
             createTrackerElements();
         }
@@ -45,14 +44,14 @@
     }
     
     function createTrackerElements() {
-        // Create floating tracker button
+      
         const tracker = document.createElement('div');
         tracker.id = 'floatingTracker';
         tracker.className = 'floating-tracker';
         tracker.innerHTML = '<i class="fas fa-utensils"></i>';
         document.body.appendChild(tracker);
         
-        // Create tracker popup
+       
         const popup = document.createElement('div');
         popup.id = 'trackerPopup';
         popup.className = 'tracker-popup';
@@ -80,7 +79,7 @@
         document.body.appendChild(popup);
     }
     
-    // Variables
+  
     let trackerInterval = null;
     let trackerWS = null;
     let activeOrder = null;
@@ -99,11 +98,11 @@
         
         tracker.style.display = 'flex';
         
-        // Load order details
+  
         loadOrderDetails(orderId);
         initializeWebSocket(orderId);
         
-        // Event Listeners
+       
         if (tracker) {
             tracker.addEventListener('click', function(e) {
                 e.stopPropagation();
