@@ -22,12 +22,12 @@ width:100%;
 }
 
 .sidebar{
-width:240px;
+width:270px;
 background:#0e2b28;
 color:white;
 position:fixed;
 height:100vh;
-right:-240px;   /* hidden */
+left:-270px;   
 top:0;
 transition:0.3s ease;
 z-index:1000;
@@ -71,7 +71,7 @@ padding:15px;
 border-top:1px solid rgba(255,255,255,0.1);
 }
 .sidebar.active{
-right:0;
+left:0;
 }
 .close-sidebar{
 position:absolute;
@@ -311,8 +311,8 @@ justify-content:center;
 .cards{
 grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
 }
-
 }
+
 @media (max-width:768px){
 
 .content{
