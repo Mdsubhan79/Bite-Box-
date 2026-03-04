@@ -1,693 +1,1281 @@
-// tracker-unified.js - COMPLETE CORRECTED VERSION
+/* ========= CONFIG ========= */
+const API_BASE = "https://bbbackend-bng2.onrender.com";
 
-(function() {
-    'use strict';
-    
-    const API_BASE = "https://bbbackend-bng2.onrender.com";
-    
-    // Initialize on page load
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initTracker);
-    } else {
-        initTracker();
-    }
-    
-    // Listen for storage changes (order placed in another tab)
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'activeOrderId') {
-            initTracker();
-        }
-    });
-    
-    function initTracker() {
-        const orderId = localStorage.getItem('activeOrderId');
-        
-        // Remove tracker if no active order
-        if (!orderId) {
-            removeTracker();
-            return;
-        }
-        
-        // Create tracker if it doesn't exist
-        if (!document.getElementById('floatingTracker')) {
-            createTrackerElements();
-        }
-        
-        initializeTracker(orderId);
-    }
-    
-    function removeTracker() {
-        const tracker = document.getElementById('floatingTracker');
-        const popup = document.getElementById('trackerPopup');
-        
-        if (tracker) tracker.remove();
-        if (popup) popup.remove();
-    }
-    
-    function createTrackerElements() {
-        // Create floating tracker button
-        const tracker = document.createElement('div');
-        tracker.id = 'floatingTracker';
-        tracker.className = 'floating-tracker';
-        tracker.innerHTML = '<i class="fas fa-utensils"></i>';
-        document.body.appendChild(tracker);
-        
-        // Create tracker popup
-        const popup = document.createElement('div');
-        popup.id = 'trackerPopup';
-        popup.className = 'tracker-popup';
-        popup.innerHTML = `
-            <div class="popup-header">
-                <span><i class="fas fa-shopping-bag"></i> Your Order</span>
-                <button id="closePopup"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="popup-content">
-                <div class="timer" id="cancellationTimer"></div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-                </div>
-                <div class="progress-steps" id="progressSteps"></div>
-                <div id="orderDetails" style="margin: 20px 0;"></div>
-                <div class="admin-message" id="adminMessage"></div>
-                <button class="cancel-btn" id="cancelOrderBtn">
-                    <i class="fas fa-times-circle"></i> Cancel Order
-                </button>
-                <button class="reorder-btn" id="reorderBtn">
-                    <i class="fas fa-redo-alt"></i> Reorder Now
-                </button>
-            </div>
-        `;
-        document.body.appendChild(popup);
-    }
-    
-    // Global variables
-    let trackerInterval = null;
-    let trackerWS = null;
-    let activeOrder = null;
-    let isDragging = false;
-    let currentX, currentY, initialX, initialY;
-    let xOffset = 0, yOffset = 0;
-    
-    function initializeTracker(orderId) {
-        const tracker = document.getElementById('floatingTracker');
-        const popup = document.getElementById('trackerPopup');
-        const closeBtn = document.getElementById('closePopup');
-        const cancelBtn = document.getElementById('cancelOrderBtn');
-        const reorderBtn = document.getElementById('reorderBtn');
-        
-        if (!tracker) return;
-        
-        tracker.style.display = 'flex';
-        
-        // Load order details
-        loadOrderDetails(orderId);
-        initializeWebSocket(orderId);
-        
-        // Event Listeners
-        if (tracker) {
-            tracker.addEventListener('click', function(e) {
-                e.stopPropagation();
-                if (popup) popup.classList.toggle('active');
-            });
-        }
-        
-        if (closeBtn) {
-            closeBtn.addEventListener('click', function() {
-                if (popup) popup.classList.remove('active');
-            });
-        }
-        
-        // Close popup when clicking outside
-        document.addEventListener('click', function(e) {
-            if (popup && popup.classList.contains('active') && 
-                !popup.contains(e.target) && 
-                !tracker.contains(e.target)) {
-                popup.classList.remove('active');
-            }
-        });
-        
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', cancelOrder);
-        }
-        
-        if (reorderBtn) {
-            reorderBtn.addEventListener('click', reorderItems);
-        }
-        
-        // Make tracker draggable
-        makeDraggable(tracker);
-        
-        // Clean up on page unload
-        window.addEventListener('beforeunload', cleanupTracker);
-    }
-    
-    // Load order details from API
-    async function loadOrderDetails(orderId) {
-        try {
-            const response = await fetch(`${API_BASE}/api/orders/${orderId}`);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const order = await response.json();
-            
-            if (order) {
-                activeOrder = order;
-                updatePopup(order);
-                startCancellationTimer(order);
-            } else {
-                localStorage.removeItem('activeOrderId');
-                removeTracker();
-            }
-        } catch (error) {
-            console.error('Error loading order:', error);
-            updatePopupFromLocal(orderId);
-        }
-    }
-    
-    function updatePopupFromLocal(orderId) {
-        const orderDetails = document.getElementById('orderDetails');
-        
-        if (orderDetails && orderId) {
-            orderDetails.innerHTML = `
-                <p><strong>Order ID:</strong> #${orderId.slice(-6)}</p>
-                <p><strong>Status:</strong> Pending</p>
-                <p><i>Loading details...</i></p>
-            `;
-        }
-    }
-    
-    function updatePopup(order) {
-        const orderDetails = document.getElementById('orderDetails');
-        const progressFill = document.getElementById('progressFill');
-        const progressSteps = document.getElementById('progressSteps');
-        const adminMessage = document.getElementById('adminMessage');
-        const cancelBtn = document.getElementById('cancelOrderBtn');
-        const reorderBtn = document.getElementById('reorderBtn');
-        const timerElement = document.getElementById('cancellationTimer');
-        
-        if (!orderDetails) return;
-        
-        const itemsCount = order.items?.reduce((sum, item) => sum + (item.quantity || 1), 0) || 0;
-        
-        orderDetails.innerHTML = `
-            <p><strong>Items:</strong> ${itemsCount}</p>
-            <p><strong>Total:</strong> ₹${order.totalAmount || 0}</p>
-            <p><strong>Status:</strong> ${(order.orderStatus || 'pending').replace(/-/g, ' ')}</p>
-            <p><strong>Payment:</strong> ${order.paymentStatus || 'pending'}</p>
-            <p><strong>Delivery:</strong> ${order.deliveryEstimate || '25-30 minutes'}</p>
-        `;
-        
-        // Update progress bar
-        if (progressFill) {
-            const progressMap = {
-                'pending': 20,
-                'confirmed': 40,
-                'preparing': 60,
-                'out-for-delivery': 80,
-                'delivered': 100,
-                'cancelled': 0
-            };
-            progressFill.style.width = `${progressMap[order.orderStatus] || 0}%`;
-        }
-        
-        // Update steps
-        if (progressSteps) {
-            const steps = ['Order Placed', 'Confirmed', 'Preparing', 'Out for Delivery', 'Delivered'];
-            const statusMap = ['pending', 'confirmed', 'preparing', 'out-for-delivery', 'delivered'];
-            
-            let stepsHtml = '';
-            steps.forEach((step, index) => {
-                const isActive = order.orderStatus === statusMap[index] || 
-                                (index < statusMap.indexOf(order.orderStatus) && order.orderStatus !== 'cancelled');
-                stepsHtml += `<div class="step ${isActive ? 'active' : ''}">${step}</div>`;
-            });
-            progressSteps.innerHTML = stepsHtml;
-        }
-        
-        // Show admin message
-        if (adminMessage) {
-            if (order.adminNotes) {
-                adminMessage.style.display = 'block';
-                adminMessage.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${order.adminNotes}`;
-            } else {
-                adminMessage.style.display = 'none';
-            }
-        }
-        
-        // Show/hide buttons based on status
-        if (cancelBtn && reorderBtn) {
-            if (order.orderStatus === 'cancelled' || order.orderStatus === 'delivered') {
-                cancelBtn.style.display = 'none';
-                if (order.orderStatus === 'cancelled') {
-                    reorderBtn.style.display = 'block';
-                } else {
-                    reorderBtn.style.display = 'none';
-                }
-            } else {
-                cancelBtn.style.display = 'block';
-                reorderBtn.style.display = 'none';
-            }
-        }
-        
-        // Hide timer for delivered/cancelled orders
-        if (timerElement && (order.orderStatus === 'delivered' || order.orderStatus === 'cancelled')) {
-            timerElement.style.display = 'none';
-        }
-    }
-    
-    function startCancellationTimer(order) {
-        const timerElement = document.getElementById('cancellationTimer');
-        const cancelBtn = document.getElementById('cancelOrderBtn');
-        
-        if (!timerElement || !cancelBtn || !order.cancellationDeadline) return;
-        
-        timerElement.style.display = 'block';
-        const deadline = new Date(order.cancellationDeadline);
-        
-        function updateTimer() {
-            const now = new Date();
-            const timeLeft = deadline - now;
-            
-            if (timeLeft <= 0) {
-                timerElement.innerHTML = '⏰ Cancellation time expired';
-                cancelBtn.disabled = true;
-                if (trackerInterval) {
-                    clearInterval(trackerInterval);
-                    trackerInterval = null;
-                }
-            } else {
-                const minutes = Math.floor(timeLeft / 60000);
-                const seconds = Math.floor((timeLeft % 60000) / 1000);
-                timerElement.innerHTML = `⏱️ Cancel within: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-                cancelBtn.disabled = false;
-            }
-        }
-        
-        updateTimer();
-        trackerInterval = setInterval(updateTimer, 1000);
-    }
-    
-    function initializeWebSocket(orderId) {
-        const wsUrl = 'wss://bbbackend-bng2.onrender.com';
-        trackerWS = new WebSocket(wsUrl);
-        
-        trackerWS.onmessage = (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                
-                if (data.type === 'ORDER_UPDATED' && data.order._id === orderId) {
-                    activeOrder = data.order;
-                    updatePopup(data.order);
-                    
-                    // Show feedback popup when order is delivered
-                    if (data.order.orderStatus === 'delivered') {
-                        showDeliveryFeedback(data.order);
-                    }
-                    
-                } else if (data.type === 'ORDER_DELETED' && data.orderId === orderId) {
-                    const adminMessage = document.getElementById('adminMessage');
-                    const cancelBtn = document.getElementById('cancelOrderBtn');
-                    const reorderBtn = document.getElementById('reorderBtn');
-                    
-                    if (adminMessage) {
-                        adminMessage.style.display = 'block';
-                        adminMessage.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${data.reason || 'Order cancelled by admin'}`;
-                    }
-                    if (cancelBtn) cancelBtn.style.display = 'none';
-                    if (reorderBtn) reorderBtn.style.display = 'block';
-                    
-                    if (trackerInterval) {
-                        clearInterval(trackerInterval);
-                        trackerInterval = null;
-                    }
-                    
-                } else if (data.type === 'ORDER_DELIVERED' && data.orderId === orderId) {
-                    // Show feedback popup from admin broadcast
-                    showDeliveryFeedback({ _id: orderId });
-                }
-            } catch (error) {
-                console.error('WebSocket message error:', error);
-            }
-        };
-        
-        trackerWS.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
-        
-        trackerWS.onclose = () => {
-            // Try to reconnect after 5 seconds
-            setTimeout(() => {
-                if (localStorage.getItem('activeOrderId')) {
-                    initializeWebSocket(localStorage.getItem('activeOrderId'));
-                }
-            }, 5000);
-        };
-    }
-    
-    // Cancel order function
-    async function cancelOrder() {
-        const orderId = localStorage.getItem('activeOrderId');
-        
-        if (!orderId) {
-            alert('No active order found');
-            return;
-        }
-        
-        if (!confirm('Are you sure you want to cancel this order? You can only cancel within 5 minutes of placing the order.')) {
-            return;
-        }
-        
-        // Show loading state on cancel button
-        const cancelBtn = document.getElementById('cancelOrderBtn');
-        const originalText = cancelBtn ? cancelBtn.innerHTML : 'Cancel Order';
-        if (cancelBtn) {
-            cancelBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cancelling...';
-            cancelBtn.disabled = true;
-        }
-        
-        try {
-            console.log('Cancelling order:', orderId);
-            
-            const response = await fetch(`${API_BASE}/api/orders/cancel/${orderId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            
-            console.log('Cancel response status:', response.status);
-            
-            const data = await response.json();
-            console.log('Cancel response data:', data);
-            
-            if (response.ok) {
-                alert('✅ Order cancelled successfully');
-                
-                // Update UI
-                const popup = document.getElementById('trackerPopup');
-                const tracker = document.getElementById('floatingTracker');
-                const orderDetails = document.getElementById('orderDetails');
-                
-                if (orderDetails) {
-                    orderDetails.innerHTML = '<p style="color: #dc3545; text-align: center;">Order has been cancelled</p>';
-                }
-                
-                // Update progress bar
-                const progressFill = document.getElementById('progressFill');
-                if (progressFill) progressFill.style.width = '0%';
-                
-                // Show reorder button
-                const reorderBtn = document.getElementById('reorderBtn');
-                if (cancelBtn) cancelBtn.style.display = 'none';
-                if (reorderBtn) {
-                    reorderBtn.style.display = 'block';
-                    reorderBtn.onclick = () => {
-                        if (activeOrder && activeOrder.items) {
-                            localStorage.setItem('cart', JSON.stringify(activeOrder.items));
-                            window.location.href = 'orderdetail.html';
-                        }
-                    };
-                }
-                
-                // Hide timer
-                const timerElement = document.getElementById('cancellationTimer');
-                if (timerElement) timerElement.style.display = 'none';
-                
-                // Remove order ID after delay
-                setTimeout(() => {
-                    localStorage.removeItem('activeOrderId');
-                    if (tracker) {
-                        tracker.style.display = 'none';
-                    }
-                    if (popup) {
-                        popup.classList.remove('active');
-                    }
-                }, 3000);
-                
-            } else {
-                // Handle specific error messages
-                let errorMessage = data.error || 'Cannot cancel order';
-                
-                if (response.status === 400) {
-                    if (errorMessage.includes('time')) {
-                        errorMessage = '⏰ Cancellation time expired (5 minutes limit)';
-                    }
-                } else if (response.status === 404) {
-                    errorMessage = 'Order not found';
-                    localStorage.removeItem('activeOrderId');
-                }
-                
-                alert('❌ ' + errorMessage);
-                
-                // Reset button
-                if (cancelBtn) {
-                    cancelBtn.innerHTML = originalText;
-                    cancelBtn.disabled = false;
-                }
-            }
-        } catch (error) {
-            console.error('Error cancelling order:', error);
-            alert('❌ Network error. Please check your connection and try again.');
-            
-            // Reset button
-            if (cancelBtn) {
-                cancelBtn.innerHTML = originalText;
-                cancelBtn.disabled = false;
-            }
-        }
-    }
-    
-    function reorderItems() {
-        if (activeOrder && activeOrder.items) {
-            localStorage.setItem('cart', JSON.stringify(activeOrder.items));
-            window.location.href = 'orderdetail.html';
-        }
-    }
-    
-    function makeDraggable(element) {
-        if (!element) return;
-        
-        element.addEventListener('mousedown', dragStart);
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('mouseup', dragEnd);
-    }
-    
-    function dragStart(e) {
-        const element = document.getElementById('floatingTracker');
-        if (!element) return;
-        
-        initialX = e.clientX - xOffset;
-        initialY = e.clientY - yOffset;
-        isDragging = true;
-        element.style.cursor = 'grabbing';
-        e.preventDefault();
-    }
-    
-    function dragEnd() {
-        const element = document.getElementById('floatingTracker');
-        if (!element) return;
-        
-        isDragging = false;
-        element.style.cursor = 'grab';
-    }
-    
-    function drag(e) {
-        const element = document.getElementById('floatingTracker');
-        if (!element || !isDragging) return;
-        
-        e.preventDefault();
-        currentX = e.clientX - initialX;
-        currentY = e.clientY - initialY;
-        xOffset = currentX;
-        yOffset = currentY;
-        
-        element.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
-    }
-    
-    function cleanupTracker() {
-        if (trackerInterval) {
-            clearInterval(trackerInterval);
-            trackerInterval = null;
-        }
-        if (trackerWS) {
-            trackerWS.close();
-            trackerWS = null;
-        }
-    }
-})();
+/* ========= AUTH CHECK ========= */
+const token = localStorage.getItem("adminToken");
 
-// ========== DELIVERY FEEDBACK FUNCTIONS ==========
-
-function showDeliveryFeedback(order) {
-    // Remove any existing feedback popup
-    const existingPopup = document.getElementById('deliveryFeedbackPopup');
-    if (existingPopup) existingPopup.remove();
-    
-    // Create feedback popup
-    const feedbackPopup = document.createElement('div');
-    feedbackPopup.id = 'deliveryFeedbackPopup';
-    feedbackPopup.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        padding: 25px;
-        border-radius: 15px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        z-index: 10002;
-        max-width: 350px;
-        width: 90%;
-        text-align: center;
-        animation: slideIn 0.3s ease;
-    `;
-    
-    feedbackPopup.innerHTML = `
-        <div style="margin-bottom: 20px;">
-            <i class="fas fa-check-circle" style="font-size: 60px; color: #28a745;"></i>
-            <h3 style="margin: 15px 0 10px; color: #333;">Order Delivered!</h3>
-            <p style="color: #666; margin-bottom: 20px;">Your order has been delivered. How was your experience?</p>
-        </div>
-        
-        <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;">
-            <button onclick="rateOrder(1)" style="font-size: 24px; background: none; border: none; cursor: pointer;">😡</button>
-            <button onclick="rateOrder(2)" style="font-size: 24px; background: none; border: none; cursor: pointer;">😕</button>
-            <button onclick="rateOrder(3)" style="font-size: 24px; background: none; border: none; cursor: pointer;">😐</button>
-            <button onclick="rateOrder(4)" style="font-size: 24px; background: none; border: none; cursor: pointer;">😊</button>
-            <button onclick="rateOrder(5)" style="font-size: 24px; background: none; border: none; cursor: pointer;">🤩</button>
-        </div>
-        
-        <textarea id="feedbackText" placeholder="Tell us about your experience..." 
-            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px; min-height: 80px;"></textarea>
-        
-        <div style="display: flex; gap: 10px;">
-            <button onclick="submitFeedback('${order._id}')" 
-                style="flex: 2; background: #28a745; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
-                Submit Feedback
-            </button>
-            <button onclick="closeFeedbackPopup()" 
-                style="flex: 1; background: #6c757d; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer;">
-                Later
-            </button>
-        </div>
-        
-        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
-            <p style="color: #666; margin-bottom: 10px;">Order not delivered yet?</p>
-            <button onclick="contactSupport('${order._id}')" 
-                style="background: #17a2b8; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; width: 100%;">
-                <i class="fas fa-headset"></i> Contact Support
-            </button>
-        </div>
-        
-        <button onclick="closeFeedbackPopup()" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
-    `;
-    
-    document.body.appendChild(feedbackPopup);
-    
-    // Add overlay
-    const overlay = document.createElement('div');
-    overlay.id = 'feedbackOverlay';
-    overlay.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0,0,0,0.5);
-        z-index: 10001;
-        animation: fadeIn 0.3s ease;
-    `;
-    document.body.appendChild(overlay);
+if (!token || token === "undefined") {
+  window.location.href = "login.html";
 }
 
-// Rating function
-window.rateOrder = function(rating) {
-    const feedbackText = document.getElementById('feedbackText');
-    if (feedbackText) {
-        const messages = {
-            1: "Very dissatisfied",
-            2: "Dissatisfied", 
-            3: "Neutral",
-            4: "Satisfied",
-            5: "Very satisfied"
-        };
-        feedbackText.value = `Rating: ${messages[rating]}\n`;
+/* ========= PAGE NAVIGATION ========= */
+function loadPage(page) {
+  const content = document.getElementById("content");
+
+  switch (page) {
+    case "dashboard":
+      loadDashboard();
+      break;
+
+    case "veg":
+      loadVegMenu();
+      break;
+
+    case "nonveg":
+        loadNonVegMenu();
+      break;
+
+    case "tiffin":
+       loadTiffins();
+      break;
+
+    case "tiffinBookings":
+  loadTiffinBookings();
+  break;
+    
+    case "defaultMenu":
+  loadDefaultMenu();
+  break;
+
+    case "orders":
+       loadOrders();
+      break;
+
+    case "users":
+      loadUsers();
+      break;
+
+    case "settings":
+      content.innerHTML = `
+        <h2>Admin Settings</h2>
+        <button onclick="logoutAdmin()">Logout</button>
+      `;
+      break;
+
+    default:
+      content.innerHTML = "<h2>Welcome Admin</h2>";
+  }
+}
+
+function makeTableMobileResponsive(tableId) {
+  const table = document.getElementById(tableId);
+  if (!table) return;
+  
+  const headers = [];
+  const headerCells = table.querySelectorAll('thead th');
+  
+  headerCells.forEach(header => {
+    headers.push(header.textContent.trim());
+  });
+  
+  const rows = table.querySelectorAll('tbody tr');
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    cells.forEach((cell, index) => {
+      if (headers[index]) {
+        cell.setAttribute('data-label', headers[index]);
+      }
+    });
+  });
+}
+/* ========= DASHBOARD OVERVIEW ========= */
+
+function loadDashboard() {
+  const content = document.getElementById("content");
+  content.innerHTML = "<h2>Loading dashboard...</h2>";
+
+  fetch(`${API_BASE}/api/admin/dashboard-stats`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
     }
+  })
+    .then(res => {
+      if (res.status === 401) {
+        logoutAdmin();
+        throw new Error("Unauthorized");
+      }
+      return res.json();
+    })
+    .then(data => {
+      content.innerHTML = `
+        <h2>Dashboard Overview</h2>
+        <div class="cards">
+          <div class="card">Total Users<br><b>${data.totalUsers}</b></div>
+          <div class="card">Today Orders<br><b>${data.todayOrders}</b></div>
+          <div class="card">Veg Items<br><b>${data.vegItems}</b></div>
+          <div class="card">Non-Veg Items<br><b>${data.nonVegItems}</b></div>
+          <div class="card">Active Tiffins<br><b>${data.activeTiffins}</b></div>
+          <div class="card">Today Revenue<br><b>₹${data.todayRevenue}</b></div>
+        </div>
+      `;
+    })
+    .catch(err => console.error(err));
+}
+
+/* ========= VEG MENU MANAGEMENT ========= */
+function loadVegMenu() {
+  const content = document.getElementById("content");
+
+  content.innerHTML = "<h2>Loading Veg Menu...</h2>";
+
+  fetch(`${API_BASE}/api/food?type=veg`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  })
+  .then(res => res.json())
+  .then(items => {
+    let html = `
+      <h2>Veg Menu Management</h2>
+      <button onclick="showAddVegForm()">+ Add Veg Item</button>
+
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Available</th>
+          <th>Actions</th>
+        </tr>
+    `;
+
+    items.forEach(item => {
+      html += `
+        <tr>
+          <td>${item.name}</td>
+          <td>₹${item.price}</td>
+          <td>${item.available ? "Yes" : "No"}</td>
+          <td>
+            <button onclick="deleteVeg('${item._id}')">Delete</button>
+          </td>
+        </tr>
+      `;
+    });
+
+    html += "</table>";
+    content.innerHTML = html;
+  });
+}
+
+/* ========= ADD VEG ITEM ========= */
+function showAddVegForm() {
+  document.getElementById("content").innerHTML = `
+    <h2>Add Veg Item</h2>
+    <input id="vegName" placeholder="Item Name">
+    <input id="vegPrice" type="number" placeholder="Price">
+    <input id="vegImage" type="file" accept="image/*">
+    <button onclick="addVeg()">Save</button>
+    <button onclick="loadVegMenu()">Cancel</button>
+  `;
+}
+
+function addVeg() {
+  const formData = new FormData();
+
+  formData.append("name", document.getElementById("vegName").value);
+  formData.append("price", document.getElementById("vegPrice").value);
+  formData.append("item_type", "veg");
+
+  const imageFile = document.getElementById("vegImage").files[0];
+
+  if (!imageFile) {
+    alert("Please select an image");
+    return;
+  }
+
+
+  if (imageFile.size > 5 * 1024 * 1024) {
+    alert("Image must be under 5MB");
+    return;
+  }
+
+  formData.append("image", imageFile);
+
+  fetch(`${API_BASE}/api/food/add`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    },
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (!data.success) {
+      alert(data.error || "Failed to add item");
+      return;
+    }
+
+    alert("Item added successfully!");
+    loadVegMenu();
+  })
+  .catch(err => {
+    console.log("Veg add error:", err);
+    alert("Server error");
+  });
+}
+
+/* ========= DELETE VEG ========= */
+function deleteVeg(id) {
+  if (!confirm("Delete this item?")) return;
+
+  fetch(`${API_BASE}/api/food/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  })
+    .then(res => res.json())
+.then(data => {
+  if (!data.success) throw new Error("Delete failed");
+  alert("Item deleted");
+  loadVegMenu(); 
+})
+    .catch(() => alert("Failed to delete veg item"));
+}
+
+/* ========= LOGOUT ========= */
+function logoutAdmin() {
+  localStorage.removeItem("adminToken");
+  window.location.href = "login.html";
+}
+
+/* ========= AUTO LOAD ========= */
+window.onload = () => {
+  loadPage("dashboard");
 };
 
-// Submit feedback
-window.submitFeedback = async function(orderId) {
-    const feedback = document.getElementById('feedbackText')?.value || '';
+/* ========= ADD NON-VEG ITEM ========= */
+function loadNonVegMenu() {
+  const content = document.getElementById("content");
+
+  content.innerHTML = "<h2>Loading Non-Veg Menu...</h2>";
+
+  fetch(`${API_BASE}/api/food?type=nonveg`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  })
+  .then(res => res.json())
+  .then(items => {
+    let html = `
+      <h2>Non-Veg Menu Management</h2>
+      <button onclick="showAddNonVegForm()">+ Add Non-Veg Item</button>
+
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Available</th>
+          <th>Actions</th>
+        </tr>
+    `;
+
+    items.forEach(item => {
+      html += `
+        <tr>
+          <td>${item.name}</td>
+          <td>₹${item.price}</td>
+          <td>${item.available ? "Yes" : "No"}</td>
+          <td>
+            <button onclick="deleteNonVeg('${item._id}')">Delete</button>
+          </td>
+        </tr>
+      `;
+    });
+
+    html += "</table>";
+    content.innerHTML = html;
+  });
+}
+function showAddNonVegForm() {
+  document.getElementById("content").innerHTML = `
+    <h2>Add Non-Veg Item</h2>
+
+    <input id="nonvegName" placeholder="Item Name">
+    <input id="nonvegPrice" type="number" placeholder="Price">
+    <input id="nonvegImage" type="file" accept="image/*">
+
+    <button onclick="addNonVeg()">Save</button>
+    <button onclick="loadNonVegMenu()">Cancel</button>
+  `;
+}
+
+function addNonVeg() {
+  const formData = new FormData();
+
+  formData.append("name", document.getElementById("nonvegName").value);
+  formData.append("price", document.getElementById("nonvegPrice").value);
+  formData.append("item_type", "nonveg");
+
+  const imageFile = document.getElementById("nonvegImage").files[0];
+
+  if (!imageFile) {
+    alert("Please select an image");
+    return;
+  }
+
+  if (imageFile.size > 5 * 1024 * 1024) {
+    alert("Image must be under 5MB");
+    return;
+  }
+
+  formData.append("image", imageFile);
+
+  fetch(`${API_BASE}/api/food/add`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    },
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (!data.success) {
+      alert(data.error || "Failed to add item");
+      return;
+    }
+
+    alert("Item added successfully!");
+    loadNonVegMenu();
+  })
+  .catch(err => {
+    console.log("NonVeg add error:", err);
+    alert("Server error");
+  });
+}
+
+
+/* ========= DELETE NON-VEG ========= */
+function deleteNonVeg(id) {
+  if (!confirm("Delete this item?")) return;
+
+  fetch(`${API_BASE}/api/food/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  })
+    .then(res => res.json())
+.then(data => {
+  if (!data.success) throw new Error("Delete failed");
+  alert("Item deleted");
+  loadNonVegMenu();
+})
+    .catch(() => alert("Failed to delete veg item"));
+}
+
+function loadTiffinBookings() {
+  const content = document.getElementById("content");
+  content.innerHTML = "<h2>Loading Tiffin Bookings...</h2>";
+
+  fetch(`${API_BASE}/api/admin/tiffin-bookings`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  })
+  .then(res => res.json())
+  .then(async bookings => {
+
+    let html = `
+      <h2>Tiffin Subscriptions</h2>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Father</th>
+          <th>Profession</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>City</th>
+          <th>State</th>
+          <th>Address</th>
+          <th>Start Date</th>
+          <th>Plan</th>
+          <th>Status</th>
+          <th>Payment</th>
+          <th>Action</th>
+        </tr>
+    `;
+
+    for (const b of bookings) {
+
+      html += `
+        <tr>
+          <td>${b.userName || ""}</td>
+          <td>${b.fatherName || ""}</td>
+          <td>${b.profession || ""}</td>
+          <td>${b.email || ""}</td>
+          <td>${b.phone || ""}</td>
+          <td>${b.city || ""}</td>
+          <td>${b.state || ""}</td>
+          <td>${b.address || ""}</td>
+          <td>${b.startDate ? new Date(b.startDate).toLocaleDateString() : ""}</td>
+          <td>${b.planName}</td>
+          <td>${b.status}</td>
+          <td>${b.paymentStatus}</td>
+   <td>
+  ${
+    b.status === "pending"
+      ? `<button onclick="activateTiffin('${b._id}')">Activate</button>`
+      : `<span style="color:#146400;font-weight:bold">Active</span>`
+  }
+  <br/>
+
+  <button style="background:red;color:white;margin-top:5px"
+    onclick="deleteTiffinBooking('${b._id}')">
+    Delete
+  </button>
+
+  <br/>
+
+  <button onclick="toggleMenu('${b._id}')" 
+          style="background:#10332F;color:white;margin-top:5px">
+    See Menu
+  </button>
+</td>
+        </tr>
+      `;
+
+
+try {
+
+  const menuRes = await fetch(`${API_BASE}/api/tiffin-menus/${b._id}`);
+
+  if (!menuRes.ok) {
+    html += `
+      <tr class="menuRow-${b._id}" style="display:none;">
+        <td colspan="13" style="color:red;">
+          User has not created menu yet
+        </td>
+      </tr>
+    `;
+  } else {
+
+    const menu = await menuRes.json();
+
+    if (menu && menu.days) {
+
+      menu.days.forEach(d => {
+        html += `
+        <tr class="menuRow-${b._id}" style="display:none;">
+          <td colspan="13">
+            <b>Day ${d.dayNumber}</b><br>
+            Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
+            Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
+            Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
+          </td>
+        </tr>
+        `;
+      });
+
+    }
+
+  }
+
+} catch (err) {
+  console.log("Menu fetch error", err);
+}
+    }
+
+    html += "</table>";
+    content.innerHTML = html;
+
+  })
+  .catch(() => {
+    content.innerHTML = "<p>Failed to load bookings</p>";
+  });
+}
+function toggleMenu(bookingId) {
+
+  const rows = document.querySelectorAll(`.menuRow-${bookingId}`);
+
+  rows.forEach(row => {
+
+    if (row.style.display === "none") {
+      row.style.display = "table-row";
+    } else {
+      row.style.display = "none";
+    }
+   
+  });
+}
+
+
+function deleteTiffinBooking(id) {
+  if (!confirm("Delete this booking?")) return;
+
+  fetch(`${API_BASE}/api/admin/tiffin-bookings/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  })
+  .then(res => res.json())
+  .then(() => {
+    alert("Booking Deleted");
+    loadTiffinBookings();
+  })
+  .catch(() => alert("Delete failed"));
+}
+
+
+function activateTiffin(id) {
+  if (!confirm("Activate this tiffin subscription?")) return;
+
+  fetch(`${API_BASE}/api/admin/tiffin-bookings/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    },
+    body: JSON.stringify({
+      status: "active",
+      paymentStatus: "paid",
+      startDate: new Date()   
+    })
+  })
+  .then(() => {
+    alert("Tiffin Activated");
+    loadTiffinBookings();
+  });
+}
+
+
+function loadTiffins() {
+  const content = document.getElementById("content");
+  content.innerHTML = "<h2>Loading Tiffin Plans...</h2>";
+
+  fetch(`${API_BASE}/api/admin/tiffins`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  })
+    .then(res => res.json())
+    .then(plans => {
+      let html = `
+        <h2>Tiffin Plans</h2>
+        <button onclick="showAddTiffinForm()">+ Add Tiffin Plan</button>
+
+        <table>
+          <tr>
+            <th>Plan</th>
+            <th>Type</th>
+            <th>Price</th>
+            <th>Meals</th>
+            <th>Active</th>
+            <th>Action</th>
+          </tr>
+      `;
+
+      plans.forEach(p => {
+        html += `
+          <tr>
+            <td>${p.planName}</td>
+            <td>${p.type}</td>
+            <td>₹${p.price}</td>
+            <td>${p.mealTime ? p.mealTime.join(", ") : ""}</td>
+            <td>${p.active ? "Yes" : "No"}</td>
+            <td>
+              <button onclick="deleteTiffin('${p._id}')">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+
+      html += "</table>";
+      content.innerHTML = html;
+    });
+}
+
+function deleteTiffin(id) {
+  if (!confirm("Delete this tiffin plan?")) return;
+
+  fetch(`${API_BASE}/api/admin/tiffins/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  })
+  .then(res => res.json())
+  .then(() => {
+    alert("Plan Deleted");
+    loadTiffins(); 
+  })
+  .catch(() => alert("Delete failed"));
+}
+
+function showAddTiffinForm() {
+  document.getElementById("content").innerHTML = `
+    <h2>Add Tiffin Plan</h2>
+
+    <input id="planName" placeholder="Plan Name">
+
+    <select id="type">
+      <option value="veg">Veg</option>
+      <option value="nonveg">Non-Veg</option>
+    </select>
+
+    <div>
+      <label><input type="checkbox" name="mealTime" value="breakfast"> Breakfast</label>
+      <label><input type="checkbox" name="mealTime" value="lunch"> Lunch</label>
+      <label><input type="checkbox" name="mealTime" value="dinner"> Dinner</label>
+    </div>
+
+    <textarea id="description" placeholder="Plan Description"></textarea>
+
+    <input id="price" type="number" placeholder="Monthly Price">
+
+    <button onclick="addTiffin()">Save</button>
+    <button onclick="loadTiffins()">Cancel</button>
+  `;
+}
+
+function addTiffin() {
+  const mealTime = Array.from(
+    document.querySelectorAll("input[name='mealTime']:checked")
+  ).map(el => el.value);
+
+  fetch(`${API_BASE}/api/admin/tiffins`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    },
+    body: JSON.stringify({
+      planName: document.getElementById("planName").value,
+      type: document.getElementById("type").value,
+      mealTime: mealTime,
+      description: document.getElementById("description").value,
+      price: document.getElementById("price").value,
+      active: true
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (!data || data.message) {
+      alert("Failed to add tiffin");
+      return;
+    }
+
+    alert("Tiffin Added Successfully");
+    loadTiffins();   
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Server error");
+  });
+}
+
+
+function loadDefaultMenu() {
+
+  const content = document.getElementById("content");
+
+  content.innerHTML = `
+    <h2>Set Weekly Tiffin Menu</h2>
+    <div id="adminMenuContainer"></div>
+    <button class="setMenuBtn" onclick="saveDefaultMenu()">Set Tiffin Menu</button>
+  `;
+
+  const container = document.getElementById("adminMenuContainer");
+
+  for (let day = 1; day <= 7; day++) {
+
+    container.innerHTML += `
+      <div class="admin-day-card">
+        <div class="admin-day-header" onclick="toggleAdminDay(${day})">
+          Day ${day}
+        </div>
+
+        <div class="admin-day-body" id="adminDay${day}" style="display:none;">
+
+          ${createMealFields("breakfast", day)}
+          ${createMealFields("lunch", day)}
+          ${createMealFields("dinner", day)}
+
+        </div>
+      </div>
+    `;
+  }
+
+  loadExistingDefaultMenu();
+}
+
+function createMealFields(meal, day) {
+
+  return `
+    <h4>${meal.toUpperCase()}</h4>
+    <input type="text" id="${meal}Items${day}" 
+      placeholder="Items (comma separated like 1,2,3,4)">
+    <input type="text" id="${meal}Time${day}" 
+      placeholder="Timing (7:00AM-7:30AM)">
+  `;
+}
+
+
+function toggleAdminDay(day) {
+
+  for (let i = 1; i <= 7; i++) {
+    const el = document.getElementById(`adminDay${i}`);
+    if (el) el.style.display = "none";
+  }
+
+  document.getElementById(`adminDay${day}`).style.display = "block";
+}
+
+
+function saveDefaultMenu() {
+
+  const days = [];
+
+  for (let day = 1; day <= 7; day++) {
+
+    days.push({
+      dayNumber: day,
+      breakfast: {
+        items: document.getElementById(`breakfastItems${day}`).value.split(","),
+        time: document.getElementById(`breakfastTime${day}`).value
+      },
+      lunch: {
+        items: document.getElementById(`lunchItems${day}`).value.split(","),
+        time: document.getElementById(`lunchTime${day}`).value
+      },
+      dinner: {
+        items: document.getElementById(`dinnerItems${day}`).value.split(","),
+        time: document.getElementById(`dinnerTime${day}`).value
+      }
+    });
+  }
+
+  fetch(`${API_BASE}/api/default-menu`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    },
+    body: JSON.stringify({ days })
+  })
+  .then(() => alert("Default Tiffin Menu Saved Successfully"));
+}
+
+
+function loadExistingDefaultMenu() {
+
+  fetch(`${API_BASE}/api/admin/default-menu`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  })
+  .then(res => res.json())
+  .then(menu => {
+
+    if (!menu) return;
+
+    menu.days.forEach(d => {
+
+      document.getElementById(`breakfastItems${d.dayNumber}`).value =
+        d.breakfast.items.join(",");
+
+      document.getElementById(`breakfastTime${d.dayNumber}`).value =
+        d.breakfast.time;
+
+      document.getElementById(`lunchItems${d.dayNumber}`).value =
+        d.lunch.items.join(",");
+
+      document.getElementById(`lunchTime${d.dayNumber}`).value =
+        d.lunch.time;
+
+      document.getElementById(`dinnerItems${d.dayNumber}`).value =
+        d.dinner.items.join(",");
+
+      document.getElementById(`dinnerTime${d.dayNumber}`).value =
+        d.dinner.time;
+    });
+  });
+}
+
+
+
+/* ========= USERS LIST ========= */
+function loadUsers() {
+  const content = document.getElementById("content");
+  content.innerHTML = "<h2>Loading users...</h2>";
+
+  fetch(`${API_BASE}/api/admin/users`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("adminToken")
+    }
+  })
+    .then(res => {
+      if (res.status === 401) {
+        logoutAdmin();
+        throw new Error("Unauthorized");
+      }
+      return res.json();
+    })
+    .then(users => {
+      let html = `
+        <h2>Users List</h2>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Joined</th>
+          </tr>
+      `;
+
+      users.forEach(user => {
+        html += `
+          <tr>
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+            <td>${new Date(user.createdAt).toLocaleDateString()}</td>
+          </tr>
+        `;
+      });
+
+      html += "</table>";
+      content.innerHTML = html;
+    })
+    .catch(err => {
+      console.error(err);
+      content.innerHTML = "<p>Failed to load users. Try again.</p>";
+    });
+}
+
+
+
+let adminWS = null;
+
+
+function initializeAdminWebSocket() {
+    const wsUrl = 'wss://bbbackend-bng2.onrender.com';
+    adminWS = new WebSocket(wsUrl);
     
-    try {
-        await fetch(`${API_BASE}/api/orders/${orderId}/feedback`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ 
-                feedback: feedback,
-                timestamp: new Date().toISOString()
-            })
+    adminWS.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        
+        if (data.type === 'NEW_ORDER') {
+            showAdminNotification('New order received!');
+            
+            if (document.getElementById('ordersList')) {
+                loadOrders();
+            }
+        } else if (data.type === 'ORDER_UPDATED') {
+           
+            updateOrderInUI(data.order);
+        }
+    };
+
+    adminWS.onerror = (error) => {
+        console.error('WebSocket error:', error);
+    };
+}
+
+function broadcastOrderDeletion(orderId, reason) {
+    if (adminWS && adminWS.readyState === WebSocket.OPEN) {
+        try {
+            adminWS.send(JSON.stringify({
+                type: 'ORDER_DELETED',
+                orderId: orderId,
+                reason: reason
+            }));
+            return true;
+        } catch (e) {
+            console.error('WebSocket send error:', e);
+        }
+    }
+    return false;
+}
+
+
+// Show admin notification
+function showAdminNotification(message) {
+    if (Notification.permission === 'granted') {
+        new Notification('Brio Bite Admin', { 
+            body: message,
+            icon: 'briobite.png'
         });
-        
-        alert('Thank you for your feedback!');
-        closeFeedbackPopup();
-        
-        // Hide tracker after feedback
-        const tracker = document.getElementById('floatingTracker');
-        if (tracker) {
-            tracker.style.display = 'none';
-        }
-        localStorage.removeItem('activeOrderId');
-        
-    } catch (error) {
-        console.error('Error submitting feedback:', error);
-        alert('Error submitting feedback. Please try again.');
     }
-};
+}
+/* ========= ORDERS MANAGEMENT  ========= */
 
-// Contact support
-window.contactSupport = function(orderId) {
-    const phone = "919627024287"; 
-    const message = `Help: Order #${orderId.slice(-6)} - Not delivered yet`;
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
-    
-    alert(`📞 Call us: +91 9627024287\n💬 WhatsApp: Same number\n📧 Email: Official.briobite@gmail.com`);
-};
 
-// Close popup
-window.closeFeedbackPopup = function() {
-    const popup = document.getElementById('deliveryFeedbackPopup');
-    const overlay = document.getElementById('feedbackOverlay');
-    if (popup) popup.remove();
-    if (overlay) overlay.remove();
-};
+function loadOrders() {
+    const content = document.getElementById("content");
+    
 
-// Add CSS animations (add these to your tracker.css file)
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from {
-            transform: translate(-50%, -60%);
-            opacity: 0;
+    content.innerHTML = `
+        <div style="text-align: center; padding: 50px;">
+            <h2><i class="fas fa-spinner fa-spin"></i> Loading Orders...</h2>
+        </div>
+    `;
+
+  
+    fetch(`${API_BASE}/api/admin/orders`, {
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("adminToken")
         }
-        to {
-            transform: translate(-50%, -50%);
-            opacity: 1;
+    })
+    .then(res => {
+        if (res.status === 401) {
+            logoutAdmin();
+            throw new Error("Unauthorized");
         }
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+    })
+    .then(data => {
+        console.log("Orders received:", data);
+        displayOrders(data.orders || [], data.stats || {});
+    })
+    .catch(err => {
+        console.error("Error loading orders:", err);
+        content.innerHTML = `
+            <div style="text-align: center; padding: 50px;">
+                <h2 style="color: #dc3545;">Error Loading Orders</h2>
+                <p>${err.message}</p>
+                <button onclick="loadOrders()" style="padding: 10px 20px; margin-top: 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    Retry
+                </button>
+            </div>
+        `;
+    });
+}
+
+
+function displayOrders(orders, stats) {
+    const content = document.getElementById("content");
+    
+    if (!orders || orders.length === 0) {
+        content.innerHTML = `
+            <h2>Orders Management</h2>
+            
+            <!-- Stats Cards -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0;">
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+                    <h4>Total Orders</h4>
+                    <p style="font-size: 32px; font-weight: bold;">${stats.totalOrders || 0}</p>
+                </div>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+                    <h4>Today's Orders</h4>
+                    <p style="font-size: 32px; font-weight: bold;">${stats.todayOrders || 0}</p>
+                </div>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+                    <h4>Delivered (10 days)</h4>
+                    <p style="font-size: 32px; font-weight: bold;">${stats.deliveredLast10Days || 0}</p>
+                </div>
+            </div>
+            
+            <p style="text-align: center; padding: 50px; color: #666;">No orders found</p>
+            <button onclick="loadOrders()" style="display: block; margin: 0 auto; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Refresh
+            </button>
+        `;
+        return;
     }
     
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+ 
+    let html = `
+        <h2>Orders Management</h2>
+        
+        <!-- Stats Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0;">
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+                <h4>Total Orders</h4>
+                <p style="font-size: 32px; font-weight: bold;">${stats.totalOrders || orders.length}</p>
+            </div>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+                <h4>Today's Orders</h4>
+                <p style="font-size: 32px; font-weight: bold;">${stats.todayOrders || orders.filter(o => new Date(o.orderTime).toDateString() === new Date().toDateString()).length}</p>
+            </div>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+                <h4>Pending</h4>
+                <p style="font-size: 32px; font-weight: bold; color: #ffc107;">${orders.filter(o => o.orderStatus === 'pending').length}</p>
+            </div>
+        </div>
+        
+        <!-- Refresh Button -->
+        <div style="margin-bottom: 20px;">
+            <button onclick="loadOrders()" style="padding: 8px 15px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                <i class="fas fa-sync-alt"></i> Refresh Orders
+            </button>
+        </div>
+        
+        <!-- Orders Table -->
+        <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <thead>
+                <tr style="background: #343a40; color: white;">
+                    <th style="padding: 12px;">Order ID</th>
+                    <th style="padding: 12px;">Customer</th>
+                    <th style="padding: 12px;">Phone</th>
+                    <th style="padding: 12px;">Items</th>
+                    <th style="padding: 12px;">Total</th>
+                    <th style="padding: 12px;">Status</th>
+                    <th style="padding: 12px;">Payment</th>
+                    <th style="padding: 12px;">Order Time</th>
+                    <th style="padding: 12px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    orders.forEach(order => {
+        const itemsCount = order.items?.reduce((sum, item) => sum + (item.quantity || 1), 0) || 0;
+        const statusColor = getStatusColor(order.orderStatus);
+        
+        html += `
+            <tr style="border-bottom: 1px solid #dee2e6;">
+                <td style="padding: 12px;">#${order._id.slice(-6)}</td>
+                <td style="padding: 12px;">${order.customerDetails?.name || 'N/A'}</td>
+                <td style="padding: 12px;">${order.customerDetails?.phone || 'N/A'}</td>
+                <td style="padding: 12px;">${itemsCount} items</td>
+                <td style="padding: 12px;">₹${order.totalAmount || 0}</td>
+                <td style="padding: 12px;">
+                    <select onchange="updateOrderStatus('${order._id}', this.value)" 
+                            style="padding: 5px; border-radius: 3px; border: 1px solid #ddd;">
+                        <option value="pending" ${order.orderStatus === 'pending' ? 'selected' : ''}>Pending</option>
+                        <option value="confirmed" ${order.orderStatus === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                        <option value="preparing" ${order.orderStatus === 'preparing' ? 'selected' : ''}>Preparing</option>
+                        <option value="out-for-delivery" ${order.orderStatus === 'out-for-delivery' ? 'selected' : ''}>Out for Delivery</option>
+                        <option value="delivered" ${order.orderStatus === 'delivered' ? 'selected' : ''}>Delivered</option>
+                        <option value="cancelled" ${order.orderStatus === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                    </select>
+                </td>
+                <td style="padding: 12px;">
+                    <span style="padding: 3px 8px; border-radius: 3px; background: ${order.paymentStatus === 'paid' ? '#28a745' : '#ffc107'}; color: white;">
+                        ${order.paymentStatus || 'pending'}
+                    </span>
+                </td>
+                <td style="padding: 12px;">${new Date(order.orderTime || order.createdAt).toLocaleString()}</td>
+                <td style="padding: 12px;">
+                    <button onclick="viewOrderDetails('${order._id}')" style="padding: 5px 10px; background: #17a2b8; color: white; border: none; border-radius: 3px; cursor: pointer; margin-right: 5px;">
+                        View
+                    </button>
+                    <button onclick="deleteOrder('${order._id}')" style="padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+    
+    html += `
+            </tbody>
+        </table>
+        </div>
+    `;
+    
+    content.innerHTML = html;
+}
+
+
+function getStatusColor(status) {
+    const colors = {
+        'pending': '#ffc107',
+        'confirmed': '#17a2b8',
+        'preparing': '#fd7e14',
+        'out-for-delivery': '#007bff',
+        'delivered': '#28a745',
+        'cancelled': '#dc3545'
+    };
+    return colors[status] || '#6c757d';
+}
+
+function updateOrderStatus(orderId, status) {
+    if (!confirm(`Change order status to ${status}?`)) return;
+    
+    fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("adminToken")
+        },
+        body: JSON.stringify({ status: status })
+    })
+    .then(res => {
+        if (res.status === 401) {
+            logoutAdmin();
+            throw new Error("Unauthorized");
+        }
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+    })
+    .then(() => {
+        alert("Order status updated successfully!");
+        loadOrders(); // Reload orders
+    })
+    .catch(err => {
+        console.error("Error updating order:", err);
+        alert("Failed to update order status: " + err.message);
+    });
+}
+
+
+
+function updateOrderStatus(orderId, status) {
+    if (!confirm(`Change order status to ${status}?`)) return;
+    
+    fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("adminToken")
+        },
+        body: JSON.stringify({ status: status })
+    })
+    .then(res => {
+        if (res.status === 401) {
+            logoutAdmin();
+            throw new Error("Unauthorized");
+        }
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+    })
+    .then(data => {
+        alert(`✅ Order status updated to ${status}!`);
+        
+       
+        if (status === 'delivered') {
+            if (typeof global.broadcastUpdate === 'function') {
+                global.broadcastUpdate({
+                    type: 'ORDER_DELIVERED',
+                    orderId: orderId,
+                    message: 'Your order has been delivered! Please rate your experience.'
+                });
+            }
+        }
+        
+        loadOrders(); 
+    })
+    .catch(err => {
+        console.error("Error updating order:", err);
+        alert("❌ Failed to update order status: " + err.message);
+    });
+}
+
+
+
+function viewOrderDetails(orderId) { 
+    alert(`Viewing order #${orderId} - Full details feature coming soon!`);
+}
+
+
+function deleteOrder(orderId) {
+    if (!confirm("⚠️ Are you sure you want to permanently delete this order?")) return;
+    
+    const reason = prompt("Enter reason for deletion (optional):", "Order cancelled by admin");
+    
+    
+    const deleteBtn = event?.target;
+    const originalText = deleteBtn?.innerHTML;
+    if (deleteBtn) {
+        deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+        deleteBtn.disabled = true;
     }
     
-    #deliveryFeedbackPopup button[style*="font-size: 24px"]:hover {
-        transform: scale(1.2);
-        transition: transform 0.2s;
-    }
-`;
-document.head.appendChild(style);
+    
+    fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("adminToken")
+        }
+    })
+    .then(async res => {
+        if (res.status === 401) {
+            logoutAdmin();
+            throw new Error("Unauthorized");
+        }
+        
+        // If DELETE not supported, try PUT with action=delete
+        if (res.status === 404 || res.status === 405) {
+            console.log("DELETE not supported, trying PUT with action=delete");
+            return fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("adminToken")
+                },
+                body: JSON.stringify({ 
+                    action: 'delete',
+                    adminNotes: reason,
+                    status: 'cancelled'
+                })
+            });
+        }
+        
+        if (!res.ok) {
+            const error = await res.json().catch(() => ({ error: 'Unknown error' }));
+            throw new Error(error.error || `HTTP error! status: ${res.status}`);
+        }
+        return res;
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert("✅ Order deleted/cancelled successfully!");
+        
+        
+        try {
+           
+            if (adminWS && adminWS.readyState === WebSocket.OPEN) {
+                adminWS.send(JSON.stringify({
+                    type: 'ORDER_DELETED',
+                    orderId: orderId,
+                    reason: reason || 'Order cancelled by admin'
+                }));
+                console.log("Broadcast sent via WebSocket");
+            } else {
+                console.log("WebSocket not available, skipping broadcast");
+              
+                if (!adminWS || adminWS.readyState !== WebSocket.OPEN) {
+                    initializeAdminWebSocket();
+                }
+            }
+        } catch (e) {
+            console.log('Broadcast error (non-critical):', e);
+          
+        }
+        
+        loadOrders(); 
+    })
+    .catch(err => {
+        console.error("Error deleting order:", err);
+        alert("❌ Failed to delete order: " + err.message);
+        
+        if (deleteBtn) {
+            deleteBtn.innerHTML = originalText;
+            deleteBtn.disabled = false;
+        }
+    });
+}
+
+
+//functions global
+window.loadOrders = loadOrders;
+window.viewOrderDetails = viewOrderDetails;
+window.updateOrderStatus = updateOrderStatus;
+window.updateOrderStatusSimple = updateOrderStatusSimple;
+window.updateDeliveryTime = updateDeliveryTime;
+window.deleteOrder = deleteOrder;
+window.addAdminNotes = addAdminNotes;
+window.loadPage = loadPage;
+window.logoutAdmin = logoutAdmin;
+window.showAddVegForm = showAddVegForm;
+window.addVeg = addVeg;
+window.deleteVeg = deleteVeg;
+window.showAddNonVegForm = showAddNonVegForm;
+window.addNonVeg = addNonVeg;
+window.deleteNonVeg = deleteNonVeg;
+window.activateTiffin = activateTiffin;
+window.deleteTiffinBooking = deleteTiffinBooking;
+window.toggleMenu = toggleMenu;
+window.deleteTiffin = deleteTiffin;
+window.showAddTiffinForm = showAddTiffinForm;
+window.addTiffin = addTiffin;
+window.toggleAdminDay = toggleAdminDay;
+window.saveDefaultMenu = saveDefaultMenu;
