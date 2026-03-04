@@ -686,13 +686,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (dropdownHeader && dropdownList) {
     dropdownHeader.addEventListener("click", () => {
-      // Only work on small screens
+    
       if (window.innerWidth < 768) {
         dropdownList.classList.toggle("active");
         dropdownHeader.classList.toggle("active");
       }
     });
   }
+        document.addEventListener('click', function(e) {
+  const sidebar = document.getElementById('dropdownMenu');
+  const toggle = document.getElementById('menuToggle');
+
+  if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+    sidebar.classList.remove('active');
+  }
+});
 });
 </script> 
 

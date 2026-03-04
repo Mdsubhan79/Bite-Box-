@@ -685,6 +685,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+          document.addEventListener('click', function(e) {
+  const sidebar = document.getElementById('dropdownMenu');
+  const toggle = document.getElementById('menuToggle');
+
+  if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+    sidebar.classList.remove('active');
+  }
+});
 });
 </script>
 

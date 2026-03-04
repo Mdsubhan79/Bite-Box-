@@ -908,15 +908,23 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+          document.addEventListener('click', function(e) {
+  const sidebar = document.getElementById('dropdownMenu');
+  const toggle = document.getElementById('menuToggle');
+
+  if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+    sidebar.classList.remove('active');
+  }
+});
 });
 </script>
 
-<!-- Floating Order Tracker -->
+
 <div class="floating-tracker" id="floatingTracker">
     <i class="fas fa-utensils"></i>
 </div>
 
-<!-- Tracker Popup -->
+
 <div class="tracker-popup" id="trackerPopup">
     <div class="popup-header">
         <span><i class="fas fa-shopping-bag"></i> Your Order</span>
