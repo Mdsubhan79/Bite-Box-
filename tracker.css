@@ -28,7 +28,7 @@
     cursor: grabbing;
 }
 
-/* Tracker Popup */
+
 .tracker-popup {
     position: fixed;
     bottom: 120px;
@@ -90,7 +90,7 @@
     padding: 20px;
 }
 
-/* Timer */
+
 .timer {
     text-align: center;
     margin: 15px 0;
@@ -123,7 +123,7 @@
     display: flex;
     justify-content: space-between;
     font-size: 10px;
-    color: #1b1b1b;
+    color: #161616;
     margin: 10px 0;
     position: relative;
 }
@@ -220,8 +220,8 @@
 }
 
 .reorder-btn {
-    background: #28a745;
-    color: white;
+    background: #ffee00;
+    color: #10332e;
     border: none;
     padding: 12px;
     border-radius: 10px;
