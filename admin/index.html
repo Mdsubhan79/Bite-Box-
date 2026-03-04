@@ -19,7 +19,7 @@
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <h2><i class="fas fa-utensils"></i> Brio Bite</h2>
-
+         
       </div>
       <ul>
         <li onclick="loadPage('dashboard')"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></li>
@@ -54,30 +54,29 @@
   <script src="admin.js"></script>
   <script>
  
-    document.getElementById('mobileMenuToggle').addEventListener('click', function() {
-      document.getElementById('sidebar').classList.add('active');
-    });
-    
-    document.getElementById('closeSidebar').addEventListener('click', function() {
-      document.getElementById('sidebar').classList.remove('active');
-    });
-    
-   
-    document.querySelectorAll('.sidebar ul li').forEach(item => {
-      item.addEventListener('click', function() {
-        if (window.innerWidth <= 768) {
-          document.getElementById('sidebar').classList.remove('active');
-        }
-      });
-      document.addEventListener('click', function(e) {
-  const sidebar = document.getElementById('sidebar');
-  const toggle = document.getElementById('mobileMenuToggle');
+const sidebar = document.getElementById('sidebar');
+const toggle = document.getElementById('mobileMenuToggle');
 
+
+toggle.addEventListener('click', function() {
+  sidebar.classList.add('active');
+});
+
+
+document.querySelectorAll('.sidebar ul li').forEach(item => {
+  item.addEventListener('click', function() {
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove('active');
+    }
+  });
+});
+
+
+document.addEventListener('click', function(e) {
   if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
     sidebar.classList.remove('active');
   }
 });
-    });
   </script>
 </body>
 </html>
