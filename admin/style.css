@@ -293,7 +293,8 @@ background:#2ecc71;
 display:flex;
 position:fixed;
 top:10px;
-right:10px;
+left:10px;   
+right:auto;
 background:#0e2b28;
 color:white;
 padding:10px;
@@ -305,7 +306,6 @@ justify-content:center;
 }
 
 
-
 @media (max-width:1024px){
 
 .cards{
@@ -314,8 +314,6 @@ grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
 
 }
 @media (max-width:768px){
-
-
 
 .content{
 margin-left:0;
