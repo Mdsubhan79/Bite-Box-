@@ -845,7 +845,7 @@ function loadUsers() {
 
 let adminWS = null;
 
-// Initialize WebSocket for admin
+
 function initializeAdminWebSocket() {
     const wsUrl = 'wss://bbbackend-bng2.onrender.com';
     adminWS = new WebSocket(wsUrl);
@@ -855,12 +855,12 @@ function initializeAdminWebSocket() {
         
         if (data.type === 'NEW_ORDER') {
             showAdminNotification('New order received!');
-            // Reload orders if we're on the orders page
+            
             if (document.getElementById('ordersList')) {
                 loadOrders();
             }
         } else if (data.type === 'ORDER_UPDATED') {
-            // Update specific order in UI
+           
             updateOrderInUI(data.order);
         }
     };
@@ -879,20 +879,20 @@ function showAdminNotification(message) {
         });
     }
 }
-/* ========= ORDERS MANAGEMENT - COMPLETE FIXED VERSION ========= */
+/* ========= ORDERS MANAGEMENT  ========= */
 
-// Main load orders function
+
 function loadOrders() {
     const content = document.getElementById("content");
     
-    // Show loading state
+
     content.innerHTML = `
         <div style="text-align: center; padding: 50px;">
             <h2><i class="fas fa-spinner fa-spin"></i> Loading Orders...</h2>
         </div>
     `;
 
-    // Fetch orders from API
+  
     fetch(`${API_BASE}/api/admin/orders`, {
         headers: {
             "Authorization": "Bearer " + localStorage.getItem("adminToken")
@@ -926,7 +926,7 @@ function loadOrders() {
     });
 }
 
-// Display orders in admin panel
+
 function displayOrders(orders, stats) {
     const content = document.getElementById("content");
     
@@ -958,7 +958,7 @@ function displayOrders(orders, stats) {
         return;
     }
     
-    // Stats cards HTML
+ 
     let html = `
         <h2>Orders Management</h2>
         
@@ -1053,7 +1053,7 @@ function displayOrders(orders, stats) {
     content.innerHTML = html;
 }
 
-// Get status color for badge
+
 function getStatusColor(status) {
     const colors = {
         'pending': '#ffc107',
@@ -1066,7 +1066,6 @@ function getStatusColor(status) {
     return colors[status] || '#6c757d';
 }
 
-// Update order status
 function updateOrderStatus(orderId, status) {
     if (!confirm(`Change order status to ${status}?`)) return;
     
@@ -1098,18 +1097,62 @@ function updateOrderStatus(orderId, status) {
     });
 }
 
-// View order details
+
+
+function updateOrderStatus(orderId, status) {
+    if (!confirm(`Change order status to ${status}?`)) return;
+    
+    fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("adminToken")
+        },
+        body: JSON.stringify({ status: status })
+    })
+    .then(res => {
+        if (res.status === 401) {
+            logoutAdmin();
+            throw new Error("Unauthorized");
+        }
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+    })
+    .then(data => {
+        alert(`✅ Order status updated to ${status}!`);
+        
+       
+        if (status === 'delivered') {
+            if (typeof global.broadcastUpdate === 'function') {
+                global.broadcastUpdate({
+                    type: 'ORDER_DELIVERED',
+                    orderId: orderId,
+                    message: 'Your order has been delivered! Please rate your experience.'
+                });
+            }
+        }
+        
+        loadOrders(); 
+    })
+    .catch(err => {
+        console.error("Error updating order:", err);
+        alert("❌ Failed to update order status: " + err.message);
+    });
+}
+
+
+
 function viewOrderDetails(orderId) { 
     alert(`Viewing order #${orderId} - Full details feature coming soon!`);
 }
-
-// Delete order
 function deleteOrder(orderId) {
     if (!confirm("⚠️ Are you sure you want to permanently delete this order?")) return;
     
-    const reason = prompt("Enter reason for deletion (optional):");
+    const reason = prompt("Enter reason for deletion (optional):", "Order cancelled by admin");
     
-    // Show loading state on button
+ 
     const deleteBtn = event?.target;
     const originalText = deleteBtn?.innerHTML;
     if (deleteBtn) {
@@ -1128,20 +1171,48 @@ function deleteOrder(orderId) {
             logoutAdmin();
             throw new Error("Unauthorized");
         }
+        
+     
+        if (res.status === 404 || res.status === 405) {
+            console.log("DELETE not supported, trying PUT with action=delete");
+            return fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("adminToken")
+                },
+                body: JSON.stringify({ 
+                    action: 'delete',
+                    adminNotes: reason,
+                    status: 'cancelled'
+                })
+            });
+        }
+        
         if (!res.ok) {
             const error = await res.json();
             throw new Error(error.error || `HTTP error! status: ${res.status}`);
         }
-        return res.json();
+        return res;
     })
+    .then(res => res.json())
     .then(data => {
-        alert("✅ Order deleted successfully!");
-        loadOrders(); // Reload orders
+        alert("✅ Order deleted/cancelled successfully!");
+        
+        if (typeof global.broadcastUpdate === 'function') {
+            global.broadcastUpdate({
+                type: 'ORDER_DELETED',
+                orderId: orderId,
+                reason: reason || 'Order cancelled by admin'
+            });
+        }
+        
+        loadOrders(); 
     })
     .catch(err => {
         console.error("Error deleting order:", err);
         alert("❌ Failed to delete order: " + err.message);
-        // Reset button
+        
         if (deleteBtn) {
             deleteBtn.innerHTML = originalText;
             deleteBtn.disabled = false;

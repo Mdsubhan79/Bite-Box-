@@ -1,11 +1,11 @@
-// orderdetail.js - FIXED VERSION
+
 
 const API_BASE = "https://bbbackend-bng2.onrender.com";
 const cart = getCart();
 let activeOrder = null;
 let timerInterval = null;
 
-// Create order function (was missing!)
+
 async function createOrder(orderData) {
     const response = await fetch(`${API_BASE}/api/orders/create`, {
         method: 'POST',
@@ -23,7 +23,7 @@ async function createOrder(orderData) {
     return await response.json();
 }
 
-// Get active order function (was missing!)
+
 async function getActiveOrder() {
     const userId = localStorage.getItem('userId') || 'guest';
     try {
@@ -36,7 +36,7 @@ async function getActiveOrder() {
     }
 }
 
-// Display order items
+
 function displayOrderItems() {
     const container = document.getElementById('orderItems');
     if (!container) return;
@@ -75,7 +75,7 @@ function displayOrderItems() {
     localStorage.setItem('orderTotal', total);
 }
 
-// Update popup with order details
+
 function updateOrderPopup(order) {
     activeOrder = order;
     const progressFill = document.getElementById('progressFill');
@@ -85,7 +85,7 @@ function updateOrderPopup(order) {
     
     if (!progressFill || !progressSteps || !orderDetails) return;
     
-    // Update progress bar
+
     const progressMap = {
         'pending': 20,
         'confirmed': 40,
@@ -96,7 +96,7 @@ function updateOrderPopup(order) {
     
     progressFill.style.width = `${progressMap[order.orderStatus] || 0}%`;
     
-    // Update steps
+    
     const steps = ['Order Placed', 'Confirmed', 'Preparing', 'Out for Delivery', 'Delivered'];
     const statusMap = ['pending', 'confirmed', 'preparing', 'out-for-delivery', 'delivered'];
     
@@ -108,7 +108,7 @@ function updateOrderPopup(order) {
     });
     progressSteps.innerHTML = stepsHtml;
     
-    // Update order details
+    
     orderDetails.innerHTML = `
         <p><i class="fas fa-box"></i> <strong>Items:</strong> ${order.items.length}</p>
         <p><i class="fas fa-rupee-sign"></i> <strong>Total:</strong> ₹${order.totalAmount}</p>
@@ -117,11 +117,11 @@ function updateOrderPopup(order) {
         <p><i class="fas fa-motorcycle"></i> <strong>Delivery:</strong> ${order.deliveryEstimate || '25-30 minutes'}</p>
     `;
     
-    // Update cancellation timer
+  
     updateCancellationTimer(order);
 }
 
-// Update cancellation timer
+
 function updateCancellationTimer(order) {
     const timerElement = document.getElementById('cancellationTimer');
     const cancelBtn = document.getElementById('cancelOrderBtn');
@@ -150,7 +150,7 @@ function updateCancellationTimer(order) {
     timerInterval = setInterval(updateTimer, 1000);
 }
 
-// Handle order deletion by admin
+
 function handleOrderDeletion(reason) {
     const adminMessage = document.getElementById('adminMessage');
     const cancelBtn = document.getElementById('cancelOrderBtn');
@@ -173,11 +173,11 @@ function handleOrderDeletion(reason) {
     clearInterval(timerInterval);
 }
 
-// Initialize tracker elements after DOM loads
+
 document.addEventListener('DOMContentLoaded', () => {
     displayOrderItems();
     
-    // Check for existing active order
+    
     if (localStorage.getItem('activeOrderId')) {
         const tracker = document.getElementById('floatingTracker');
         if (tracker) {
@@ -193,19 +193,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Setup form submission
+
     const orderForm = document.getElementById('orderForm');
     if (orderForm) {
         orderForm.addEventListener('submit', handleOrderSubmit);
     }
     
-    // Setup cancel button
+  
     const cancelBtn = document.getElementById('cancelOrderBtn');
     if (cancelBtn) {
         cancelBtn.addEventListener('click', handleCancelOrder);
     }
     
-    // Setup close popup button
+  
     const closeBtn = document.getElementById('closePopup');
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
@@ -215,18 +215,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Handle order submission
+
 async function handleOrderSubmit(e) {
     e.preventDefault();
     
-    // Validate phone
+   
     const phone = document.getElementById('phone').value;
     if (!/^\d{10}$/.test(phone)) {
         alert('Please enter a valid 10-digit phone number');
         return;
     }
     
-    // Get user ID
+   
     let userId = localStorage.getItem('userId');
     if (!userId) {
         userId = 'user_' + Date.now();
@@ -248,14 +248,14 @@ async function handleOrderSubmit(e) {
     try {
         const order = await createOrder(orderData);
         
-        // Store order info
+      
         localStorage.setItem('activeOrderId', order._id);
         localStorage.setItem('lastOrderItems', JSON.stringify(cart));
         localStorage.removeItem('cart');
         
         alert('✅ Order placed successfully! Track your order using the floating tracker.');
         
-        // Show tracker
+        
         const tracker = document.getElementById('floatingTracker');
         if (tracker) {
             tracker.style.display = 'flex';
@@ -263,7 +263,7 @@ async function handleOrderSubmit(e) {
         
         updateOrderPopup(order);
         
-        // Redirect or stay
+      
         setTimeout(() => {
             window.location.href = 'services.html';
         }, 2000);
@@ -274,7 +274,6 @@ async function handleOrderSubmit(e) {
     }
 }
 
-// Handle cancel order
 async function handleCancelOrder() {
     const orderId = localStorage.getItem('activeOrderId');
     
@@ -308,7 +307,7 @@ async function handleCancelOrder() {
     }
 }
 
-// Clean up
+
 window.addEventListener('beforeunload', () => {
     if (timerInterval) clearInterval(timerInterval);
 });

@@ -56,33 +56,33 @@ function updateQuantity(itemName, change) {
         
         saveCart(cart);
         
-        // If on cart page, refresh display
+       
         if (window.location.pathname.includes('Cartpage.html')) {
             displayCart();
         }
     }
 }
 
-// Clear entire cart
+
 function clearCart() {
     localStorage.removeItem('cart');
     updateCartCount();
     showNotification('🛒 Cart cleared');
 }
 
-// Get cart total
+
 function getCartTotal() {
     const cart = getCart();
     return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
 }
 
-// Get cart item count
+
 function getCartCount() {
     const cart = getCart();
     return cart.reduce((count, item) => count + item.quantity, 0);
 }
 
-// Update cart count display in navbar
+
 function updateCartCount() {
     const count = getCartCount();
     const cartCountElements = document.querySelectorAll('.cart-count, #cart-count');
@@ -93,10 +93,10 @@ function updateCartCount() {
     });
 }
 
-// Show notification
+
 function showNotification(message, type = 'success') {
     const colors = {
-        success: '#28a745',
+        success: '#02741dff',
         error: '#dc3545',
         warning: '#ffc107',
         info: '#17a2b8'
@@ -125,11 +125,11 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-// Initialize cart count on page load
+
 document.addEventListener('DOMContentLoaded', function() {
     updateCartCount();
     
-    // Add animation styles if not present
+  
     if (!document.getElementById('cart-animation-styles')) {
         const style = document.createElement('style');
         style.id = 'cart-animation-styles';
@@ -269,10 +269,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ========== ORDER MANAGEMENT ==========
 
-// Generate unique user ID
 const userId = 'user_' + Date.now();
 
-// Create new order
+
 async function createOrder(orderData) {
     try {
         const response = await fetch(`${BASE_URL}/api/orders/create`, {
@@ -342,7 +341,7 @@ function initializeWebSocket(orderId) {
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         
-        // Trigger callbacks based on message type
+        
         if (data.type === 'ORDER_UPDATED' && data.order._id === orderId) {
             if (wsCallbacks.onOrderUpdate) wsCallbacks.onOrderUpdate(data.order);
         } else if (data.type === 'ORDER_DELETED' && data.orderId === orderId) {
@@ -358,7 +357,6 @@ function initializeWebSocket(orderId) {
     
     ws.onclose = () => {
         console.log('WebSocket disconnected');
-        // Try to reconnect after 5 seconds
         setTimeout(() => {
             if (localStorage.getItem('activeOrderId')) {
                 initializeWebSocket(localStorage.getItem('activeOrderId'));

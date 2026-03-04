@@ -82,7 +82,7 @@
 
 .popup-header button:hover {
     transform: rotate(90deg);
-    background: rgba(255,255,255,0.1);
+    background: rgba(10, 10, 10, 0.1);
 }
 
 
@@ -182,17 +182,17 @@
 .admin-message {
     margin: 15px 0;
     padding: 12px;
-    background: #004417;
-    border-left: 4px solid #ffc107;
+    background: #ffffff;
+    border-left: 4px solid #a00b00;
     border-radius: 5px;
     display: none;
     font-size: 14px;
 }
 
-/* Buttons */
+
 .cancel-btn {
     background: #dc3545;
-    color: white;
+    color: rgb(0, 0, 0);
     border: none;
     padding: 12px;
     border-radius: 10px;
@@ -242,7 +242,7 @@
     box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
 }
 
-/* Animations */
+
 @keyframes pulse {
     0% {
         transform: scale(1);
@@ -320,4 +320,43 @@
     .tracker-popup {
         display: none !important;
     }
+}
+
+
+
+
+@keyframes slideIn {
+    from {
+        transform: translate(-50%, -60%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+
+
+#deliveryFeedbackPopup button[style*="font-size: 24px"]:hover {
+    transform: scale(1.2);
+    transition: transform 0.2s;
+}
+
+
+
+.contact-support-btn {
+    background: #17a2b8;
+    transition: all 0.3s;
+}
+
+.contact-support-btn:hover {
+    background: #138496;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
 }

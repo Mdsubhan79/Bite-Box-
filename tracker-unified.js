@@ -116,7 +116,7 @@
             });
         }
         
-        // Close popup when clicking outside
+      
         document.addEventListener('click', function(e) {
             if (popup && popup.classList.contains('active') && 
                 !popup.contains(e.target) && 
@@ -133,14 +133,14 @@
             reorderBtn.addEventListener('click', reorderItems);
         }
         
-        // Make tracker draggable
+       
         makeDraggable(tracker);
         
-        // Clean up on page unload
+      
         window.addEventListener('beforeunload', cleanupTracker);
     }
     
-    // Load order details from API
+   
     async function loadOrderDetails(orderId) {
         try {
             const response = await fetch(`${API_BASE}/api/orders/${orderId}`);
@@ -198,7 +198,7 @@
             <p><strong>Delivery:</strong> ${order.deliveryEstimate || '25-30 minutes'}</p>
         `;
         
-        // Update progress bar
+      
         if (progressFill) {
             const progressMap = {
                 'pending': 20,
@@ -211,7 +211,7 @@
             progressFill.style.width = `${progressMap[order.orderStatus] || 0}%`;
         }
         
-        // Update steps
+      
         if (progressSteps) {
             const steps = ['Order Placed', 'Confirmed', 'Preparing', 'Out for Delivery', 'Delivered'];
             const statusMap = ['pending', 'confirmed', 'preparing', 'out-for-delivery', 'delivered'];
@@ -225,7 +225,7 @@
             progressSteps.innerHTML = stepsHtml;
         }
         
-        // Show admin message
+       
         if (adminMessage) {
             if (order.adminNotes) {
                 adminMessage.style.display = 'block';
@@ -235,7 +235,7 @@
             }
         }
         
-        // Show/hide buttons based on status
+  
         if (cancelBtn && reorderBtn) {
             if (order.orderStatus === 'cancelled' || order.orderStatus === 'delivered') {
                 cancelBtn.style.display = 'none';
@@ -250,7 +250,7 @@
             }
         }
         
-        // Hide timer for delivered/cancelled orders
+   
         if (timerElement && (order.orderStatus === 'delivered' || order.orderStatus === 'cancelled')) {
             timerElement.style.display = 'none';
         }
@@ -326,7 +326,7 @@
         };
         
         trackerWS.onclose = () => {
-            // Try to reconnect after 5 seconds
+           
             setTimeout(() => {
                 if (localStorage.getItem('activeOrderId')) {
                     initializeWebSocket(localStorage.getItem('activeOrderId'));
@@ -335,7 +335,7 @@
         };
     }
     
-// Cancel order function - FIXED VERSION
+
 async function cancelOrder() {
     const orderId = localStorage.getItem('activeOrderId');
     
@@ -348,7 +348,7 @@ async function cancelOrder() {
         return;
     }
     
-    // Show loading state on cancel button
+
     const cancelBtn = document.getElementById('cancelOrderBtn');
     const originalText = cancelBtn ? cancelBtn.innerHTML : 'Cancel Order';
     if (cancelBtn) {
@@ -366,7 +366,7 @@ async function cancelOrder() {
             }
         });
         
-        // Log response for debugging
+      
         console.log('Cancel response status:', response.status);
         
         const data = await response.json();
@@ -375,7 +375,7 @@ async function cancelOrder() {
         if (response.ok) {
             alert('✅ Order cancelled successfully');
             
-            // Update UI
+          
             const popup = document.getElementById('trackerPopup');
             const tracker = document.getElementById('floatingTracker');
             const orderDetails = document.getElementById('orderDetails');
@@ -384,11 +384,10 @@ async function cancelOrder() {
                 orderDetails.innerHTML = '<p style="color: #dc3545; text-align: center;">Order has been cancelled</p>';
             }
             
-            // Update progress bar
+          
             const progressFill = document.getElementById('progressFill');
             if (progressFill) progressFill.style.width = '0%';
-            
-            // Hide cancel button, show reorder button
+           
             const reorderBtn = document.getElementById('reorderBtn');
             if (cancelBtn) cancelBtn.style.display = 'none';
             if (reorderBtn) {
@@ -401,11 +400,11 @@ async function cancelOrder() {
                 };
             }
             
-            // Hide timer
+         
             const timerElement = document.getElementById('cancellationTimer');
             if (timerElement) timerElement.style.display = 'none';
             
-            // Remove order ID from localStorage after 2 seconds
+            
             setTimeout(() => {
                 localStorage.removeItem('activeOrderId');
                 if (tracker) {
@@ -417,7 +416,7 @@ async function cancelOrder() {
             }, 3000);
             
         } else {
-            // Handle specific error messages
+          
             let errorMessage = data.error || 'Cannot cancel order';
             
             if (response.status === 400) {
@@ -431,7 +430,7 @@ async function cancelOrder() {
             
             alert('❌ ' + errorMessage);
             
-            // Reset button
+            
             if (cancelBtn) {
                 cancelBtn.innerHTML = originalText;
                 cancelBtn.disabled = false;
@@ -441,7 +440,7 @@ async function cancelOrder() {
         console.error('Error cancelling order:', error);
         alert('❌ Network error. Please check your connection and try again.');
         
-        // Reset button
+  
         if (cancelBtn) {
             cancelBtn.innerHTML = originalText;
             cancelBtn.disabled = false;
@@ -507,3 +506,208 @@ async function cancelOrder() {
         }
     }
 })();
+
+
+function showDeliveryFeedback(order) {
+   
+    const existingPopup = document.getElementById('deliveryFeedbackPopup');
+    if (existingPopup) existingPopup.remove();
+    
+   
+    const feedbackPopup = document.createElement('div');
+    feedbackPopup.id = 'deliveryFeedbackPopup';
+    feedbackPopup.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        z-index: 10002;
+        max-width: 350px;
+        width: 90%;
+        text-align: center;
+        animation: slideIn 0.3s ease;
+    `;
+    
+    feedbackPopup.innerHTML = `
+        <div style="margin-bottom: 20px;">
+            <i class="fas fa-check-circle" style="font-size: 60px; color: #28a745;"></i>
+            <h3 style="margin: 15px 0 10px; color: #333;">Order Delivered!</h3>
+            <p style="color: #666; margin-bottom: 20px;">Your order has been delivered. How was your experience?</p>
+        </div>
+        
+        <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;">
+            <button onclick="rateOrder(1)" style="font-size: 24px; background: none; border: none; cursor: pointer;">😡</button>
+            <button onclick="rateOrder(2)" style="font-size: 24px; background: none; border: none; cursor: pointer;">😕</button>
+            <button onclick="rateOrder(3)" style="font-size: 24px; background: none; border: none; cursor: pointer;">😐</button>
+            <button onclick="rateOrder(4)" style="font-size: 24px; background: none; border: none; cursor: pointer;">😊</button>
+            <button onclick="rateOrder(5)" style="font-size: 24px; background: none; border: none; cursor: pointer;">🤩</button>
+        </div>
+        
+        <textarea id="feedbackText" placeholder="Tell us about your experience..." 
+            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px; min-height: 80px;"></textarea>
+        
+        <div style="display: flex; gap: 10px;">
+            <button onclick="submitFeedback('${order._id}')" 
+                style="flex: 2; background: #28a745; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                Submit Feedback
+            </button>
+            <button onclick="closeFeedbackPopup()" 
+                style="flex: 1; background: #6c757d; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer;">
+                Later
+            </button>
+        </div>
+        
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+            <p style="color: #666; margin-bottom: 10px;">Order not delivered yet?</p>
+            <button onclick="contactSupport('${order._id}')" 
+                style="background: #17a2b8; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; width: 100%;">
+                <i class="fas fa-headset"></i> Contact Support
+            </button>
+        </div>
+        
+        <button onclick="closeFeedbackPopup()" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+    `;
+    
+    document.body.appendChild(feedbackPopup);
+    
+
+    const overlay = document.createElement('div');
+    overlay.id = 'feedbackOverlay';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 10001;
+        animation: fadeIn 0.3s ease;
+    `;
+    document.body.appendChild(overlay);
+}
+
+
+window.rateOrder = function(rating) {
+    const feedbackText = document.getElementById('feedbackText');
+    if (feedbackText) {
+        const messages = {
+            1: "Very dissatisfied",
+            2: "Dissatisfied", 
+            3: "Neutral",
+            4: "Satisfied",
+            5: "Very satisfied"
+        };
+        feedbackText.value = `Rating: ${messages[rating]}\n`;
+    }
+};
+
+
+window.submitFeedback = async function(orderId) {
+    const feedback = document.getElementById('feedbackText')?.value || '';
+    
+    try {
+        await fetch(`${API_BASE}/api/orders/${orderId}/feedback`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                feedback: feedback,
+                timestamp: new Date().toISOString()
+            })
+        });
+        
+        alert('Thank you for your feedback!');
+        closeFeedbackPopup();
+        
+      
+        const tracker = document.getElementById('floatingTracker');
+        if (tracker) {
+            tracker.style.display = 'none';
+        }
+        localStorage.removeItem('activeOrderId');
+        
+    } catch (error) {
+        console.error('Error submitting feedback:', error);
+        alert('Error submitting feedback. Please try again.');
+    }
+};
+
+// Contact support
+window.contactSupport = function(orderId) {
+    const phone = "919627024287"; 
+    const message = `Help: Order #${orderId.slice(-6)} - Not delivered yet`;
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+    
+   
+    alert(`📞 Call us: +91 9627024287\n💬 WhatsApp: Same number\n📧 Email: Official.briobite@gmail.com`);
+};
+
+window.closeFeedbackPopup = function() {
+    const popup = document.getElementById('deliveryFeedbackPopup');
+    const overlay = document.getElementById('feedbackOverlay');
+    if (popup) popup.remove();
+    if (overlay) overlay.remove();
+};
+
+
+function initializeWebSocket(orderId) {
+    const wsUrl = 'wss://bbbackend-bng2.onrender.com';
+    trackerWS = new WebSocket(wsUrl);
+    
+    trackerWS.onmessage = (event) => {
+        try {
+            const data = JSON.parse(event.data);
+            
+            if (data.type === 'ORDER_UPDATED' && data.order._id === orderId) {
+                activeOrder = data.order;
+                updatePopup(data.order);
+                
+        
+                if (data.order.orderStatus === 'delivered') {
+                    showDeliveryFeedback(data.order);
+                }
+                
+            } else if (data.type === 'ORDER_DELETED' && data.orderId === orderId) {
+                const adminMessage = document.getElementById('adminMessage');
+                const cancelBtn = document.getElementById('cancelOrderBtn');
+                const reorderBtn = document.getElementById('reorderBtn');
+                
+                if (adminMessage) {
+                    adminMessage.style.display = 'block';
+                    adminMessage.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${data.reason || 'Order cancelled by admin'}`;
+                }
+                if (cancelBtn) cancelBtn.style.display = 'none';
+                if (reorderBtn) reorderBtn.style.display = 'block';
+                
+                if (trackerInterval) {
+                    clearInterval(trackerInterval);
+                    trackerInterval = null;
+                }
+                
+            } else if (data.type === 'ORDER_DELIVERED' && data.orderId === orderId) {
+             
+                showDeliveryFeedback({ _id: orderId });
+            }
+        } catch (error) {
+            console.error('WebSocket message error:', error);
+        }
+    };
+    
+    trackerWS.onerror = (error) => {
+        console.error('WebSocket error:', error);
+    };
+    
+    trackerWS.onclose = () => {
+       
+        setTimeout(() => {
+            if (localStorage.getItem('activeOrderId')) {
+                initializeWebSocket(localStorage.getItem('activeOrderId'));
+            }
+        }, 5000);
+    };
+}
