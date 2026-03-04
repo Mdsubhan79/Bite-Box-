@@ -9,10 +9,11 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Mobile Menu Toggle -->
+  <header class="topbar">
   <div class="mobile-menu-toggle" id="mobileMenuToggle">
     <i class="fas fa-bars"></i>
   </div>
+</header>
 
   <div class="admin-wrapper">
 
@@ -57,24 +58,15 @@
 const sidebar = document.getElementById('sidebar');
 const toggle = document.getElementById('mobileMenuToggle');
 
-
 toggle.addEventListener('click', function() {
   sidebar.classList.add('active');
+  toggle.style.display = "none"; // hide toggle
 });
-
-
-document.querySelectorAll('.sidebar ul li').forEach(item => {
-  item.addEventListener('click', function() {
-    if (window.innerWidth <= 768) {
-      sidebar.classList.remove('active');
-    }
-  });
-});
-
 
 document.addEventListener('click', function(e) {
   if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
     sidebar.classList.remove('active');
+    toggle.style.display = "flex"; // show toggle again
   }
 });
   </script>
