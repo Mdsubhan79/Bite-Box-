@@ -15,7 +15,7 @@
   </div>
 
   <div class="admin-wrapper">
-    <!-- Sidebar -->
+
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <h2><i class="fas fa-utensils"></i> Brio Bite</h2>
@@ -53,7 +53,7 @@
 
   <script src="admin.js"></script>
   <script>
-    // Mobile menu toggle
+ 
     document.getElementById('mobileMenuToggle').addEventListener('click', function() {
       document.getElementById('sidebar').classList.add('active');
     });
@@ -62,7 +62,7 @@
       document.getElementById('sidebar').classList.remove('active');
     });
     
-    // Close sidebar when clicking on a menu item (mobile)
+   
     document.querySelectorAll('.sidebar ul li').forEach(item => {
       item.addEventListener('click', function() {
         if (window.innerWidth <= 768) {
