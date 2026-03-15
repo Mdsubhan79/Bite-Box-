@@ -845,30 +845,43 @@ function loadUsers() {
 
 let adminWS = null;
 
-
+// Initialize WebSocket
 function initializeAdminWebSocket() {
     const wsUrl = 'wss://bbbackend-bng2.onrender.com';
     adminWS = new WebSocket(wsUrl);
     
+    adminWS.onopen = () => {
+        console.log('✅ Admin WebSocket connected');
+    };
+    
     adminWS.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        console.log('WebSocket message received:', data);
         
         if (data.type === 'NEW_ORDER') {
             showAdminNotification('New order received!');
-            
             if (document.getElementById('ordersList')) {
                 loadOrders();
             }
         } else if (data.type === 'ORDER_UPDATED') {
-           
-            updateOrderInUI(data.order);
+            console.log('Order updated:', data.order);
         }
     };
 
     adminWS.onerror = (error) => {
         console.error('WebSocket error:', error);
     };
+    
+    adminWS.onclose = () => {
+        console.log('WebSocket closed, reconnecting in 5 seconds...');
+        setTimeout(() => {
+            initializeAdminWebSocket();
+        }, 5000);
+    };
 }
+
+// Call this when admin dashboard loads
+initializeAdminWebSocket();
 
 function broadcastOrderDeletion(orderId, reason) {
     if (adminWS && adminWS.readyState === WebSocket.OPEN) {
@@ -1083,46 +1096,16 @@ function getStatusColor(status) {
     return colors[status] || '#6c757d';
 }
 
+
 function updateOrderStatus(orderId, status) {
     if (!confirm(`Change order status to ${status}?`)) return;
     
-    fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + localStorage.getItem("adminToken")
-        },
-        body: JSON.stringify({ status: status })
-    })
-    .then(res => {
-        if (res.status === 401) {
-            logoutAdmin();
-            throw new Error("Unauthorized");
-        }
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-    })
-    .then(() => {
-        alert("Order status updated successfully!");
-        loadOrders(); 
-    })
-    .catch(err => {
-        console.error("Error updating order:", err);
-        alert("Failed to update order status: " + err.message);
-    });
-}
-
-
-
-// Update order status with enhanced notifications
-function updateOrderStatus(orderId, status) {
-    if (!confirm(`Change order status to ${status}?`)) return;
-    
-    const adminNotes = status === 'cancelled' 
-        ? prompt("Enter reason for cancellation (will be shown to customer):", "Order cancelled by restaurant")
-        : '';
+ 
+    let adminNotes = '';
+    if (status === 'cancelled') {
+        adminNotes = prompt("Enter reason for cancellation (will be shown to customer):", "Order cancelled by restaurant");
+        if (adminNotes === null) return
+    }
     
     fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
         method: "PUT",
@@ -1147,13 +1130,40 @@ function updateOrderStatus(orderId, status) {
     })
     .then(data => {
         alert(`✅ Order status updated to ${status}!`);
-        loadOrders();
+        
+       
+        if (adminWS && adminWS.readyState === WebSocket.OPEN) {
+            if (status === 'delivered') {
+                adminWS.send(JSON.stringify({
+                    type: 'ORDER_DELIVERED',
+                    order: data
+                }));
+            } else if (status === 'cancelled') {
+                adminWS.send(JSON.stringify({
+                    type: 'ORDER_CANCELLED',
+                    order: data
+                }));
+            } else {
+                adminWS.send(JSON.stringify({
+                    type: 'ORDER_UPDATED',
+                    order: data
+                }));
+            }
+            console.log(`Broadcast sent: ${status}`);
+        } else {
+            console.log('WebSocket not available');
+           
+            initializeAdminWebSocket();
+        }
+        
+        loadOrders(); 
     })
     .catch(err => {
         console.error("Error updating order:", err);
         alert("❌ Failed to update order status: " + err.message);
     });
 }
+
 
 function viewOrderDetails(orderId) { 
     alert(`Viewing order #${orderId} - Full details feature coming soon!`);

@@ -1,18 +1,14 @@
-// tracker-unified.js - COMPLETE VERSION WITH ALL FEATURES
-
 (function() {
     'use strict';
     
     const API_BASE = "https://bbbackend-bng2.onrender.com";
-    
-    // Initialize on page load
+   
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initTracker);
     } else {
         initTracker();
     }
     
-    // Listen for storage changes
     window.addEventListener('storage', function(e) {
         if (e.key === 'activeOrderId') {
             initTracker();
@@ -43,14 +39,12 @@
     }
     
     function createTrackerElements() {
-        // Create floating tracker button
         const tracker = document.createElement('div');
         tracker.id = 'floatingTracker';
         tracker.className = 'floating-tracker';
         tracker.innerHTML = '<i class="fas fa-utensils"></i>';
         document.body.appendChild(tracker);
         
-        // Create tracker popup
         const popup = document.createElement('div');
         popup.id = 'trackerPopup';
         popup.className = 'tracker-popup';
@@ -78,7 +72,6 @@
         document.body.appendChild(popup);
     }
     
-    // Global variables
     let trackerInterval = null;
     let trackerWS = null;
     let activeOrder = null;
@@ -97,11 +90,9 @@
         
         tracker.style.display = 'flex';
         
-        // Load order details
         loadOrderDetails(orderId);
         initializeWebSocket(orderId);
         
-        // Event Listeners
         if (tracker) {
             tracker.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -192,7 +183,6 @@
             <p><strong>Delivery:</strong> ${order.deliveryEstimate || '25-30 minutes'}</p>
         `;
         
-        // Update progress bar
         if (progressFill) {
             const progressMap = {
                 'pending': 20,
@@ -205,7 +195,6 @@
             progressFill.style.width = `${progressMap[order.orderStatus] || 0}%`;
         }
         
-        // Update steps
         if (progressSteps) {
             const steps = ['Order Placed', 'Confirmed', 'Preparing', 'Out for Delivery', 'Delivered'];
             const statusMap = ['pending', 'confirmed', 'preparing', 'out-for-delivery', 'delivered'];
@@ -219,7 +208,6 @@
             progressSteps.innerHTML = stepsHtml;
         }
         
-        // Show admin message
         if (adminMessage) {
             if (order.adminNotes) {
                 adminMessage.style.display = 'block';
@@ -229,7 +217,6 @@
             }
         }
         
-        // Show/hide buttons based on status
         if (cancelBtn && reorderBtn) {
             if (order.orderStatus === 'cancelled' || order.orderStatus === 'delivered') {
                 cancelBtn.style.display = 'none';
@@ -281,6 +268,7 @@
         trackerInterval = setInterval(updateTimer, 1000);
     }
     
+    // SINGLE WebSocket initialization (remove the duplicate at the bottom)
     function initializeWebSocket(orderId) {
         const wsUrl = 'wss://bbbackend-bng2.onrender.com';
         trackerWS = new WebSocket(wsUrl);
@@ -293,17 +281,27 @@
                     activeOrder = data.order;
                     updatePopup(data.order);
                     
-                } else if (data.type === 'ORDER_DELIVERED' && data.order._id === orderId) {
-                    // Order delivered - show feedback popup and remove tracker
-                    activeOrder = data.order;
-                    showDeliveryFeedback(data.order);
+                    if (data.order.orderStatus === 'delivered') {
+                        // Remove tracker and show delivery popup
+                        removeTracker();
+                        showDeliveryFeedback(data.order);
+                    }
+                    
+                } else if (data.type === 'ORDER_DELIVERED' && data.orderId === orderId) {
                     removeTracker();
+                    showDeliveryFeedback({ _id: orderId });
                     
                 } else if (data.type === 'ORDER_CANCELLED' && data.order._id === orderId) {
-                    // Order cancelled - show cancellation popup
-                    activeOrder = data.order;
-                    showCancellationPopup(data.order);
+                    // Remove tracker and show cancellation popup
                     removeTracker();
+                    showCancellationPopup(data.order);
+                    
+                } else if (data.type === 'ORDER_DELETED' && data.orderId === orderId) {
+                    removeTracker();
+                    showCancellationPopup({ 
+                        _id: orderId, 
+                        adminNotes: data.reason || 'Order cancelled by admin' 
+                    });
                 }
             } catch (error) {
                 console.error('WebSocket message error:', error);
@@ -354,11 +352,56 @@
             
             if (response.ok) {
                 alert('✅ Order cancelled successfully');
-                removeTracker();
-                localStorage.removeItem('activeOrderId');
+                
+                const popup = document.getElementById('trackerPopup');
+                const tracker = document.getElementById('floatingTracker');
+                
+                if (orderDetails) {
+                    orderDetails.innerHTML = '<p style="color: #dc3545; text-align: center;">Order has been cancelled</p>';
+                }
+                
+                const progressFill = document.getElementById('progressFill');
+                if (progressFill) progressFill.style.width = '0%';
+                
+                const reorderBtn = document.getElementById('reorderBtn');
+                if (cancelBtn) cancelBtn.style.display = 'none';
+                if (reorderBtn) {
+                    reorderBtn.style.display = 'block';
+                    reorderBtn.onclick = () => {
+                        if (activeOrder && activeOrder.items) {
+                            localStorage.setItem('cart', JSON.stringify(activeOrder.items));
+                            window.location.href = 'orderdetail.html';
+                        }
+                    };
+                }
+                
+                const timerElement = document.getElementById('cancellationTimer');
+                if (timerElement) timerElement.style.display = 'none';
+                
+                setTimeout(() => {
+                    localStorage.removeItem('activeOrderId');
+                    if (tracker) {
+                        tracker.style.display = 'none';
+                    }
+                    if (popup) {
+                        popup.classList.remove('active');
+                    }
+                }, 3000);
+                
             } else {
                 let errorMessage = data.error || 'Cannot cancel order';
+                
+                if (response.status === 400) {
+                    if (errorMessage.includes('time')) {
+                        errorMessage = '⏰ Cancellation time expired (5 minutes limit)';
+                    }
+                } else if (response.status === 404) {
+                    errorMessage = 'Order not found';
+                    localStorage.removeItem('activeOrderId');
+                }
+                
                 alert('❌ ' + errorMessage);
+                
                 if (cancelBtn) {
                     cancelBtn.innerHTML = originalText;
                     cancelBtn.disabled = false;
@@ -367,6 +410,7 @@
         } catch (error) {
             console.error('Error cancelling order:', error);
             alert('❌ Network error. Please check your connection and try again.');
+            
             if (cancelBtn) {
                 cancelBtn.innerHTML = originalText;
                 cancelBtn.disabled = false;
@@ -378,6 +422,13 @@
         if (activeOrder && activeOrder.items) {
             localStorage.setItem('cart', JSON.stringify(activeOrder.items));
             window.location.href = 'orderdetail.html';
+        } else {
+            // Try to get from lastOrderItems
+            const lastOrder = localStorage.getItem('lastOrderItems');
+            if (lastOrder) {
+                localStorage.setItem('cart', lastOrder);
+                window.location.href = 'orderdetail.html';
+            }
         }
     }
     
@@ -433,7 +484,7 @@
     }
 })();
 
-// ========== DELIVERY FEEDBACK FUNCTIONS ==========
+// ========== DELIVERY FEEDBACK POPUP ==========
 
 function showDeliveryFeedback(order) {
     const existingPopup = document.getElementById('deliveryFeedbackPopup');
@@ -486,7 +537,7 @@ function showDeliveryFeedback(order) {
     document.body.appendChild(overlay);
 }
 
-// ========== CANCELLATION POPUP FUNCTIONS ==========
+// ========== CANCELLATION POPUP ==========
 
 function showCancellationPopup(order) {
     const existingPopup = document.getElementById('cancellationPopup');
@@ -536,18 +587,21 @@ function showCancellationPopup(order) {
 }
 
 function reorderCancelledItems() {
+    // Try to get from activeOrder first
     if (window.activeOrder && window.activeOrder.items) {
         localStorage.setItem('cart', JSON.stringify(window.activeOrder.items));
         window.location.href = 'orderdetail.html';
+        return;
+    }
+    
+    // Fallback to lastOrderItems in localStorage
+    const lastOrder = localStorage.getItem('lastOrderItems');
+    if (lastOrder) {
+        localStorage.setItem('cart', lastOrder);
+        window.location.href = 'orderdetail.html';
     } else {
-        // Try to get from localStorage
-        const lastOrder = localStorage.getItem('lastOrderItems');
-        if (lastOrder) {
-            localStorage.setItem('cart', lastOrder);
-            window.location.href = 'orderdetail.html';
-        } else {
-            alert('No items to reorder');
-        }
+        alert('No items to reorder. Please add items to cart first.');
+        window.location.href = 'veg.html';
     }
 }
 
@@ -605,7 +659,6 @@ window.contactSupport = function(orderId) {
     const message = `Help: Order #${orderId.slice(-6)} - Issue with my order`;
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
     
-    // Also show contact options
     alert(`📞 Call us: +91 9627024287\n💬 WhatsApp: Same number\n📧 Email: Official.briobite@gmail.com`);
 };
 
@@ -616,3 +669,7 @@ window.closeFeedbackPopup = function() {
     if (overlay) overlay.remove();
     localStorage.removeItem('activeOrderId');
 };
+
+// Make functions globally available
+window.reorderCancelledItems = reorderCancelledItems;
+window.closeCancellationPopup = closeCancellationPopup;
