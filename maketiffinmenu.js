@@ -17,11 +17,24 @@ init();
 /* ================== INIT ================== */
 
 async function init() {
- menuSection.style.display = "block";
+  console.log("🚀 Initializing page...");
+  
+  menuSection.style.display = "block";
   generateDays();
-  await loadAdminDefaultMenu();  
+  
+
+  await new Promise(resolve => setTimeout(resolve, 100));
+  
+  console.log("Loading default menu...");
+  await loadAdminDefaultMenu();
+  
+  console.log("Locking past days...");
   await lockPastDays();
+  
+  console.log("Loading summary...");
   await loadSummary();
+  
+  console.log("✅ Initialization complete");
 }
 
 /* ================== GENERATE DAYS ================== */
@@ -200,72 +213,124 @@ const booking = await res.json();
 /* ==================LOAD ADMIN DEFAULT MENU================== */
 
 async function loadAdminDefaultMenu() {
-
   try {
-
+    console.log("1. Attempting to fetch default menu from:", `${API_BASE}/api/default-menu`);
+    
     const res = await fetch(`${API_BASE}/api/default-menu`);
+    console.log("2. Response status:", res.status);
+    console.log("3. Response OK?", res.ok);
+    
+    if (!res.ok) {
+      console.log("4. Default menu fetch failed with status:", res.status);
+      return;
+    }
+    
     const menu = await res.json();
+    console.log("5. Default menu data received:", menu);
 
-    if (!menu || !menu.days) return;
+    if (!menu || !menu.days) {
+      console.log("6. No menu data or days found");
+      return;
+    }
 
+    console.log("7. Menu has", menu.days.length, "days");
+    
     menu.days.forEach(d => {
-
       const day = d.dayNumber;
-
+      console.log(`8. Processing Day ${day}:`, d);
+      
       setMealData("breakfast", day, d.breakfast);
       setMealData("lunch", day, d.lunch);
       setMealData("dinner", day, d.dinner);
-
     });
 
   } catch (err) {
-    console.log("No default menu found");
+    console.error("❌ Error in loadAdminDefaultMenu:", err);
   }
 }
 
 function setMealData(meal, day, mealData) {
-  if (!mealData) return;
+  if (!mealData) {
+    console.log(`No ${meal} data for day ${day}`);
+    return;
+  }
+
+  console.log(`Setting ${meal} for day ${day}:`, mealData);
 
   const select = document.getElementById(`${meal}Items${day}`);
   const timeSelect = document.getElementById(`${meal}Time${day}`);
   const customInput = document.getElementById(`custom${meal}${day}`);
 
-  if (!select || !timeSelect) return;
-
-  select.innerHTML = "";
-
-  if (Array.isArray(mealData.items)) {
-    mealData.items.forEach(item => {
-      const option = document.createElement("option");
-      option.value = item.trim();
-      option.textContent = item.trim();
-      option.selected = true;
-      select.appendChild(option);
-    });
+  if (!select) {
+    console.error(`❌ Select element ${meal}Items${day} not found!`);
+    return;
+  }
+  
+  if (!timeSelect) {
+    console.error(`❌ Time select element ${meal}Time${day} not found!`);
+    return;
   }
 
+  console.log(`✅ Found elements for ${meal} day ${day}`);
+
+ 
+  select.innerHTML = "";
   timeSelect.innerHTML = "";
 
-  if (!mealData.time) return;
 
-  const timeValues = mealData.time.split(",").map(t => t.trim());
+  if (Array.isArray(mealData.items) && mealData.items.length > 0) {
+    console.log(`Adding ${mealData.items.length} items for ${meal} day ${day}`);
+    mealData.items.forEach(item => {
+      if (item && item.trim()) {
+        const option = document.createElement("option");
+        option.value = item.trim();
+        option.textContent = item.trim();
+        option.selected = true;
+        select.appendChild(option);
+      }
+    });
+  } else {
+    console.log(`No items for ${meal} day ${day}`);
+  }
 
-  timeValues.forEach(t => {
-    const option = document.createElement("option");
-    option.value = t;
-    option.textContent = t;
-    timeSelect.appendChild(option);
-  });
 
+  if (mealData.time && mealData.time.trim()) {
+    console.log(`Setting time for ${meal} day ${day} to:`, mealData.time);
+    
+    const timeValues = mealData.time.split(",").map(t => t.trim());
+    
+    timeValues.forEach(t => {
+      if (t) {
+        const option = document.createElement("option");
+        option.value = t;
+        option.textContent = t;
+        timeSelect.appendChild(option);
+      }
+    });
+  } else {
+    console.log(`No time for ${meal} day ${day}`);
+  }
+
+ 
   const customOption = document.createElement("option");
   customOption.value = "custom";
   customOption.textContent = "Make Your Own";
   timeSelect.appendChild(customOption);
 
-  timeSelect.value = timeValues[0];
-  customInput.style.display = "none";
-  customInput.value = "";
+
+  if (timeSelect.options.length > 1) {
+    timeSelect.value = timeSelect.options[0].value;
+  }
+
+  if (customInput) {
+    customInput.style.display = "none";
+    customInput.value = "";
+  }
 }
+
+
+
+
 
 async function loadSummary() {
   try {
