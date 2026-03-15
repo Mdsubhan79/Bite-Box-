@@ -1,10 +1,9 @@
-
-
 const API_BASE = "https://bbbackend-bng2.onrender.com";
 const cart = getCart();
 let activeOrder = null;
 let timerInterval = null;
 
+// ========== ORDER CREATION FUNCTIONS ==========
 
 async function createOrder(orderData) {
     const response = await fetch(`${API_BASE}/api/orders/create`, {
@@ -23,7 +22,6 @@ async function createOrder(orderData) {
     return await response.json();
 }
 
-
 async function getActiveOrder() {
     const userId = localStorage.getItem('userId') || 'guest';
     try {
@@ -36,6 +34,7 @@ async function getActiveOrder() {
     }
 }
 
+// ========== DISPLAY FUNCTIONS ==========
 
 function displayOrderItems() {
     const container = document.getElementById('orderItems');
@@ -52,7 +51,7 @@ function displayOrderItems() {
     }
     
     container.innerHTML = '';
-    cart.forEach((item, index) => {
+    cart.forEach((item) => {
         const quantity = item.quantity || 1;
         const itemTotal = item.price * quantity;
         total += itemTotal;
@@ -75,6 +74,7 @@ function displayOrderItems() {
     localStorage.setItem('orderTotal', total);
 }
 
+// ========== TRACKER POPUP FUNCTIONS ==========
 
 function updateOrderPopup(order) {
     activeOrder = order;
@@ -85,49 +85,66 @@ function updateOrderPopup(order) {
     
     if (!progressFill || !progressSteps || !orderDetails) return;
     
-
+    // Update progress bar
     const progressMap = {
         'pending': 20,
         'confirmed': 40,
         'preparing': 60,
         'out-for-delivery': 80,
-        'delivered': 100
+        'delivered': 100,
+        'cancelled': 0
     };
     
     progressFill.style.width = `${progressMap[order.orderStatus] || 0}%`;
     
-    
+    // Update steps
     const steps = ['Order Placed', 'Confirmed', 'Preparing', 'Out for Delivery', 'Delivered'];
     const statusMap = ['pending', 'confirmed', 'preparing', 'out-for-delivery', 'delivered'];
     
     let stepsHtml = '';
     steps.forEach((step, index) => {
         const isActive = order.orderStatus === statusMap[index] || 
-                        (index < statusMap.indexOf(order.orderStatus));
+                        (index < statusMap.indexOf(order.orderStatus) && order.orderStatus !== 'cancelled');
         stepsHtml += `<div class="step ${isActive ? 'active' : ''}">${step}</div>`;
     });
     progressSteps.innerHTML = stepsHtml;
     
-    
+    // Update order details
     orderDetails.innerHTML = `
-        <p><i class="fas fa-box"></i> <strong>Items:</strong> ${order.items.length}</p>
-        <p><i class="fas fa-rupee-sign"></i> <strong>Total:</strong> ₹${order.totalAmount}</p>
-        <p><i class="fas fa-clock"></i> <strong>Status:</strong> ${order.orderStatus.replace(/-/g, ' ')}</p>
+        <p><i class="fas fa-box"></i> <strong>Items:</strong> ${order.items?.length || 0}</p>
+        <p><i class="fas fa-rupee-sign"></i> <strong>Total:</strong> ₹${order.totalAmount || 0}</p>
+        <p><i class="fas fa-clock"></i> <strong>Status:</strong> ${(order.orderStatus || 'pending').replace(/-/g, ' ')}</p>
         <p><i class="fas fa-credit-card"></i> <strong>Payment:</strong> ${order.paymentStatus || 'pending'}</p>
         <p><i class="fas fa-motorcycle"></i> <strong>Delivery:</strong> ${order.deliveryEstimate || '25-30 minutes'}</p>
     `;
     
-  
+    // Show/hide admin message
+    const adminMessage = document.getElementById('adminMessage');
+    if (adminMessage && order.adminNotes) {
+        adminMessage.style.display = 'block';
+        adminMessage.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${order.adminNotes}`;
+    }
+    
+    // Update cancellation timer
     updateCancellationTimer(order);
 }
-
 
 function updateCancellationTimer(order) {
     const timerElement = document.getElementById('cancellationTimer');
     const cancelBtn = document.getElementById('cancelOrderBtn');
     
-    if (!timerElement || !cancelBtn || !order.cancellationDeadline) return;
+    if (!timerElement || !cancelBtn) return;
     
+    // Hide timer for delivered/cancelled orders
+    if (order.orderStatus === 'delivered' || order.orderStatus === 'cancelled') {
+        timerElement.style.display = 'none';
+        cancelBtn.style.display = 'none';
+        return;
+    }
+    
+    if (!order.cancellationDeadline) return;
+    
+    timerElement.style.display = 'block';
     const deadline = new Date(order.cancellationDeadline);
     
     function updateTimer() {
@@ -150,6 +167,7 @@ function updateCancellationTimer(order) {
     timerInterval = setInterval(updateTimer, 1000);
 }
 
+// ========== ORDER CANCELLATION HANDLING ==========
 
 function handleOrderDeletion(reason) {
     const adminMessage = document.getElementById('adminMessage');
@@ -173,60 +191,40 @@ function handleOrderDeletion(reason) {
     clearInterval(timerInterval);
 }
 
+// ========== REORDER FUNCTION ==========
 
-document.addEventListener('DOMContentLoaded', () => {
-    displayOrderItems();
-    
-    
-    if (localStorage.getItem('activeOrderId')) {
-        const tracker = document.getElementById('floatingTracker');
-        if (tracker) {
-            tracker.style.display = 'flex';
-            getActiveOrder().then(order => {
-                if (order) {
-                    updateOrderPopup(order);
-                    if (typeof initializeWebSocket === 'function') {
-                        initializeWebSocket(order._id);
-                    }
-                }
-            });
-        }
+function reorderCancelledItems() {
+    // Try to get from activeOrder first
+    if (activeOrder && activeOrder.items) {
+        localStorage.setItem('cart', JSON.stringify(activeOrder.items));
+        window.location.href = 'orderdetail.html';
+        return;
     }
     
+    // Fallback to lastOrderItems in localStorage
+    const lastOrder = localStorage.getItem('lastOrderItems');
+    if (lastOrder) {
+        localStorage.setItem('cart', lastOrder);
+        window.location.href = 'orderdetail.html';
+    } else {
+        alert('No items to reorder. Please add items to cart first.');
+        window.location.href = 'veg.html';
+    }
+}
 
-    const orderForm = document.getElementById('orderForm');
-    if (orderForm) {
-        orderForm.addEventListener('submit', handleOrderSubmit);
-    }
-    
-  
-    const cancelBtn = document.getElementById('cancelOrderBtn');
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', handleCancelOrder);
-    }
-    
-  
-    const closeBtn = document.getElementById('closePopup');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            const popup = document.getElementById('trackerPopup');
-            if (popup) popup.classList.remove('active');
-        });
-    }
-});
-
+// ========== ORDER SUBMISSION ==========
 
 async function handleOrderSubmit(e) {
     e.preventDefault();
     
-   
+    // Validate phone
     const phone = document.getElementById('phone').value;
     if (!/^\d{10}$/.test(phone)) {
         alert('Please enter a valid 10-digit phone number');
         return;
     }
     
-   
+    // Get or create user ID
     let userId = localStorage.getItem('userId');
     if (!userId) {
         userId = 'user_' + Date.now();
@@ -248,14 +246,14 @@ async function handleOrderSubmit(e) {
     try {
         const order = await createOrder(orderData);
         
-      
+        // Store order info
         localStorage.setItem('activeOrderId', order._id);
         localStorage.setItem('lastOrderItems', JSON.stringify(cart));
         localStorage.removeItem('cart');
         
         alert('✅ Order placed successfully! Track your order using the floating tracker.');
         
-        
+        // Show tracker
         const tracker = document.getElementById('floatingTracker');
         if (tracker) {
             tracker.style.display = 'flex';
@@ -263,7 +261,7 @@ async function handleOrderSubmit(e) {
         
         updateOrderPopup(order);
         
-      
+        // Redirect to services page
         setTimeout(() => {
             window.location.href = 'services.html';
         }, 2000);
@@ -307,7 +305,57 @@ async function handleCancelOrder() {
     }
 }
 
+// ========== INITIALIZATION ==========
+
+document.addEventListener('DOMContentLoaded', () => {
+    displayOrderItems();
+    
+    // Check for existing active order
+    if (localStorage.getItem('activeOrderId')) {
+        const tracker = document.getElementById('floatingTracker');
+        if (tracker) {
+            tracker.style.display = 'flex';
+            getActiveOrder().then(order => {
+                if (order) {
+                    updateOrderPopup(order);
+                    if (typeof initializeWebSocket === 'function') {
+                        initializeWebSocket(order._id);
+                    }
+                }
+            });
+        }
+    }
+    
+    // Setup form submission
+    const orderForm = document.getElementById('orderForm');
+    if (orderForm) {
+        orderForm.addEventListener('submit', handleOrderSubmit);
+    }
+    
+    // Setup cancel button
+    const cancelBtn = document.getElementById('cancelOrderBtn');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', handleCancelOrder);
+    }
+    
+    // Setup close popup button
+    const closeBtn = document.getElementById('closePopup');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            const popup = document.getElementById('trackerPopup');
+            if (popup) popup.classList.remove('active');
+        });
+    }
+});
+
+// ========== CLEANUP ==========
 
 window.addEventListener('beforeunload', () => {
     if (timerInterval) clearInterval(timerInterval);
 });
+
+// ========== EXPORT FUNCTIONS TO GLOBAL SCOPE ==========
+
+window.reorderCancelledItems = reorderCancelledItems;
+window.getActiveOrder = getActiveOrder;
+window.updateOrderPopup = updateOrderPopup;

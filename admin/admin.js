@@ -1116,8 +1116,13 @@ function updateOrderStatus(orderId, status) {
 
 
 
+// Update order status with enhanced notifications
 function updateOrderStatus(orderId, status) {
     if (!confirm(`Change order status to ${status}?`)) return;
+    
+    const adminNotes = status === 'cancelled' 
+        ? prompt("Enter reason for cancellation (will be shown to customer):", "Order cancelled by restaurant")
+        : '';
     
     fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
         method: "PUT",
@@ -1125,7 +1130,10 @@ function updateOrderStatus(orderId, status) {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + localStorage.getItem("adminToken")
         },
-        body: JSON.stringify({ status: status })
+        body: JSON.stringify({ 
+            status: status,
+            adminNotes: adminNotes
+        })
     })
     .then(res => {
         if (res.status === 401) {
@@ -1139,27 +1147,13 @@ function updateOrderStatus(orderId, status) {
     })
     .then(data => {
         alert(`✅ Order status updated to ${status}!`);
-        
-       
-        if (status === 'delivered') {
-            if (typeof global.broadcastUpdate === 'function') {
-                global.broadcastUpdate({
-                    type: 'ORDER_DELIVERED',
-                    orderId: orderId,
-                    message: 'Your order has been delivered! Please rate your experience.'
-                });
-            }
-        }
-        
-        loadOrders(); 
+        loadOrders();
     })
     .catch(err => {
         console.error("Error updating order:", err);
         alert("❌ Failed to update order status: " + err.message);
     });
 }
-
-
 
 function viewOrderDetails(orderId) { 
     alert(`Viewing order #${orderId} - Full details feature coming soon!`);

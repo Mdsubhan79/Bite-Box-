@@ -360,3 +360,236 @@
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
 }
+
+
+
+/* ========== STATUS POPUPS ========== */
+.status-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10002;
+    max-width: 400px;
+    width: 90%;
+    animation: popupSlideIn 0.3s ease;
+}
+
+.status-popup .popup-content {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.success-popup .popup-content {
+    border-top: 5px solid #28a745;
+}
+
+.cancelled-popup .popup-content {
+    border-top: 5px solid #dc3545;
+}
+
+
+.success-animation i {
+    font-size: 70px;
+    color: #28a745;
+    animation: successBounce 0.5s ease;
+}
+
+.cancelled-animation i {
+    font-size: 70px;
+    color: #dc3545;
+    animation: shake 0.5s ease;
+}
+
+@keyframes successBounce {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes popupSlideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.status-popup h2 {
+    margin: 15px 0 10px;
+    color: #333;
+}
+
+.status-popup .order-id {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+
+.rating-section {
+    margin: 20px 0;
+}
+
+.rating-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.rating-buttons button {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+    padding: 5px;
+}
+
+.rating-buttons button:hover {
+    transform: scale(1.2);
+}
+
+.reason-section {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.reason-section strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.reason-section p {
+    color: #333;
+    margin: 0;
+}
+
+
+.enquiry-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.enquiry-section p {
+    color: #666;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.btn-enquiry {
+    background: #17a2b8;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    width: 100%;
+}
+
+.btn-enquiry:hover {
+    background: #138496;
+    transform: translateY(-2px);
+}
+
+
+.popup-buttons {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.popup-buttons .btn-primary {
+    flex: 2;
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.popup-buttons .btn-primary:hover {
+    background: #218838;
+    transform: translateY(-2px);
+}
+
+.popup-buttons .btn-secondary {
+    flex: 1;
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.popup-buttons .btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+
+#feedbackText {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 15px 0;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 10001;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+
+@media (max-width: 480px) {
+    .status-popup .popup-content {
+        padding: 20px;
+    }
+    
+    .rating-buttons {
+        flex-wrap: wrap;
+    }
+    
+    .popup-buttons {
+        flex-direction: column;
+    }
+}
