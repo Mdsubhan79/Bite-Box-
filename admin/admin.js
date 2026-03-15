@@ -1106,7 +1106,7 @@ function updateOrderStatus(orderId, status) {
     })
     .then(() => {
         alert("Order status updated successfully!");
-        loadOrders(); // Reload orders
+        loadOrders(); 
     })
     .catch(err => {
         console.error("Error updating order:", err);
@@ -1192,7 +1192,7 @@ function deleteOrder(orderId) {
             throw new Error("Unauthorized");
         }
         
-        // If DELETE not supported, try PUT with action=delete
+       
         if (res.status === 404 || res.status === 405) {
             console.log("DELETE not supported, trying PUT with action=delete");
             return fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
