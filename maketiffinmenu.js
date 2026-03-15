@@ -275,7 +275,7 @@ function setMealData(meal, day, mealData) {
         const option = document.createElement("option");
         option.value = item.trim();
         option.textContent = item.trim();
-        option.selected = true;
+        option.selected = false;
         select.appendChild(option);
       }
     });
