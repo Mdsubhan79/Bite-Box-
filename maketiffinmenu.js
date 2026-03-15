@@ -216,7 +216,7 @@ async function loadAdminDefaultMenu() {
   try {
     console.log("1. Attempting to fetch default menu from:", `${API_BASE}/api/default-menu`);
     
-    const res = await fetch(`${API_BASE}/api/default-menu`);
+    const res = await fetch(`${API_BASE}/api/admin/default-menu`);
     console.log("2. Response status:", res.status);
     console.log("3. Response OK?", res.ok);
     
