@@ -211,44 +211,34 @@ const booking = await res.json();
 }
 
 /* ==================LOAD ADMIN DEFAULT MENU================== */
-
 async function loadAdminDefaultMenu() {
   try {
-    console.log("1. Attempting to fetch default menu from:", `${API_BASE}/api/default-menu`);
-    
-    const res = await fetch(`${API_BASE}/api/admin/default-menu`);
-    console.log("2. Response status:", res.status);
-    console.log("3. Response OK?", res.ok);
-    
+
+    const res = await fetch(`${API_BASE}/api/default-menu`);
+
     if (!res.ok) {
-      console.log("4. Default menu fetch failed with status:", res.status);
+      console.log("Default menu not found");
       return;
     }
-    
+
     const menu = await res.json();
-    console.log("5. Default menu data received:", menu);
 
-    if (!menu || !menu.days) {
-      console.log("6. No menu data or days found");
-      return;
-    }
+    if (!menu || !menu.days) return;
 
-    console.log("7. Menu has", menu.days.length, "days");
-    
     menu.days.forEach(d => {
+
       const day = d.dayNumber;
-      console.log(`8. Processing Day ${day}:`, d);
-      
+
       setMealData("breakfast", day, d.breakfast);
       setMealData("lunch", day, d.lunch);
       setMealData("dinner", day, d.dinner);
+
     });
 
   } catch (err) {
-    console.error("❌ Error in loadAdminDefaultMenu:", err);
+    console.error("Menu load error:", err);
   }
 }
-
 function setMealData(meal, day, mealData) {
   if (!mealData) {
     console.log(`No ${meal} data for day ${day}`);
