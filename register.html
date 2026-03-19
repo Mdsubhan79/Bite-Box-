@@ -6,6 +6,7 @@
     <title>Brio Bite - Register</title>
     <link rel="icon" type="image/x-icon" href="briobite.png">
     <style>
+        /* YOUR EXISTING STYLES - KEEP THEM ALL */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
         * {
@@ -408,15 +409,15 @@ footer button:hover {
       <h1>Brio Bite</h1>
     </div>
 
-    <form class="register-form">
-      <input type="text" placeholder="Full Name" required>
-      <input type="email" placeholder="Email Address" required>
+    <form class="register-form" id="registerForm">
+      <input type="text" id="name" placeholder="Full Name" required>
+      <input type="email" id="email" placeholder="Email Address" required>
       <div class="password-field">
-        <input type="password" placeholder="Password" required>
+        <input type="password" id="password" placeholder="Password" required>
         <span class="toggle-password">👁</span>
       </div>
       <div class="password-field">
-        <input type="password" placeholder="Confirm Password" required>
+        <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
         <span class="toggle-password">👁</span>
       </div>
       <div class="terms">
@@ -464,6 +465,7 @@ footer button:hover {
       <p id="copyrightText" data-translate="copyrightText">&copy; 2026 Brio Bite. All Rights Reserved.</p>
     </div>
   </footer>
+  <script src="auth-check.js"></script>
   <script>
 // Toggle Password Visibility
 const togglePassword = document.querySelectorAll('.toggle-password');
@@ -477,13 +479,13 @@ togglePassword.forEach(eye => {
 
 
 // 🔥 Backend Register Logic
-document.querySelector('.register-form').addEventListener('submit', async function (e) {
+document.getElementById('registerForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  const name = document.querySelector('input[placeholder="Full Name"]').value.trim();
-  const email = document.querySelector('input[placeholder="Email Address"]').value.trim();
-  const password = document.querySelectorAll('.password-field input')[0].value;
-  const confirmPassword = document.querySelectorAll('.password-field input')[1].value;
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
   const errorMessage = document.getElementById('error-message');
 
   // 1️⃣ Prevent admin email signup
@@ -524,10 +526,18 @@ document.querySelector('.register-form').addEventListener('submit', async functi
 
     const data = await response.json();
 
-    if (response.status === 201) {
-      alert("Account created successfully!");
-      window.location.href = "login.html";
+ if (response.status === 201) {
+    alert("Account created successfully!");
+    
+    // Check if there was an intended action
+    const intendedAction = sessionStorage.getItem("intendedAction");
+    if (intendedAction) {
+        // Keep the intended action and go to login
+        window.location.href = "login.html";
     } else {
+        window.location.href = "login.html";
+    }
+}else {
       errorMessage.style.display = "block";
       errorMessage.textContent = data.message || "Registration failed!";
     }
@@ -543,15 +553,12 @@ document.querySelector('.register-form').addEventListener('submit', async functi
   function updateOpenStatus() {
     const now = new Date();
     const hour = now.getHours();
-
-    
     const isOpen = hour >= 7 && hour < 22;
 
     const statusElement = document.getElementById("openStatus");
     statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
     statusElement.style.color = isOpen ? "green" : "red";
   }
-
   
   updateOpenStatus();
 </script>

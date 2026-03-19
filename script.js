@@ -1,23 +1,23 @@
 const BASE_URL = 'https://bbbackend-bng2.onrender.com';
 
-// ========== CART MANAGEMENT ==========
 
-// Get cart from localStorage
+
+// cart 
 function getCart() {
     return JSON.parse(localStorage.getItem('cart')) || [];
 }
 
-// Save cart to localStorage
+
 function saveCart(cart) {
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
 }
 
-// Add item to cart
+
 function addToCart(item) {
     let cart = getCart();
     
-    // Check if item already exists
+  
     const existingItem = cart.find(i => i.name === item.name);
     
     if (existingItem) {
@@ -34,7 +34,7 @@ function addToCart(item) {
     showNotification('✅ Item added to cart!');
 }
 
-// Remove item from cart
+
 function removeFromCart(itemName) {
     let cart = getCart();
     cart = cart.filter(item => item.name !== itemName);
@@ -42,7 +42,7 @@ function removeFromCart(itemName) {
     showNotification('🗑️ Item removed from cart');
 }
 
-// Update item quantity
+
 function updateQuantity(itemName, change) {
     let cart = getCart();
     const itemIndex = cart.findIndex(item => item.name === itemName);
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.head.appendChild(style);
     }
 });
-/* ---------------- FETCH FOOD ---------------- */
+/*FETCH FOOD ---------------- */
 async function fetchAllFood() {
   try {
     const res = await fetch(`${BASE_URL}/api/food`);
@@ -183,7 +183,7 @@ async function fetchAllFood() {
   }
 }
 
-/* ---------------- UI ---------------- */
+
 function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, m =>
     ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])
@@ -230,7 +230,7 @@ function renderFood(containerId, items) {
   });
 }
 
-/* ---------------- LOAD FOOD ---------------- */
+/* LOAD FOOD ---------------- */
 async function loadFood() {
   const all = await fetchAllFood();
 
@@ -247,7 +247,7 @@ async function loadFood() {
   );
 }
 
-/* ---------------- DELETE FOOD (ADMIN USE) ---------------- */
+/* DELETE FOOD---------------- */
 async function deleteFood(id) {
   if (!confirm('Delete this item?')) return;
 
@@ -260,14 +260,14 @@ async function deleteFood(id) {
 
 window.deleteFood = deleteFood;
 
-/* ---------------- INIT ---------------- */
+/*INIT ---------------- */
 document.addEventListener('DOMContentLoaded', () => {
   updateCartCount();
   loadFood();
 });
 
 
-// ========== ORDER MANAGEMENT ==========
+// ========== ORDER MANAGEMENT
 
 const userId = 'user_' + Date.now();
 

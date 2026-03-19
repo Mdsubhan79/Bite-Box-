@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brio Bite - AI Chef</title>
+    <link rel="icon" type="image/x-icon" href="briobite.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #0a2824;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            background: #0c2f2c;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f7c948;
+        }
+
+        .logo {
+            font-family: 'Lucida Handwriting', cursive;
+            font-size: 1.8rem;
+            color: #ffd87c;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            background: #f7c948;
+            color: #0c2f2c;
+            padding: 8px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: #e4b732;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #f7c948;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #ddd;
+            font-size: 1.1rem;
+        }
+
+        /* Input Section */
+        .input-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #f7c948;
+        }
+
+        .input-section h2 {
+            color: #f7c948;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .ingredient-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #f7c948;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .ingredient-input:focus {
+            outline: none;
+            border-color: #ffd87c;
+        }
+
+        .ingredient-input::placeholder {
+            color: #aaa;
+        }
+
+        .add-btn {
+            background: #f7c948;
+            color: #0c2f2c;
+            border: none;
+            padding: 0 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-btn:hover {
+            background: #e4b732;
+        }
+
+        /* Ingredients Tags */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            min-height: 50px;
+        }
+
+        .tag {
+            background: #f7c948;
+            color: #0c2f2c;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tag button {
+            background: none;
+            border: none;
+            color: #0c2f2c;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        /* Quick Add Buttons */
+        .quick-add {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .quick-btn {
+            background: rgba(247, 201, 72, 0.1);
+            border: 1px solid #f7c948;
+            color: #f7c948;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .quick-btn:hover {
+            background: #f7c948;
+            color: #0c2f2c;
+        }
+
+        /* Find Recipes Button */
+        .find-btn {
+            background: #f7c948;
+            color: #0c2f2c;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .find-btn:hover:not(:disabled) {
+            background: #e4b732;
+            transform: translateY(-2px);
+        }
+
+        .find-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        .spinner.active {
+            display: block;
+        }
+
+        .loader {
+            border: 4px solid rgba(247, 201, 72, 0.1);
+            border-top: 4px solid #f7c948;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Results Grid */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .recipe-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid #f7c948;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(247, 201, 72, 0.2);
+        }
+
+        .recipe-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 2px solid #f7c948;
+        }
+
+        .recipe-content {
+            padding: 15px;
+        }
+
+        .recipe-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #f7c948;
+            margin-bottom: 10px;
+        }
+
+        .recipe-meta {
+            display: flex;
+            gap: 15px;
+            color: #ddd;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        .protein-badge {
+            background: #28a745;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .ingredients-preview {
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-bottom: 15px;
+            max-height: 60px;
+            overflow: hidden;
+        }
+
+        .card-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-btn {
+            flex: 1;
+            background: #f7c948;
+            color: #0c2f2c;
+            text-decoration: none;
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .order-btn {
+            flex: 1;
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .error-message {
+            background: #dc3545;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* User Info */
+        .user-welcome {
+            background: rgba(247, 201, 72, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #f7c948;
+        }
+
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .add-btn {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="nav-bar">
+        <a href="index.html" class="logo">Brio Bite</a>
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>👨‍🍳 AI Chef Assistant</h1>
+            <p id="welcomeMsg">Tell me what ingredients you have, and I'll suggest Indian recipes!</p>
+        </div>
+
+        <!-- User Info -->
+        <div class="user-welcome" id="userWelcome"></div>
+
+        <!-- Input Section -->
+        <div class="input-section">
+            <h2>What ingredients do you have?</h2>
+            
+            <div class="input-group">
+                <input type="text" id="ingredientInput" class="ingredient-input" 
+                       placeholder="e.g., chicken, rice, tomatoes, paneer" 
+                       onkeypress="if(event.key==='Enter') addIngredient()">
+                <button onclick="addIngredient()" class="add-btn">
+                    <i class="fas fa-plus"></i> Add
+                </button>
+            </div>
+
+            <!-- Quick Add Buttons -->
+            <div class="quick-add">
+                <span class="quick-btn" onclick="addQuickIngredient('chicken')">🍗 Chicken</span>
+                <span class="quick-btn" onclick="addQuickIngredient('paneer')">🧀 Paneer</span>
+                <span class="quick-btn" onclick="addQuickIngredient('rice')">🍚 Rice</span>
+                <span class="quick-btn" onclick="addQuickIngredient('potato')">🥔 Potato</span>
+                <span class="quick-btn" onclick="addQuickIngredient('onion')">🧅 Onion</span>
+                <span class="quick-btn" onclick="addQuickIngredient('tomato')">🍅 Tomato</span>
+            </div>
+
+            <!-- Ingredients Tags -->
+            <div id="tagsContainer" class="tags-container"></div>
+
+            <!-- Find Recipes Button -->
+            <button onclick="findRecipes()" id="findBtn" class="find-btn">
+                <i class="fas fa-search"></i> Find Recipes
+            </button>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="spinner" class="spinner">
+            <div class="loader"></div>
+            <p>Searching for recipes...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div id="errorMsg" class="error-message"></div>
+
+        <!-- Results Container -->
+        <div id="resultsContainer" class="results-grid"></div>
+    </div>
+
+    <script>
+        // Check login
+        const token = localStorage.getItem("biteboxToken");
+        const user = JSON.parse(localStorage.getItem("biteboxUser"));
+
+        if (!token || !user) {
+            window.location.href = "login.html";
+        }
+
+        // Display welcome message
+        document.getElementById('welcomeMsg').innerHTML = 
+            `Hi ${user.name}! Tell me what ingredients you have, and I'll suggest Indian recipes!`;
+        document.getElementById('userWelcome').innerHTML = 
+            `<i class="fas fa-user-circle"></i> Welcome back, <strong>${user.name}</strong>!`;
+
+        // Store ingredients
+        let ingredients = [];
+
+        // Add ingredient
+        function addIngredient() {
+            const input = document.getElementById('ingredientInput');
+            const value = input.value.trim().toLowerCase();
+            
+            if (value && !ingredients.includes(value)) {
+                ingredients.push(value);
+                updateTags();
+                input.value = '';
+            }
+        }
+
+        // Add quick ingredient
+        function addQuickIngredient(ing) {
+            if (!ingredients.includes(ing)) {
+                ingredients.push(ing);
+                updateTags();
+            }
+        }
+
+        // Remove ingredient
+        function removeIngredient(ing) {
+            ingredients = ingredients.filter(i => i !== ing);
+            updateTags();
+        }
+
+        // Update tags display
+        function updateTags() {
+            const container = document.getElementById('tagsContainer');
+            container.innerHTML = '';
+            
+            ingredients.forEach(ing => {
+                const tag = document.createElement('span');
+                tag.className = 'tag';
+                tag.innerHTML = `
+                    ${ing}
+                    <button onclick="removeIngredient('${ing}')">×</button>
+                `;
+                container.appendChild(tag);
+            });
+        }
+
+        // Show error
+        function showError(msg) {
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.textContent = msg;
+            errorDiv.classList.add('show');
+            setTimeout(() => errorDiv.classList.remove('show'), 3000);
+        }
+
+        // Find recipes
+        async function findRecipes() {
+            if (ingredients.length === 0) {
+                showError('Please add some ingredients first!');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('spinner').classList.add('active');
+            document.getElementById('findBtn').disabled = true;
+            document.getElementById('resultsContainer').innerHTML = '';
+
+            try {
+                const recipes = await fetchRecipes();
+                displayRecipes(recipes);
+            } catch (error) {
+                showError('Something went wrong. Using sample recipes instead.');
+                displayRecipes(getSampleRecipes());
+            } finally {
+                document.getElementById('spinner').classList.remove('active');
+                document.getElementById('findBtn').disabled = false;
+            }
+        }
+
+        // Fetch recipes from free API
+        async function fetchRecipes() {
+            // Try TheMealDB API (free, no key needed)
+            const mainIngredient = ingredients[0];
+            const url = `https://www.themealdb.com/api/json/v1/1/filter.php?i=${mainIngredient}`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.meals) {
+                    // Get first 6 recipes
+                    const meals = data.meals.slice(0, 6);
+                    
+                    // Get details for each recipe
+                    const detailedRecipes = await Promise.all(
+                        meals.map(async (meal) => {
+                            const detailUrl = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${meal.idMeal}`;
+                            const detailRes = await fetch(detailUrl);
+                            const detailData = await detailRes.json();
+                            const details = detailData.meals[0];
+                            
+                            // Extract ingredients
+                            const ingList = [];
+                            for (let i = 1; i <= 20; i++) {
+                                if (details[`strIngredient${i}`] && details[`strIngredient${i}`].trim()) {
+                                    ingList.push(details[`strIngredient${i}`]);
+                                }
+                            }
+                            
+                            // Calculate estimated protein (simplified)
+                            let protein = 20; // default
+                            if (details.strCategory === 'Chicken') protein = 35;
+                            if (details.strCategory === 'Vegetarian') protein = 18;
+                            if (details.strCategory === 'Seafood') protein = 30;
+                            
+                            return {
+                                title: details.strMeal,
+                                image: details.strMealThumb,
+                                category: details.strCategory,
+                                area: details.strArea,
+                                protein: protein,
+                                ingredients: ingList.slice(0, 8),
+                                instructions: details.strInstructions,
+                                source: details.strSource || '#'
+                            };
+                        })
+                    );
+                    
+                    return detailedRecipes;
+                }
+            } catch (e) {
+                console.log('API error, using samples');
+            }
+            
+            return getSampleRecipes();
+        }
+
+        // Sample Indian recipes (fallback)
+        function getSampleRecipes() {
+            return [
+                {
+                    title: "Butter Chicken",
+                    image: "https://www.themealdb.com/images/media/meals/uttupv1511815050.jpg",
+                    category: "Chicken",
+                    area: "Indian",
+                    protein: 35,
+                    ingredients: ["Chicken", "Butter", "Cream", "Tomatoes", "Onions", "Garam Masala"],
+                    instructions: "Marinated chicken cooked in creamy tomato gravy.",
+                    source: "#"
+                },
+                {
+                    title: "Palak Paneer",
+                    image: "https://www.themealdb.com/images/media/meals/rwqtwp1511814486.jpg",
+                    category: "Vegetarian",
+                    area: "Indian",
+                    protein: 22,
+                    ingredients: ["Paneer", "Spinach", "Onions", "Tomatoes", "Cream", "Spices"],
+                    instructions: "Cottage cheese in spiced spinach gravy.",
+                    source: "#"
+                },
+                {
+                    title: "Chicken Biryani",
+                    image: "https://www.themealdb.com/images/media/meals/xvsurr1511719182.jpg",
+                    category: "Chicken",
+                    area: "Indian",
+                    protein: 40,
+                    ingredients: ["Chicken", "Rice", "Yogurt", "Onions", "Biryani Masala"],
+                    instructions: "Layered rice dish with spiced chicken.",
+                    source: "#"
+                },
+                {
+                    title: "Masala Dosa",
+                    image: "https://www.themealdb.com/images/media/meals/ryppyu1511812150.jpg",
+                    category: "Vegetarian",
+                    area: "Indian",
+                    protein: 15,
+                    ingredients: ["Rice", "Urad Dal", "Potatoes", "Onions", "Mustard Seeds"],
+                    instructions: "Crispy crepe filled with spiced potatoes.",
+                    source: "#"
+                },
+                {
+                    title: "Fish Curry",
+                    image: "https://www.themealdb.com/images/media/meals/uwxusv1487344500.jpg",
+                    category: "Seafood",
+                    area: "Indian",
+                    protein: 32,
+                    ingredients: ["Fish", "Coconut", "Onions", "Tomatoes", "Curry Leaves"],
+                    instructions: "Fish cooked in coconut-based curry.",
+                    source: "#"
+                },
+                {
+                    title: "Chana Masala",
+                    image: "https://www.themealdb.com/images/media/meals/tvvcnx1511765065.jpg",
+                    category: "Vegetarian",
+                    area: "Indian",
+                    protein: 20,
+                    ingredients: ["Chickpeas", "Onions", "Tomatoes", "Ginger", "Spices"],
+                    instructions: "Spiced chickpea curry.",
+                    source: "#"
+                }
+            ];
+        }
+
+        // Display recipes
+        function displayRecipes(recipes) {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = '';
+            
+            recipes.forEach(recipe => {
+                const card = document.createElement('div');
+                card.className = 'recipe-card';
+                
+                // Check if high protein
+                const isHighProtein = recipe.protein > 25;
+                
+                card.innerHTML = `
+                    <img src="${recipe.image}" alt="${recipe.title}" class="recipe-image"
+                         onerror="this.src='https://via.placeholder.com/300x200?text=Indian+Food'">
+                    <div class="recipe-content">
+                        <h3 class="recipe-title">${recipe.title}</h3>
+                        <div class="recipe-meta">
+                            <span><i class="fas fa-utensils"></i> ${recipe.category || 'Indian'}</span>
+                            <span><i class="fas fa-map-marker-alt"></i> ${recipe.area || 'Indian'}</span>
+                        </div>
+                        ${isHighProtein ? '<span class="protein-badge"><i class="fas fa-dumbbell"></i> High Protein</span>' : ''}
+                        <div class="ingredients-preview">
+                            <strong>Main ingredients:</strong> ${recipe.ingredients.slice(0, 4).join(', ')}...
+                        </div>
+                        <div class="card-buttons">
+                            <a href="${recipe.source}" target="_blank" class="view-btn">
+                                <i class="fas fa-book-open"></i> Recipe
+                            </a>
+                            <button onclick="orderMeal('${recipe.title}')" class="order-btn">
+                                <i class="fas fa-shopping-cart"></i> Order
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Order meal
+        function orderMeal(recipeName) {
+            localStorage.setItem('orderRecipe', recipeName);
+            window.location.href = 'tiffinservice.html?recipe=' + encodeURIComponent(recipeName);
+        }
+    </script>
+</body>
+</html>

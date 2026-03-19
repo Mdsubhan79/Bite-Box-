@@ -6,7 +6,7 @@
     <title>Brio Bite - Login</title>
      <link rel="icon" type="image/x-icon" href="briobite.png">
     <style>
-    
+        /* YOUR EXISTING STYLES - KEEP THEM ALL */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
         * {
@@ -17,7 +17,6 @@
         }
 
         body {
-           
             background-size: cover;
             min-height: 100vh;
             display: flex;
@@ -427,10 +426,10 @@ footer button:hover {
       <h1>Brio Bite</h1>
     </div>
 
-    <form class="login-form">
-      <input type="email" placeholder="Email Address" required>
+    <form class="login-form" id="loginForm">
+      <input type="email" id="email" placeholder="Email Address" required>
       <div class="password-field">
-        <input type="password" placeholder="Password" required>
+        <input type="password" id="password" placeholder="Password" required>
         <span class="toggle-password">👁</span>
       </div>
 
@@ -482,6 +481,7 @@ footer button:hover {
     </div>
   </footer>
   
+<script src="auth-check.js"></script>
 <script>
 /*  
    PASSWORD SHOW / HIDE
@@ -496,26 +496,28 @@ togglePassword.addEventListener('click', function () {
 <script>
 
 document.addEventListener("DOMContentLoaded", function () {
-
     const token = localStorage.getItem("biteboxToken");
 
-    // If token exists, go to index page
+    // If token exists, go to index page ONLY if no intended action
     if (token && token !== "null" && token !== "") {
-        window.location.href = "index.html";
+        const intendedAction = sessionStorage.getItem("intendedAction");
+        if (!intendedAction) {
+            window.location.href = "index.html";
+        }
+        // If there's an intended action, stay on login page
     }
-
 });
 </script>
 
 <script>
 /* 
-   LOGIN FUNCTION
+   LOGIN FUNCTION - UPDATED WITH INTENDED ACTION
 */
-document.querySelector('.login-form').addEventListener('submit', async function (e) {
+document.getElementById('loginForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const email = document.querySelector('input[type="email"]').value.trim();
-    const password = document.querySelector('input[type="password"]').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
     const errorMessage = document.getElementById('error-message');
 
     try {
@@ -527,22 +529,37 @@ document.querySelector('.login-form').addEventListener('submit', async function 
 
         const data = await response.json();
 
-        if (response.status === 200) {
-            // Save Token + User
-            localStorage.setItem("biteboxToken", data.token);
-            localStorage.setItem("biteboxUser", JSON.stringify(data.user));
+       if (response.status === 200) {
+    // Save Token + User
+    localStorage.setItem("biteboxToken", data.token);
+    localStorage.setItem("biteboxUser", JSON.stringify(data.user));
 
-            // Check Admin
-            if (email === "md.sammlk00@gmail.com") {
-                localStorage.setItem("biteboxAdmin", "true");
-                alert("Admin Login Successful!");
-                window.location.href = "admin-dashboard.html";
+    // Check Admin
+    if (email === "md.sammlk00@gmail.com") {
+        localStorage.setItem("biteboxAdmin", "true");
+        alert("Admin Login Successful!");
+        window.location.href = "admin-dashboard.html";
+    } else {
+        localStorage.setItem("biteboxAdmin", "false");
+        
+        // Check if there was an intended action
+        const intendedAction = sessionStorage.getItem("intendedAction");
+        if (intendedAction) {
+            sessionStorage.removeItem("intendedAction");
+            sessionStorage.removeItem("intendedUrl");
+            
+            // Redirect to intended page
+            if (intendedAction === "menu") {
+                window.location.href = "services.html";
             } else {
-                localStorage.setItem("biteboxAdmin", "false");
-                alert("Login Successful!");
                 window.location.href = "index.html";
             }
         } else {
+            // No intended action, go to home
+            window.location.href = "index.html";
+        }
+    }
+} else {
             errorMessage.style.display = "block";
             errorMessage.textContent = data.message || "Invalid Credentials";
         }
