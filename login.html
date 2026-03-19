@@ -6,7 +6,7 @@
     <title>Brio Bite - Login</title>
      <link rel="icon" type="image/x-icon" href="briobite.png">
     <style>
-        /* YOUR EXISTING STYLES - KEEP THEM ALL */
+      
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
         * {
@@ -331,7 +331,7 @@ footer button:hover {
     transform: translateX(-3px);
 }
 
-/* media*/
+
 
 @media (max-width: 400px) {
     .login-container {
@@ -435,12 +435,20 @@ footer button:hover {
 
       <div class="options">
         <div class="forgot-password">
-          <a href="#">Forgot Password?</a>
+        <a href="#" onclick="showForgotPassword()">Forgot Password?</a>
         </div>
       </div>
 
       <button type="submit" class="login-btn">Log In</button>
       <div class="error-message" id="error-message"></div>
+
+      <div id="g_id_onload"
+     data-client_id=791939557746-37h66ol588cmv8la377nrc10l5e61k1o.apps.googleusercontent.com
+     data-callback="handleGoogleLogin">
+</div>
+
+<div class="g_id_signin" data-type="standard"></div>
+
     </form>
 
     <div class="divider">or</div>
@@ -456,6 +464,17 @@ footer button:hover {
       New to Brio Bite? <a href="register.html">Sign Up</a>
     </div>
   </div>
+  
+<div id="forgotModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6);">
+  <div style="background:#fff; color:#000; padding:20px; width:300px; margin:100px auto; border-radius:10px;">
+    <h3>Reset Password</h3>
+    <input type="email" id="resetEmail" placeholder="Enter your email" style="width:100%; padding:10px; margin:10px 0;">
+    <button onclick="sendResetLink()" style="padding:10px; width:100%;">Send Link</button>
+    <button onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+
    <footer id="mainFooter">
     <div class="footer-container">
       <div class="footer-section">
@@ -483,9 +502,7 @@ footer button:hover {
   
 <script src="auth-check.js"></script>
 <script>
-/*  
-   PASSWORD SHOW / HIDE
-*/
+/*  PASSSHOW / HIDE*/
 const togglePassword = document.querySelector('.toggle-password');
 togglePassword.addEventListener('click', function () {
     const passwordField = document.querySelector('.password-field input');
@@ -498,21 +515,19 @@ togglePassword.addEventListener('click', function () {
 document.addEventListener("DOMContentLoaded", function () {
     const token = localStorage.getItem("biteboxToken");
 
-    // If token exists, go to index page ONLY if no intended action
+
     if (token && token !== "null" && token !== "") {
         const intendedAction = sessionStorage.getItem("intendedAction");
         if (!intendedAction) {
             window.location.href = "index.html";
         }
-        // If there's an intended action, stay on login page
+       
     }
 });
 </script>
 
 <script>
-/* 
-   LOGIN FUNCTION - UPDATED WITH INTENDED ACTION
-*/
+
 document.getElementById('loginForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
@@ -530,11 +545,11 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         const data = await response.json();
 
        if (response.status === 200) {
-    // Save Token + User
+   
     localStorage.setItem("biteboxToken", data.token);
     localStorage.setItem("biteboxUser", JSON.stringify(data.user));
 
-    // Check Admin
+   
     if (email === "md.sammlk00@gmail.com") {
         localStorage.setItem("biteboxAdmin", "true");
         alert("Admin Login Successful!");
@@ -542,20 +557,20 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     } else {
         localStorage.setItem("biteboxAdmin", "false");
         
-        // Check if there was an intended action
+        
         const intendedAction = sessionStorage.getItem("intendedAction");
         if (intendedAction) {
             sessionStorage.removeItem("intendedAction");
             sessionStorage.removeItem("intendedUrl");
             
-            // Redirect to intended page
+          
             if (intendedAction === "menu") {
                 window.location.href = "services.html";
             } else {
                 window.location.href = "index.html";
             }
         } else {
-            // No intended action, go to home
+           
             window.location.href = "index.html";
         }
     }
@@ -571,9 +586,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
 </script>
 
 <script>
-/* 
-   OPEN / CLOSED STATUS
-*/
+/* OPEN / CLOSED STATUS*/
 function updateOpenStatus() {
     const now = new Date();
     const hour = now.getHours();
@@ -585,6 +598,57 @@ function updateOpenStatus() {
 }
 updateOpenStatus();
 </script>
+
+<script>
+    function showForgotPassword() {
+  document.getElementById("forgotModal").style.display = "block";
+}
+
+function closeModal() {
+  document.getElementById("forgotModal").style.display = "none";
+}
+
+async function sendResetLink() {
+  const email = document.getElementById("resetEmail").value;
+
+  const res = await fetch("https://bbbackend-bng2.onrender.com/api/auth/forgot-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  });
+
+  const data = await res.json();
+  alert(data.resetLink); 
+}
+</script>
+
+<script>
+    async function handleGoogleLogin(response) {
+    const token = response.credential;
+
+    const res = await fetch("https://bbbackend-bng2.onrender.com/api/auth/google-login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ token })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+        localStorage.setItem("biteboxToken", data.token);
+        localStorage.setItem("biteboxUser", JSON.stringify(data.user));
+
+        window.location.href = "index.html";
+    } else {
+        alert("Google login failed");
+    }
+}
+</script>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
 
 </body>
 </html>

@@ -1,14 +1,11 @@
-/* ========= CONFIG ========= */
-const API_BASE = "https://bbbackend-bng2.onrender.com";
 
-/* ========= AUTH CHECK ========= */
+const API_BASE = "https://bbbackend-bng2.onrender.com";
 const token = localStorage.getItem("adminToken");
 
 if (!token || token === "undefined") {
   window.location.href = "login.html";
 }
 
-/* ========= PAGE NAVIGATION ========= */
 function loadPage(page) {
   const content = document.getElementById("content");
 
@@ -78,7 +75,7 @@ function makeTableMobileResponsive(tableId) {
     });
   });
 }
-/* ========= DASHBOARD OVERVIEW ========= */
+/* ========= DASHBOARD */
 
 function loadDashboard() {
   const content = document.getElementById("content");
@@ -238,7 +235,6 @@ function logoutAdmin() {
   window.location.href = "login.html";
 }
 
-/* ========= AUTO LOAD ========= */
 window.onload = () => {
   loadPage("dashboard");
 };

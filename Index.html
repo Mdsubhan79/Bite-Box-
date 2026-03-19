@@ -620,13 +620,13 @@ async function checkTiffinSubscription() {
 
 // ========== INITIALIZE PAGE ==========
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize auth UI
+   
     initAuthUI();
     
-    // Check for redirect after login
+  
     checkLoginRedirect();
     
-    // Load data if logged in
+   
     if (isLoggedIn()) {
         loadSubscriptions();
         checkTiffinSubscription();
@@ -647,6 +647,38 @@ function handleMenuClick() {
         window.location.href = "services.html";
     }
 }
+</script>
+
+<script>
+// =====REFRESH
+
+let refreshInterval = 30000;
+let refreshTimer;
+
+
+function startAutoRefresh() {
+    refreshTimer = setInterval(() => {
+        console.log("🔄 Auto refreshing page...");
+        window.location.reload();
+    }, refreshInterval);
+}
+
+
+function stopAutoRefresh() {
+    clearInterval(refreshTimer);
+}
+
+
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        stopAutoRefresh();
+    } else {
+        startAutoRefresh();
+    }
+});
+
+
+startAutoRefresh();
 </script>
 </body>
 </html>

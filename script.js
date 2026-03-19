@@ -234,13 +234,13 @@ function renderFood(containerId, items) {
 async function loadFood() {
   const all = await fetchAllFood();
 
-  // VEG PAGE
+ 
   renderFood(
     'vegFoodItems',
     all.filter(i => i.item_type === 'veg')
   );
 
-  // NON-VEG PAGE
+  
   renderFood(
     'nonVegFoodItems',
     all.filter(i => i.item_type === 'nonveg')
@@ -324,13 +324,13 @@ async function cancelOrder(orderId) {
     }
 }
 
-// ========== WEBSOCKET FOR REAL-TIME UPDATES ==========
+// ========== WEBSOCKET UPDATES
 
 let ws = null;
 let wsCallbacks = {};
 
 function initializeWebSocket(orderId) {
-    const wsUrl = 'wss://bbbackend-bng2.onrender.com'; // Your Render WebSocket URL
+    const wsUrl = 'wss://bbbackend-bng2.onrender.com';
     
     ws = new WebSocket(wsUrl);
     
