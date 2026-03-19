@@ -331,6 +331,102 @@ footer button:hover {
     transform: translateX(-3px);
 }
 
+/* ===== GOOGLE LOGIN ===== */
+.google-login-wrapper {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.google-title {
+    font-size: 14px;
+    color: #ccc;
+    margin-bottom: 10px;
+}
+
+.google-btn-box {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s;
+}
+
+.google-btn-box:hover {
+    transform: scale(1.03);
+}
+
+/* ===== FORGOT PASSWORD MODAL ===== */
+.forgot-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(5px);
+    z-index: 999;
+}
+
+.forgot-box {
+    background: #10332F;
+    color: white;
+    width: 320px;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    margin: 120px auto;
+    animation: fadeIn 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.forgot-box h3 {
+    margin-bottom: 10px;
+    color: #ffd87c;
+}
+
+.forgot-box p {
+    font-size: 13px;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+
+.forgot-box input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 15px;
+    outline: none;
+}
+
+.send-btn {
+    width: 100%;
+    padding: 12px;
+    background: #ffd87c;
+    color: #10332F;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.send-btn:hover {
+    background: #f4c542;
+    transform: scale(1.05);
+}
+
+.cancel-btn {
+    margin-top: 10px;
+    background: transparent;
+    color: #ccc;
+    border: none;
+    cursor: pointer;
+}
+
+.cancel-btn:hover {
+    color: #ff6b6b;
+}
 
 
 @media (max-width: 400px) {
@@ -447,7 +543,12 @@ footer button:hover {
      data-callback="handleGoogleLogin">
 </div>
 
-<div class="g_id_signin" data-type="standard"></div>
+<div class="google-login-wrapper">
+  <div class="google-title">Or continue with</div>
+  <div class="google-btn-box">
+    <div class="g_id_signin" data-type="standard"></div>
+  </div>
+</div>
 
     </form>
 
@@ -465,12 +566,15 @@ footer button:hover {
     </div>
   </div>
   
-<div id="forgotModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6);">
-  <div style="background:#fff; color:#000; padding:20px; width:300px; margin:100px auto; border-radius:10px;">
-    <h3>Reset Password</h3>
-    <input type="email" id="resetEmail" placeholder="Enter your email" style="width:100%; padding:10px; margin:10px 0;">
-    <button onclick="sendResetLink()" style="padding:10px; width:100%;">Send Link</button>
-    <button onclick="closeModal()">Cancel</button>
+<div id="forgotModal" class="forgot-overlay">
+  <div class="forgot-box">
+    <h3>🔐 Reset Password</h3>
+    <p>Enter your email to receive reset link</p>
+
+    <input type="email" id="resetEmail" placeholder="Enter your email">
+
+    <button class="send-btn" onclick="sendResetLink()">Send Link</button>
+    <button class="cancel-btn" onclick="closeModal()">Cancel</button>
   </div>
 </div>
 
@@ -601,7 +705,7 @@ updateOpenStatus();
 
 <script>
     function showForgotPassword() {
-  document.getElementById("forgotModal").style.display = "block";
+  document.getElementById("forgotModal").style.display = "flex";
 }
 
 function closeModal() {
