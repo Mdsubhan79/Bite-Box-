@@ -39,14 +39,26 @@ async function init() {
 
 /* ================== GENERATE DAYS ================== */
 
+function formatDate(date) {
+  const d = String(date.getDate()).padStart(2, '0');
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const y = date.getFullYear();
+  return `${d}/${m}/${y}`;
+}
+
 function generateDays() {
 
+  const today = new Date();
+
   for (let day = 1; day <= 7; day++) {
+
+    const currentDate = new Date();
+    currentDate.setDate(today.getDate() + (day - 1));
 
     container.innerHTML += `
       <div class="day-card">
         <div class="day-header" onclick="toggleDay(${day})">
-          Day ${day}
+          ${formatDate(currentDate)} - Day ${day}
         </div>
 
         <div class="day-content" id="dayContent${day}">
@@ -58,7 +70,6 @@ function generateDays() {
     `;
   }
 }
-
 /* ================== TOGGLE ACCORDION ================== */
 
 function toggleDay(day) {
@@ -81,16 +92,19 @@ function createMealSection(meal, day) {
     <div class="meal-section">
       <h4>${meal.toUpperCase()}</h4>
 
-      <select multiple id="${meal}Items${day}">
+      <label>Select your meal</label>
+      <select id="${meal}Items${day}">
+        <option value="">Select your meal</option>
       </select>
 
+      <label>Select time</label>
       <select id="${meal}Time${day}">
       </select>
 
       <input type="text"
-             id="custom${meal}${day}"
-             placeholder="Enter custom time"
-             style="display:none;" />
+        id="custom${meal}${day}"
+        placeholder="Enter custom time"
+        style="display:none;" />
     </div>
   `;
 }
@@ -162,8 +176,10 @@ saveBtn.addEventListener("click", async () => {
 
 function getMealData(meal, day) {
 
-  const items = [...document.getElementById(`${meal}Items${day}`).selectedOptions]
-    .map(o => o.value);
+  const select = document.getElementById(`${meal}Items${day}`);
+
+ 
+  const items = select.value ? [select.value] : [];
 
   const timeSelect = document.getElementById(`${meal}Time${day}`).value;
 
@@ -173,7 +189,6 @@ function getMealData(meal, day) {
 
   return { items, time };
 }
-
 /* ================== LOCK PAST DAYS ================== */
 
 async function lockPastDays() {
@@ -239,6 +254,7 @@ async function loadAdminDefaultMenu() {
     console.error("Menu load error:", err);
   }
 }
+
 function setMealData(meal, day, mealData) {
   if (!mealData) {
     console.log(`No ${meal} data for day ${day}`);
@@ -264,7 +280,7 @@ function setMealData(meal, day, mealData) {
   console.log(`✅ Found elements for ${meal} day ${day}`);
 
  
-  select.innerHTML = "";
+select.innerHTML = `<option value="">Select your meal</option>`;
   timeSelect.innerHTML = "";
 
 
