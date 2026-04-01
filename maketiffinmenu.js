@@ -1,6 +1,7 @@
 const API_BASE = "https://bbbackend-bng2.onrender.com";
 const params = new URLSearchParams(window.location.search);
 const bookingId = params.get("bookingId");
+let bookingStartDate = null;
 if (!bookingId || bookingId === "null") {
   console.log("No bookingId found");
   document.getElementById("menuContainer").style.display = "block";
@@ -19,9 +20,13 @@ init();
 async function init() {
   console.log("🚀 Initializing page...");
   
-  menuSection.style.display = "block";
-  generateDays();
-  
+ menuSection.style.display = "block";
+
+// start date first
+await loadBookingStartDate();
+
+//generate days
+generateDays();
 
   await new Promise(resolve => setTimeout(resolve, 100));
   
@@ -48,12 +53,12 @@ function formatDate(date) {
 
 function generateDays() {
 
-  const today = new Date();
+  const baseDate = bookingStartDate || new Date(); 
 
   for (let day = 1; day <= 7; day++) {
 
-    const currentDate = new Date();
-    currentDate.setDate(today.getDate() + (day - 1));
+    const currentDate = new Date(baseDate);
+    currentDate.setDate(baseDate.getDate() + (day - 1));
 
     container.innerHTML += `
       <div class="day-card">
@@ -334,7 +339,20 @@ select.innerHTML = `<option value="">Select your meal</option>`;
   }
 }
 
+async function loadBookingStartDate() {
+  try {
+    const res = await fetch(`${API_BASE}/api/tiffin-bookings/${bookingId}`);
+    if (!res.ok) return;
 
+    const booking = await res.json();
+
+    if (booking && booking.startDate) {
+      bookingStartDate = new Date(booking.startDate);
+    }
+  } catch (err) {
+    console.error("Error fetching start date:", err);
+  }
+}
 
 
 
@@ -362,16 +380,29 @@ async function loadSummary() {
     const box = document.getElementById("summaryBox");
     box.innerHTML = "<h2>Your Weekly Menu</h2>";
 
-    data.days.forEach(d => {
-      box.innerHTML += `
-        <div style="background:#fff;padding:10px;margin-bottom:10px;border-radius:8px;">
-          <b>Day ${d.dayNumber}</b><br>
-          Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
-          Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
-          Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
-        </div>
-      `;
-    });
+data.days.forEach(d => {
+
+  const baseDate = bookingStartDate || new Date();
+  const currentDate = new Date(baseDate);
+  currentDate.setDate(baseDate.getDate() + (d.dayNumber - 1));
+
+  const today = new Date();
+  const isToday = currentDate.toDateString() === today.toDateString();
+
+  box.innerHTML += `
+    <div style="background:#fff;padding:10px;margin-bottom:10px;border-radius:8px;">
+      
+      <b>
+        ${isToday ? "🟢 Today - " : ""}
+        ${formatDate(currentDate)} - Day ${d.dayNumber}
+      </b><br>
+
+      Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
+      Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
+      Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
+    </div>
+  `;
+});
 
     summarySection.style.display = "block";
     menuSection.style.display = "none";
