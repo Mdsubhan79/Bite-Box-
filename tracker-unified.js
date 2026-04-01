@@ -444,26 +444,35 @@ if (saved && tracker) {
 function makeDraggable(element) {
     if (!element) return;
 
+    
     element.addEventListener('mousedown', dragStart);
     document.addEventListener('mousemove', drag);
     document.addEventListener('mouseup', dragEnd);
+
+
+    element.addEventListener('touchstart', dragStart, { passive: false });
+    document.addEventListener('touchmove', drag, { passive: false });
+    document.addEventListener('touchend', dragEnd);
 }
 
 function dragStart(e) {
-    e.stopPropagation(); 
+    e.stopPropagation();
 
     const element = document.getElementById('floatingTracker');
     if (!element) return;
 
     isDragging = true;
 
-    initialX = e.clientX - xOffset;
-    initialY = e.clientY - yOffset;
+    
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    initialX = clientX - xOffset;
+    initialY = clientY - yOffset;
 
     element.style.cursor = "grabbing";
     element.style.transition = "none";
 }
-
 let animationFrameId = null;
 
 function drag(e) {
@@ -472,20 +481,19 @@ function drag(e) {
     const element = document.getElementById('floatingTracker');
     if (!element) return;
 
-    e.preventDefault();
+    e.preventDefault(); 
 
-    currentX = e.clientX - initialX;
-    currentY = e.clientY - initialY;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    currentX = clientX - initialX;
+    currentY = clientY - initialY;
 
     xOffset = currentX;
     yOffset = currentY;
 
-   
-    if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-    }
+    if (animationFrameId) cancelAnimationFrame(animationFrameId);
 
- 
     animationFrameId = requestAnimationFrame(() => {
         element.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
     });
@@ -497,12 +505,13 @@ function dragEnd() {
 
     isDragging = false;
     element.style.cursor = "grab";
+    element.style.transition = "transform 0.2s ease";
+
     localStorage.setItem('trackerPosition', JSON.stringify({
-    x: xOffset,
-    y: yOffset
-}));
-element.style.transition = "transform 0.2s ease";
-}   
+        x: xOffset,
+        y: yOffset
+    }));
+}
 
     
     
