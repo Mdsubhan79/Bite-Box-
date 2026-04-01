@@ -876,7 +876,7 @@ function initializeAdminWebSocket() {
     };
 }
 
-// Call this when admin dashboard loads
+
 initializeAdminWebSocket();
 
 function broadcastOrderDeletion(orderId, reason) {
