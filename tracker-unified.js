@@ -268,7 +268,7 @@
         trackerInterval = setInterval(updateTimer, 1000);
     }
     
-    // SINGLE WebSocket initialization (remove the duplicate at the bottom)
+    // SINGLE WebSocket initialization
     function initializeWebSocket(orderId) {
         const wsUrl = 'wss://bbbackend-bng2.onrender.com';
         trackerWS = new WebSocket(wsUrl);
@@ -423,7 +423,7 @@
             localStorage.setItem('cart', JSON.stringify(activeOrder.items));
             window.location.href = 'orderdetail.html';
         } else {
-            // Try to get from lastOrderItems
+           
             const lastOrder = localStorage.getItem('lastOrderItems');
             if (lastOrder) {
                 localStorage.setItem('cart', lastOrder);
@@ -440,16 +440,18 @@
         document.addEventListener('mouseup', dragEnd);
     }
     
-    function dragStart(e) {
-        const element = document.getElementById('floatingTracker');
-        if (!element) return;
-        
-        initialX = e.clientX - xOffset;
-        initialY = e.clientY - yOffset;
-        isDragging = true;
-        element.style.cursor = 'grabbing';
-        e.preventDefault();
-    }
+     function drag(e) {
+    const element = document.getElementById('floatingTracker');
+    if (!element || !isDragging) return;
+
+    e.preventDefault();
+
+    currentX = e.clientX;
+    currentY = e.clientY;
+
+    element.style.left = (currentX - element.offsetWidth / 2) + "px";
+    element.style.top = (currentY - element.offsetHeight / 2) + "px";
+}
     
     function dragEnd() {
         const element = document.getElementById('floatingTracker');
