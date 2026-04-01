@@ -28,6 +28,15 @@
         }
         
         initializeTracker(orderId);
+const tracker = document.getElementById('floatingTracker');
+
+const saved = localStorage.getItem('trackerPosition');
+if (saved && tracker) {
+    const pos = JSON.parse(saved);
+    xOffset = pos.x;
+    yOffset = pos.y;
+    tracker.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+}
     }
     
     function removeTracker() {
@@ -268,7 +277,7 @@
         trackerInterval = setInterval(updateTimer, 1000);
     }
     
-    // SINGLE WebSocket initialization
+    // SINGLE WebSocket
     function initializeWebSocket(orderId) {
         const wsUrl = 'wss://bbbackend-bng2.onrender.com';
         trackerWS = new WebSocket(wsUrl);
@@ -282,7 +291,7 @@
                     updatePopup(data.order);
                     
                     if (data.order.orderStatus === 'delivered') {
-                        // Remove tracker and show delivery popup
+                       
                         removeTracker();
                         showDeliveryFeedback(data.order);
                     }
@@ -292,7 +301,7 @@
                     showDeliveryFeedback({ _id: orderId });
                     
                 } else if (data.type === 'ORDER_CANCELLED' && data.order._id === orderId) {
-                    // Remove tracker and show cancellation popup
+                   
                     removeTracker();
                     showCancellationPopup(data.order);
                     
@@ -432,47 +441,56 @@
         }
     }
     
-    function makeDraggable(element) {
-        if (!element) return;
-        
-        element.addEventListener('mousedown', dragStart);
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('mouseup', dragEnd);
-    }
-    
-     function drag(e) {
+function makeDraggable(element) {
+    if (!element) return;
+
+    element.addEventListener('mousedown', dragStart);
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', dragEnd);
+}
+
+function dragStart(e) {
+    e.stopPropagation(); 
+
+    const element = document.getElementById('floatingTracker');
+    if (!element) return;
+
+    isDragging = true;
+
+    initialX = e.clientX - xOffset;
+    initialY = e.clientY - yOffset;
+
+    element.style.cursor = "grabbing";
+}
+
+function drag(e) {
     const element = document.getElementById('floatingTracker');
     if (!element || !isDragging) return;
 
     e.preventDefault();
 
-    currentX = e.clientX;
-    currentY = e.clientY;
+    currentX = e.clientX - initialX;
+    currentY = e.clientY - initialY;
 
-    element.style.left = (currentX - element.offsetWidth / 2) + "px";
-    element.style.top = (currentY - element.offsetHeight / 2) + "px";
+    xOffset = currentX;
+    yOffset = currentY;
+
+    element.style.transform = `translate(${currentX}px, ${currentY}px)`;
 }
+
+function dragEnd() {
+    const element = document.getElementById('floatingTracker');
+    if (!element) return;
+
+    isDragging = false;
+    element.style.cursor = "grab";
+    localStorage.setItem('trackerPosition', JSON.stringify({
+    x: xOffset,
+    y: yOffset
+}));
+}   
+
     
-    function dragEnd() {
-        const element = document.getElementById('floatingTracker');
-        if (!element) return;
-        
-        isDragging = false;
-        element.style.cursor = 'grab';
-    }
-    
-    function drag(e) {
-        const element = document.getElementById('floatingTracker');
-        if (!element || !isDragging) return;
-        
-        e.preventDefault();
-        currentX = e.clientX - initialX;
-        currentY = e.clientY - initialY;
-        xOffset = currentX;
-        yOffset = currentY;
-        
-        element.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
-    }
     
     function cleanupTracker() {
         if (trackerInterval) {
@@ -589,14 +607,14 @@ function showCancellationPopup(order) {
 }
 
 function reorderCancelledItems() {
-    // Try to get from activeOrder first
+    
     if (window.activeOrder && window.activeOrder.items) {
         localStorage.setItem('cart', JSON.stringify(window.activeOrder.items));
         window.location.href = 'orderdetail.html';
         return;
     }
     
-    // Fallback to lastOrderItems in localStorage
+ 
     const lastOrder = localStorage.getItem('lastOrderItems');
     if (lastOrder) {
         localStorage.setItem('cart', lastOrder);
