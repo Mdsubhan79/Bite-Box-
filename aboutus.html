@@ -851,6 +851,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+  document.addEventListener('click', function(e) {
+    if (!dropdownMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+      dropdownMenu.classList.remove('show');
+    }
+  });
+  
 </script>
 <!-- Floating Order Tracker -->
 <div class="floating-tracker" id="floatingTracker">
