@@ -162,7 +162,7 @@ body {
     box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
 }
 
-#orderDetails {
+
 #orderDetails {
     background: #f1f3f6;
     padding: 12px;
@@ -171,7 +171,7 @@ body {
 
     color: #222; 
 }
-}
+
 
 #orderDetails p {
     font-size: 13px;
@@ -188,7 +188,7 @@ body {
 .admin-message {
     margin: 15px 0;
     padding: 12px;
-    background: #ffffff;
+    background: #000000;
     border-left: 4px solid #a00b00;
     border-radius: 5px;
     display: none;
