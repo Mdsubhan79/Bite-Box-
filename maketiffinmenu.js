@@ -125,58 +125,95 @@ document.addEventListener("change", function(e){
 });
 
 /* ================== SAVE MENU ================== */
-
 document.addEventListener("DOMContentLoaded", () => {
 
-const saveBtn = document.getElementById("saveMenuBtn");
+  const saveBtn = document.getElementById("saveMenuBtn");
+  if (!saveBtn) return;
 
-if (!saveBtn) return;
+  saveBtn.addEventListener("click", async () => {
 
-saveBtn.addEventListener("click", async () => {
+    const days = [];
+    let hasError = false;
 
-  const days = [];
+    
+    for (let day = 1; day <= 7; day++) {
 
-  for (let day = 1; day <= 7; day++) {
+      const breakfast = getMealData("breakfast", day);
+      const lunch = getMealData("lunch", day);
+      const dinner = getMealData("dinner", day);
 
-    days.push({
-      dayNumber: day,
-      breakfast: getMealData("breakfast", day),
-      lunch: getMealData("lunch", day),
-      dinner: getMealData("dinner", day)
-    });
+      
+      const breakfastEl = document.getElementById(`breakfastItems${day}`);
+      const lunchEl = document.getElementById(`lunchItems${day}`);
+      const dinnerEl = document.getElementById(`dinnerItems${day}`);
 
-  }
+     
+      [breakfastEl, lunchEl, dinnerEl].forEach(el => {
+        if (el) el.classList.remove("error-field");
+      });
 
-  try {
+     
+      if (
+        breakfast.items.length === 0 ||
+        lunch.items.length === 0 ||
+        dinner.items.length === 0
+      ) {
+        hasError = true;
 
-    const res = await fetch(`${API_BASE}/api/tiffin-menus`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        bookingId: bookingId,
-        days: days
-      })
-    });
+        if (breakfast.items.length === 0 && breakfastEl) {
+          breakfastEl.classList.add("error-field");
+        }
+        if (lunch.items.length === 0 && lunchEl) {
+          lunchEl.classList.add("error-field");
+        }
+        if (dinner.items.length === 0 && dinnerEl) {
+          dinnerEl.classList.add("error-field");
+        }
+      }
 
-    const data = await res.json();
-    console.log("Menu saved:", data);
+    
+      days.push({
+        dayNumber: day,
+        breakfast,
+        lunch,
+        dinner
+      });
+    }
 
-    alert("Menu Saved Successfully!");
-    window.location.href = "index.html";
+   
+    if (hasError) {
+      alert("⚠️ Please select all meals for all days");
+      return;
+    }
 
-  } catch (err) {
 
-    console.error("Save menu error:", err);
-    alert("Menu save failed");
+    try {
 
-  }
+      const res = await fetch(`${API_BASE}/api/tiffin-menus`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          bookingId: bookingId,
+          days: days
+        })
+      });
+
+      const data = await res.json();
+      console.log("Menu saved:", data);
+
+      alert("✅ Menu Saved Successfully!");
+      window.location.href = "index.html";
+
+    } catch (err) {
+      console.error("Save menu error:", err);
+      alert("❌ Menu save failed");
+    }
+
+  });
 
 });
-
-});
-
 /* ================== GET MEAL DATA ================== */
 
 function getMealData(meal, day) {
@@ -210,24 +247,29 @@ const booking = await res.json();
   if (!booking || !booking.startDate) return;
 
   const startDate = new Date(booking.startDate);
-  const today = new Date();
+const today = new Date();
+today.setHours(0,0,0,0); 
 
-  const diff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+const startDateOnly = new Date(startDate);
+startDateOnly.setHours(0,0,0,0); 
 
-  const lockUntil = diff + 2; 
+const diff = Math.floor((today - startDateOnly) / (1000 * 60 * 60 * 24));
 
-  for (let i = 1; i <= lockUntil; i++) {
+const lockUntil = diff + 2;
 
-    const block = document.getElementById(`dayContent${i}`);
-    if (!block) continue;
+ for (let i = 1; i <= 7; i++) {
 
+  const block = document.getElementById(`dayContent${i}`);
+  if (!block) continue;
+
+  if (i <= lockUntil) {
     block.querySelectorAll("select, input").forEach(el => {
       el.disabled = true;
     });
 
-  
     block.style.opacity = "0.5";
   }
+}
 }
 
 /* ==================LOAD ADMIN DEFAULT MENU================== */
