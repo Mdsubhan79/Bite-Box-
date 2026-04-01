@@ -18,11 +18,13 @@
     touch-action: none;
     box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     cursor: grab;
-    z-index: 9999;
+    z-index: 9998;
     will-change: transform;
     transition: all 0.25s ease;
 }
-
+body {
+    overflow-x: hidden;
+}
 .floating-tracker:hover {
     transform: scale(1.08);
     box-shadow: 0 15px 35px rgba(0,0,0,0.3);
@@ -35,17 +37,20 @@
 
 .tracker-popup {
     position: fixed;
-    bottom: 110px;
-    right: 30px;
 
-    width: 340px;
-    background: #ffffff;
+    bottom: 110px;   
+    right: 20px;
 
-    border-radius: 18px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    width: 320px;
+    max-width: 90%;
 
+    background: #fff;
+    border-radius: 16px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+
+    z-index: 10001;
     display: none;
-    overflow: hidden;
 
     animation: slideUp 0.3s ease;
 }
@@ -276,8 +281,8 @@
 
 @media (max-width: 480px) {
     .tracker-popup {
-        width: 280px;
-        right: 5px;
+        width: 90%;
+        left: 10px;
         bottom: 90px;
     }
     
@@ -339,7 +344,7 @@
 
 
 
-/* ========== Status pop ========== */
+
 .status-popup {
     position: fixed;
     top: 50%;
