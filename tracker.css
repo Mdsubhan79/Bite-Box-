@@ -163,10 +163,14 @@ body {
 }
 
 #orderDetails {
-    background: #f7f9fc;
+#orderDetails {
+    background: #f1f3f6;
     padding: 12px;
     border-radius: 10px;
     margin: 15px 0;
+
+    color: #222; 
+}
 }
 
 #orderDetails p {
@@ -174,6 +178,7 @@ body {
     margin: 6px 0;
     display: flex;
     justify-content: space-between;
+    color: #222;
 }
 #orderDetails p strong {
     color: #000000;
@@ -282,7 +287,7 @@ body {
 @media (max-width: 480px) {
     .tracker-popup {
         width: 90%;
-        left: 10px;
+        right: 10px;
         bottom: 90px;
     }
     
