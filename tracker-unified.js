@@ -461,11 +461,16 @@ function dragStart(e) {
     initialY = e.clientY - yOffset;
 
     element.style.cursor = "grabbing";
+    element.style.transition = "none";
 }
 
+let animationFrameId = null;
+
 function drag(e) {
+    if (!isDragging) return;
+
     const element = document.getElementById('floatingTracker');
-    if (!element || !isDragging) return;
+    if (!element) return;
 
     e.preventDefault();
 
@@ -475,7 +480,15 @@ function drag(e) {
     xOffset = currentX;
     yOffset = currentY;
 
-    element.style.transform = `translate(${currentX}px, ${currentY}px)`;
+   
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+    }
+
+ 
+    animationFrameId = requestAnimationFrame(() => {
+        element.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+    });
 }
 
 function dragEnd() {
@@ -488,6 +501,7 @@ function dragEnd() {
     x: xOffset,
     y: yOffset
 }));
+element.style.transition = "transform 0.2s ease";
 }   
 
     
