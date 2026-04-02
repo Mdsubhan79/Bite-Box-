@@ -1,5 +1,11 @@
 
 const API_BASE = "https://bbbackend-bng2.onrender.com";
+function formatDate(date) {
+  const d = String(date.getDate()).padStart(2, '0');
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const y = date.getFullYear();
+  return `${d}/${m}/${y}`;
+}
 const token = localStorage.getItem("adminToken");
 
 if (!token || token === "undefined") {
@@ -449,18 +455,32 @@ try {
 
     if (menu && menu.days) {
 
-      menu.days.forEach(d => {
-        html += `
-        <tr class="menuRow-${b._id}" style="display:none;">
-          <td colspan="13">
-            <b>Day ${d.dayNumber}</b><br>
-            Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
-            Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
-            Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
-          </td>
-        </tr>
-        `;
-      });
+menu.days.forEach(d => {
+
+  const baseDate = new Date(b.startDate);
+  const currentDate = new Date(baseDate);
+  currentDate.setDate(baseDate.getDate() + (d.dayNumber - 1));
+
+  const today = new Date();
+  const isToday = currentDate.toDateString() === today.toDateString();
+
+  html += `
+    <tr class="menuRow-${b._id}" style="display:none;">
+      <td colspan="13">
+
+        <b>
+          ${isToday ? "🟢 Today - " : ""}
+          ${formatDate(currentDate)} - Day ${d.dayNumber}
+        </b><br>
+
+        Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
+        Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
+        Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
+
+      </td>
+    </tr>
+  `;
+});
 
     }
 
@@ -951,80 +971,119 @@ function loadOrders() {
         `;
     });
 }
-
-
 function displayOrders(orders, stats) {
     const content = document.getElementById("content");
     
     if (!orders || orders.length === 0) {
         content.innerHTML = `
-            <h2>Orders Management</h2>
-            
-            <!-- Stats Cards -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0;">
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+            <div class="orders-stats">
+                <div class="orders-card">
                     <h4>Total Orders</h4>
-                    <p style="font-size: 32px; font-weight: bold;">${stats.totalOrders || 0}</p>
+                    <p>${stats.totalOrders || 0}</p>
                 </div>
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
-                    <h4>Today's Orders</h4>
-                    <p style="font-size: 32px; font-weight: bold;">${stats.todayOrders || 0}</p>
+                <div class="orders-card">
+                    <h4>Pending</h4>
+                    <p>0</p>
                 </div>
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
-                    <h4>Delivered (10 days)</h4>
-                    <p style="font-size: 32px; font-weight: bold;">${stats.deliveredLast10Days || 0}</p>
+                <div class="orders-card">
+                    <h4>Preparing</h4>
+                    <p>0</p>
+                </div>
+                <div class="orders-card">
+                    <h4>Out for Delivery</h4>
+                    <p>0</p>
+                </div>
+                <div class="orders-card">
+                    <h4>Delivered</h4>
+                    <p>0</p>
+                </div>
+                <div class="orders-card">
+                    <h4>Cancelled</h4>
+                    <p>0</p>
                 </div>
             </div>
-            
-            <p style="text-align: center; padding: 50px; color: #666;">No orders found</p>
-            <button onclick="loadOrders()" style="display: block; margin: 0 auto; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                Refresh
-            </button>
+            <div class="empty-orders-state">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>No Orders Found</h3>
+                <p>Orders will appear here when customers place them.</p>
+                <button class="refresh-orders-btn" onclick="loadOrders()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
         `;
         return;
     }
     
- 
+    // Calculate stats for all statuses
+    const pendingCount = orders.filter(o => o.orderStatus === 'pending').length;
+    const confirmedCount = orders.filter(o => o.orderStatus === 'confirmed').length;
+    const preparingCount = orders.filter(o => o.orderStatus === 'preparing').length;
+    const outForDeliveryCount = orders.filter(o => o.orderStatus === 'out-for-delivery').length;
+    const deliveredCount = orders.filter(o => o.orderStatus === 'delivered').length;
+    const cancelledCount = orders.filter(o => o.orderStatus === 'cancelled').length;
+    
     let html = `
-        <h2>Orders Management</h2>
-        
-        <!-- Stats Cards -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0;">
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+        <div class="orders-stats">
+            <div class="orders-card">
                 <h4>Total Orders</h4>
-                <p style="font-size: 32px; font-weight: bold;">${stats.totalOrders || orders.length}</p>
+                <p>${stats.totalOrders || orders.length}</p>
             </div>
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
-                <h4>Today's Orders</h4>
-                <p style="font-size: 32px; font-weight: bold;">${stats.todayOrders || orders.filter(o => new Date(o.orderTime).toDateString() === new Date().toDateString()).length}</p>
-            </div>
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+            <div class="orders-card">
                 <h4>Pending</h4>
-                <p style="font-size: 32px; font-weight: bold; color: #ffc107;">${orders.filter(o => o.orderStatus === 'pending').length}</p>
+                <p style="color: #ffc107;">${pendingCount}</p>
+            </div>
+            <div class="orders-card">
+                <h4>Confirmed</h4>
+                <p style="color: #17a2b8;">${confirmedCount}</p>
+            </div>
+            <div class="orders-card">
+                <h4>Preparing</h4>
+                <p style="color: #fd7e14;">${preparingCount}</p>
+            </div>
+            <div class="orders-card">
+                <h4>Out for Delivery</h4>
+                <p style="color: #007bff;">${outForDeliveryCount}</p>
+            </div>
+            <div class="orders-card">
+                <h4>Delivered</h4>
+                <p style="color: #28a745;">${deliveredCount}</p>
+            </div>
+            <div class="orders-card">
+                <h4>Cancelled</h4>
+                <p style="color: #dc3545;">${cancelledCount}</p>
             </div>
         </div>
         
-        <!-- Refresh Button -->
+        <!-- Status Filter Buttons -->
+        <div class="status-filters">
+            <button class="status-filter-btn active" onclick="filterOrders('all')">All Orders</button>
+            <button class="status-filter-btn pending" onclick="filterOrders('pending')">⏳ Pending</button>
+            <button class="status-filter-btn confirmed" onclick="filterOrders('confirmed')">✓ Confirmed</button>
+            <button class="status-filter-btn preparing" onclick="filterOrders('preparing')">🔪 Preparing</button>
+            <button class="status-filter-btn out-for-delivery" onclick="filterOrders('out-for-delivery')">🚚 Out for Delivery</button>
+            <button class="status-filter-btn delivered" onclick="filterOrders('delivered')">✅ Delivered</button>
+            <button class="status-filter-btn cancelled" onclick="filterOrders('cancelled')">❌ Cancelled</button>
+        </div>
+        
         <div style="margin-bottom: 20px;">
-            <button onclick="loadOrders()" style="padding: 8px 15px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            <button class="refresh-orders-btn" onclick="loadOrders()">
                 <i class="fas fa-sync-alt"></i> Refresh Orders
             </button>
         </div>
         
-        <!-- Orders Table -->
-        <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div class="orders-table-container">
+        <table class="orders-table">
             <thead>
-                <tr style="background: #343a40; color: white;">
-                    <th style="padding: 12px;">Order ID</th>
-                    <th style="padding: 12px;">Customer</th>
-                    <th style="padding: 12px;">Phone</th>
-                    <th style="padding: 12px;">Items</th>
-                    <th style="padding: 12px;">Total</th>
-                    <th style="padding: 12px;">Status</th>
-                    <th style="padding: 12px;">Payment</th>
-                    <th style="padding: 12px;">Order Time</th>
-                    <th style="padding: 12px;">Actions</th>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Order Time</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -1032,39 +1091,74 @@ function displayOrders(orders, stats) {
     
     orders.forEach(order => {
         const itemsCount = order.items?.reduce((sum, item) => sum + (item.quantity || 1), 0) || 0;
-        const statusColor = getStatusColor(order.orderStatus);
+        
+        // Get status display text and class
+        let statusDisplay = '';
+        let statusClass = '';
+        
+        switch(order.orderStatus) {
+            case 'pending':
+                statusDisplay = '⏳ PENDING';
+                statusClass = 'pending';
+                break;
+            case 'confirmed':
+                statusDisplay = '✓ CONFIRMED';
+                statusClass = 'confirmed';
+                break;
+            case 'preparing':
+                statusDisplay = '🔪 PREPARING';
+                statusClass = 'preparing';
+                break;
+            case 'out-for-delivery':
+                statusDisplay = '🚚 OUT FOR DELIVERY';
+                statusClass = 'out-for-delivery';
+                break;
+            case 'delivered':
+                statusDisplay = '✅ DELIVERED';
+                statusClass = 'delivered';
+                break;
+            case 'cancelled':
+                statusDisplay = '❌ CANCELLED';
+                statusClass = 'cancelled';
+                break;
+            default:
+                statusDisplay = '⏳ PENDING';
+                statusClass = 'pending';
+        }
         
         html += `
-            <tr style="border-bottom: 1px solid #dee2e6;">
-                <td style="padding: 12px;">#${order._id.slice(-6)}</td>
-                <td style="padding: 12px;">${order.customerDetails?.name || 'N/A'}</td>
-                <td style="padding: 12px;">${order.customerDetails?.phone || 'N/A'}</td>
-                <td style="padding: 12px;">${itemsCount} items</td>
-                <td style="padding: 12px;">₹${order.totalAmount || 0}</td>
-                <td style="padding: 12px;">
-                    <select onchange="updateOrderStatus('${order._id}', this.value)" 
-                            style="padding: 5px; border-radius: 3px; border: 1px solid #ddd;">
-                        <option value="pending" ${order.orderStatus === 'pending' ? 'selected' : ''}>Pending</option>
-                        <option value="confirmed" ${order.orderStatus === 'confirmed' ? 'selected' : ''}>Confirmed</option>
-                        <option value="preparing" ${order.orderStatus === 'preparing' ? 'selected' : ''}>Preparing</option>
-                        <option value="out-for-delivery" ${order.orderStatus === 'out-for-delivery' ? 'selected' : ''}>Out for Delivery</option>
-                        <option value="delivered" ${order.orderStatus === 'delivered' ? 'selected' : ''}>Delivered</option>
-                        <option value="cancelled" ${order.orderStatus === 'cancelled' ? 'selected' : ''}>Cancelled</option>
-                    </select>
+            <tr data-status="${order.orderStatus || 'pending'}">
+                <td><span class="order-id">#${order._id.slice(-6)}</span></td>
+                <td><strong>${order.customerDetails?.name || 'N/A'}</strong></td>
+                <td>${order.customerDetails?.phone || 'N/A'}</td>
+                <td><span class="items-count">${itemsCount} items</span></td>
+                <td><span class="total-amount">₹${order.totalAmount || 0}</span></td>
+                <td>
+                    <span class="order-status-badge ${statusClass}">${statusDisplay}</span>
                 </td>
-                <td style="padding: 12px;">
-                    <span style="padding: 3px 8px; border-radius: 3px; background: ${order.paymentStatus === 'paid' ? '#28a745' : '#ffc107'}; color: white;">
+                <td>
+                    <span class="payment-badge ${order.paymentStatus === 'paid' ? 'payment-paid' : 'payment-pending'}">
                         ${order.paymentStatus || 'pending'}
                     </span>
                 </td>
-                <td style="padding: 12px;">${new Date(order.orderTime || order.createdAt).toLocaleString()}</td>
-                <td style="padding: 12px;">
-                    <button onclick="viewOrderDetails('${order._id}')" style="padding: 5px 10px; background: #17a2b8; color: white; border: none; border-radius: 3px; cursor: pointer; margin-right: 5px;">
-                        View
-                    </button>
-                    <button onclick="deleteOrder('${order._id}')" style="padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">
-                        Delete
-                    </button>
+                <td>${new Date(order.orderTime || order.createdAt).toLocaleString()}</td>
+                <td>
+                    <div class="action-buttons">
+                        <select class="order-status-select" onchange="updateOrderStatus('${order._id}', this.value)">
+                            <option value="pending" ${order.orderStatus === 'pending' ? 'selected' : ''}>⏳ Pending</option>
+                            <option value="confirmed" ${order.orderStatus === 'confirmed' ? 'selected' : ''}>✓ Confirmed</option>
+                            <option value="preparing" ${order.orderStatus === 'preparing' ? 'selected' : ''}>🔪 Preparing</option>
+                            <option value="out-for-delivery" ${order.orderStatus === 'out-for-delivery' ? 'selected' : ''}>🚚 Out for Delivery</option>
+                            <option value="delivered" ${order.orderStatus === 'delivered' ? 'selected' : ''}>✅ Delivered</option>
+                            <option value="cancelled" ${order.orderStatus === 'cancelled' ? 'selected' : ''}>❌ Cancelled</option>
+                        </select>
+                        <button class="orders-btn btn-view" onclick="viewOrderDetails('${order._id}')">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                        <button class="orders-btn btn-delete" onclick="deleteOrder('${order._id}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
                 </td>
             </tr>
         `;
@@ -1079,7 +1173,33 @@ function displayOrders(orders, stats) {
     content.innerHTML = html;
 }
 
-
+// Filter orders by status
+function filterOrders(status) {
+    // Remove active class from all filter buttons
+    document.querySelectorAll('.status-filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Add active class to clicked button
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
+    
+    // Get all order rows
+    const rows = document.querySelectorAll('.orders-table tbody tr');
+    
+    rows.forEach(row => {
+        if (status === 'all') {
+            row.style.display = '';
+        } else {
+            if (row.getAttribute('data-status') === status) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        }
+    });
+}
 function getStatusColor(status) {
     const colors = {
         'pending': '#ffc107',
@@ -1162,7 +1282,7 @@ function updateOrderStatus(orderId, status) {
 
 
 function viewOrderDetails(orderId) { 
-    alert(`Viewing order #${orderId} - Full details feature coming soon!`);
+    alert(`Viewing order #${orderId} - Details feature coming soon!`);
 }
 
 
