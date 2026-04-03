@@ -243,41 +243,46 @@ function getMealData(meal, day) {
 
 async function lockPastDays() {
 
-const res = await fetch(`${API_BASE}/api/tiffin-bookings/${bookingId}`);
+  try {
+    const res = await fetch(`${API_BASE}/api/tiffin-bookings/${bookingId}`);
+    if (!res.ok) return;
 
-if (!res.ok) {
-  console.log("Booking fetch failed");
-  return;
-}
+    const booking = await res.json();
+    if (!booking || !booking.startDate) return;
 
-const booking = await res.json();
+    const startDate = new Date(booking.startDate);
+    const today = new Date();
 
-  if (!booking || !booking.startDate) return;
+    
+    startDate.setHours(0,0,0,0);
+    today.setHours(0,0,0,0);
 
-  const startDate = new Date(booking.startDate);
-const today = new Date();
-today.setHours(0,0,0,0); 
+    const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
 
-const startDateOnly = new Date(startDate);
-startDateOnly.setHours(0,0,0,0); 
+    console.log("📅 Days Passed:", diffDays);
 
-const diff = Math.floor((today - startDateOnly) / (1000 * 60 * 60 * 24));
+    
+    const lockUntil = diffDays + 1; 
 
-const lockUntil = diff + 2;
+    for (let i = 1; i <= 7; i++) {
 
- for (let i = 1; i <= 7; i++) {
+      const block = document.getElementById(`dayContent${i}`);
+      if (!block) continue;
 
-  const block = document.getElementById(`dayContent${i}`);
-  if (!block) continue;
+      if (i <= lockUntil) {
 
-  if (i <= lockUntil) {
-    block.querySelectorAll("select, input").forEach(el => {
-      el.disabled = true;
-    });
+        block.querySelectorAll("select, input").forEach(el => {
+          el.disabled = true;
+        });
 
-    block.style.opacity = "0.5";
+        block.style.opacity = "0.5";
+        block.style.pointerEvents = "none"; // 🔥 extra lock
+      }
+    }
+
+  } catch (err) {
+    console.error("Lock error:", err);
   }
-}
 }
 
 /* ==================LOAD ADMIN DEFAULT MENU================== */
