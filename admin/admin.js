@@ -534,20 +534,20 @@ function deleteTiffinBooking(id) {
 
 
 function activateTiffin(id) {
-  if (!confirm("Activate this tiffin subscription?")) return;
+const dateInput = prompt("Enter start date (YYYY-MM-DD):");
 
-  fetch(`${API_BASE}/api/admin/tiffin-bookings/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + localStorage.getItem("adminToken")
-    },
-    body: JSON.stringify({
-      status: "active",
-      paymentStatus: "paid",
-      startDate: new Date()   
-    })
+fetch(`${API_BASE}/api/admin/tiffin-bookings/${id}`, {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + localStorage.getItem("adminToken")
+  },
+  body: JSON.stringify({
+    status: "active",
+    paymentStatus: "paid",
+    startDate: dateInput
   })
+})
   .then(() => {
     alert("Tiffin Activated");
     loadTiffinBookings();
