@@ -450,9 +450,7 @@ if (!bookingStartDate) {
 box.innerHTML += `
   <div style="background:#fff;padding:10px;margin-bottom:10px;border-radius:8px;">
     
-    <b>
-      ${formatDate(currentDate)} - Day ${d.dayNumber}
-    </b><br>
+    <b>${dateText}</b><br>
 
     Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
     Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
