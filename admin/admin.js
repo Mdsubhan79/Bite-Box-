@@ -461,25 +461,21 @@ menu.days.forEach(d => {
   const currentDate = new Date(baseDate);
   currentDate.setDate(baseDate.getDate() + (d.dayNumber - 1));
 
-  const today = new Date();
-  const isToday = currentDate.toDateString() === today.toDateString();
+ html += `
+  <tr class="menuRow-${b._id}" style="display:none;">
+    <td colspan="13">
 
-  html += `
-    <tr class="menuRow-${b._id}" style="display:none;">
-      <td colspan="13">
+      <b>
+        ${formatDate(currentDate)} - Day ${d.dayNumber}
+      </b><br>
 
-        <b>
-          ${isToday ? "🟢 Today - " : ""}
-          ${formatDate(currentDate)} - Day ${d.dayNumber}
-        </b><br>
+      Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
+      Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
+      Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
 
-        Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
-        Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
-        Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
-
-      </td>
-    </tr>
-  `;
+    </td>
+  </tr>
+`;
 });
 
     }
