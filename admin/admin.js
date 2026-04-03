@@ -747,21 +747,24 @@ function saveDefaultMenu() {
     days.push({
       dayNumber: day,
       breakfast: {
-        items: document.getElementById(`breakfastItems${day}`).value.split(","),
+        items: document.getElementById(`breakfastItems${day}`).value
+          .split(",").map(i => i.trim()).filter(i => i),
         time: document.getElementById(`breakfastTime${day}`).value
       },
       lunch: {
-        items: document.getElementById(`lunchItems${day}`).value.split(","),
+        items: document.getElementById(`lunchItems${day}`).value
+          .split(",").map(i => i.trim()).filter(i => i),
         time: document.getElementById(`lunchTime${day}`).value
       },
       dinner: {
-        items: document.getElementById(`dinnerItems${day}`).value.split(","),
+        items: document.getElementById(`dinnerItems${day}`).value
+          .split(",").map(i => i.trim()).filter(i => i),
         time: document.getElementById(`dinnerTime${day}`).value
       }
     });
   }
 
-  fetch(`${API_BASE}/api/default-menu`, {
+  fetch(`${API_BASE}/api/admin/default-menu`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -769,9 +772,16 @@ function saveDefaultMenu() {
     },
     body: JSON.stringify({ days })
   })
-  .then(() => alert("Default Tiffin Menu Saved Successfully"));
-}
+  .then(() => {
+    alert("✅ Default Tiffin Menu Saved Successfully");
 
+    
+    loadExistingDefaultMenu();
+  })
+  .catch(() => {
+    alert("❌ Failed to save menu");
+  });
+}
 
 function loadExistingDefaultMenu() {
 
