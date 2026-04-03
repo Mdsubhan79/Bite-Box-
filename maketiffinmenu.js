@@ -28,7 +28,7 @@ await loadBookingStartDate();
 //generate days
 generateDays();
 
-  await new Promise(resolve => setTimeout(resolve, 100));
+  await new Promise(resolve => setTimeout(resolve, 200));
   
   console.log("Loading default menu...");
   await loadAdminDefaultMenu();
@@ -390,9 +390,12 @@ async function loadBookingStartDate() {
 
     const booking = await res.json();
 
-    if (booking && booking.startDate) {
-      bookingStartDate = new Date(booking.startDate);
-    }
+ if (booking && booking.startDate) {
+  bookingStartDate = new Date(booking.startDate);
+  console.log("✅ Start Date Loaded:", bookingStartDate);
+} else {
+  console.log("❌ No startDate from backend");
+}
   } catch (err) {
     console.error("Error fetching start date:", err);
   }
@@ -403,12 +406,17 @@ async function loadBookingStartDate() {
 async function loadSummary() {
   try {
 
-    if (!bookingStartDate) {
-  summarySection.style.display = "none";
+if (!bookingStartDate) {
+
+  summarySection.style.display = "block";
   menuSection.style.display = "block";
   remakeBtn.style.display = "none";
 
-  console.log("⛔ Start date not set yet");
+  document.getElementById("summaryBox").innerHTML = `
+    <p style="text-align:center;color:red;font-weight:bold;">
+      ⏳ Waiting for admin to activate your subscription
+    </p>
+  `;
 
   return;
 }
