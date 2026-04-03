@@ -403,6 +403,16 @@ async function loadBookingStartDate() {
 async function loadSummary() {
   try {
 
+    if (!bookingStartDate) {
+  summarySection.style.display = "none";
+  menuSection.style.display = "block";
+  remakeBtn.style.display = "none";
+
+  console.log("⛔ Start date not set yet");
+
+  return;
+}
+
     const res = await fetch(`${API_BASE}/api/tiffin-menus/${bookingId}`);
 
     if (!res.ok) {
@@ -426,7 +436,7 @@ async function loadSummary() {
 
 data.days.forEach(d => {
 
-  const baseDate = bookingStartDate || new Date();
+  const baseDate = bookingStartDate;
   const currentDate = new Date(baseDate);
   currentDate.setDate(baseDate.getDate() + (d.dayNumber - 1));
 
