@@ -52,28 +52,26 @@ function formatDate(date) {
 }
 
 function generateDays() {
-  if (!bookingStartDate) {
-  container.innerHTML = `
-    <p style="text-align:center;color:red;font-weight:bold;">
-      ⏳ Waiting for admin to activate your subscription
-    </p>
-  `;
-  return;
-}
 
   container.innerHTML = ""; 
 
-  const baseDate = bookingStartDate;
-
   for (let day = 1; day <= 7; day++) {
 
-    const currentDate = new Date(baseDate);
-    currentDate.setDate(baseDate.getDate() + (day - 1));
+    let dateText;
+
+    if (!bookingStartDate) {
+      
+      dateText = `🕒 Date not set yet - Day ${day}`;
+    } else {
+      const currentDate = new Date(bookingStartDate);
+      currentDate.setDate(bookingStartDate.getDate() + (day - 1));
+      dateText = `${formatDate(currentDate)} - Day ${day}`;
+    }
 
     container.innerHTML += `
       <div class="day-card">
         <div class="day-header" onclick="toggleDay(${day})">
-          ${formatDate(currentDate)} - Day ${day}
+          ${dateText}
         </div>
 
         <div class="day-content" id="dayContent${day}">
@@ -452,9 +450,15 @@ if (!bookingStartDate) {
 
 data.days.forEach(d => {
 
-  const baseDate = bookingStartDate;
-  const currentDate = new Date(baseDate);
-  currentDate.setDate(baseDate.getDate() + (d.dayNumber - 1));
+let dateText;
+
+if (!bookingStartDate) {
+  dateText = `🕒 Date not set yet - Day ${d.dayNumber}`;
+} else {
+  const currentDate = new Date(bookingStartDate);
+  currentDate.setDate(bookingStartDate.getDate() + (d.dayNumber - 1));
+  dateText = `${formatDate(currentDate)} - Day ${d.dayNumber}`;
+}
 
  
 box.innerHTML += `
