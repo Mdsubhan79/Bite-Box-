@@ -53,7 +53,9 @@ function formatDate(date) {
 
 function generateDays() {
 
-  const baseDate = bookingStartDate || new Date(); 
+  container.innerHTML = ""; 
+
+  const baseDate = bookingStartDate || new Date();
 
   for (let day = 1; day <= 7; day++) {
 
@@ -428,22 +430,19 @@ data.days.forEach(d => {
   const currentDate = new Date(baseDate);
   currentDate.setDate(baseDate.getDate() + (d.dayNumber - 1));
 
-  const today = new Date();
-  const isToday = currentDate.toDateString() === today.toDateString();
+ 
+box.innerHTML += `
+  <div style="background:#fff;padding:10px;margin-bottom:10px;border-radius:8px;">
+    
+    <b>
+      ${formatDate(currentDate)} - Day ${d.dayNumber}
+    </b><br>
 
-  box.innerHTML += `
-    <div style="background:#fff;padding:10px;margin-bottom:10px;border-radius:8px;">
-      
-      <b>
-        ${isToday ? "🟢 Today - " : ""}
-        ${formatDate(currentDate)} - Day ${d.dayNumber}
-      </b><br>
-
-      Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
-      Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
-      Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
-    </div>
-  `;
+    Breakfast: ${d.breakfast.items.join(", ")} (${d.breakfast.time})<br>
+    Lunch: ${d.lunch.items.join(", ")} (${d.lunch.time})<br>
+    Dinner: ${d.dinner.items.join(", ")} (${d.dinner.time})
+  </div>
+`;
 });
 
     summarySection.style.display = "block";
