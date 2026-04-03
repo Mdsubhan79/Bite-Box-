@@ -412,20 +412,6 @@ async function loadBookingStartDate() {
 async function loadSummary() {
   try {
 
-if (!bookingStartDate) {
-
-  summarySection.style.display = "block";
-  menuSection.style.display = "block";
-  remakeBtn.style.display = "none";
-
-  document.getElementById("summaryBox").innerHTML = `
-    <p style="text-align:center;color:red;font-weight:bold;">
-      ⏳ Waiting for admin to activate your subscription
-    </p>
-  `;
-
-  return;
-}
 
     const res = await fetch(`${API_BASE}/api/tiffin-menus/${bookingId}`);
 
