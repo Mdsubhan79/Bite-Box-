@@ -52,10 +52,18 @@ function formatDate(date) {
 }
 
 function generateDays() {
+  if (!bookingStartDate) {
+  container.innerHTML = `
+    <p style="text-align:center;color:red;font-weight:bold;">
+      ⏳ Waiting for admin to activate your subscription
+    </p>
+  `;
+  return;
+}
 
   container.innerHTML = ""; 
 
-  const baseDate = bookingStartDate || new Date();
+  const baseDate = bookingStartDate;
 
   for (let day = 1; day <= 7; day++) {
 
