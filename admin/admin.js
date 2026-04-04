@@ -1364,7 +1364,6 @@ function deleteOrder(orderId, btn) {
 window.loadOrders = loadOrders;
 window.viewOrderDetails = viewOrderDetails;
 window.updateOrderStatus = updateOrderStatus;
-window.updateDeliveryTime = updateDeliveryTime;
 window.deleteOrder = deleteOrder;
 window.addAdminNotes = addAdminNotes;
 window.loadPage = loadPage;
