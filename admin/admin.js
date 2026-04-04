@@ -1315,33 +1315,21 @@ function deleteOrder(orderId, btn) {
         deleteBtn.disabled = true;
     }
 
+  
     fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
-        method: "DELETE",
+        method: "PUT",
         headers: {
+            "Content-Type": "application/json",
             "Authorization": "Bearer " + localStorage.getItem("adminToken")
-        }
+        },
+        body: JSON.stringify({
+            action: "delete" 
+        })
     })
-    .then(async res => {
-
-        if (res.status === 404 || res.status === 405) {
-            return fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("adminToken")
-                },
-                body: JSON.stringify({
-                    action: "delete",
-                    status: "cancelled"
-                })
-            });
-        }
-
+    .then(res => {
         if (!res.ok) throw new Error("Delete failed");
-
-        return res;
+        return res.json();
     })
-    .then(res => res.json())
     .then(() => {
 
         alert("✅ Order deleted successfully!");
@@ -1355,9 +1343,10 @@ function deleteOrder(orderId, btn) {
             }));
         }
 
-       
+      
         if (row) row.remove();
 
+    
         setTimeout(() => {
             loadOrders();
         }, 500);
@@ -1377,7 +1366,6 @@ function deleteOrder(orderId, btn) {
 window.loadOrders = loadOrders;
 window.viewOrderDetails = viewOrderDetails;
 window.updateOrderStatus = updateOrderStatus;
-window.updateOrderStatusSimple = updateOrderStatusSimple;
 window.updateDeliveryTime = updateDeliveryTime;
 window.deleteOrder = deleteOrder;
 window.addAdminNotes = addAdminNotes;
