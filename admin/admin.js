@@ -1293,18 +1293,27 @@ function viewOrderDetails(orderId) {
 
 
 function deleteOrder(orderId) {
+
+
+    const row = document.querySelector(`tr[data-status] button[onclick*="${orderId}"]`)?.closest("tr");
+    const status = row?.getAttribute("data-status");
+
+    
+    if (status !== "delivered" && status !== "cancelled") {
+        alert("❌ You can delete only Delivered or Cancelled orders");
+        return;
+    }
+
     if (!confirm("⚠️ Are you sure you want to permanently delete this order?")) return;
-    
-    const reason = prompt("Enter reason for deletion (optional):", "Order cancelled by admin");
-    
-    
+
     const deleteBtn = event?.target;
     const originalText = deleteBtn?.innerHTML;
+
     if (deleteBtn) {
         deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
         deleteBtn.disabled = true;
     }
-    
+
     
     fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
         method: "DELETE",
@@ -1312,74 +1321,42 @@ function deleteOrder(orderId) {
             "Authorization": "Bearer " + localStorage.getItem("adminToken")
         }
     })
-    .then(async res => {
+    .then(res => {
         if (res.status === 401) {
             logoutAdmin();
             throw new Error("Unauthorized");
         }
-        
-       
-        if (res.status === 404 || res.status === 405) {
-            console.log("DELETE not supported, trying PUT with action=delete");
-            return fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("adminToken")
-                },
-                body: JSON.stringify({ 
-                    action: 'delete',
-                    adminNotes: reason,
-                    status: 'cancelled'
-                })
-            });
-        }
-        
+
         if (!res.ok) {
-            const error = await res.json().catch(() => ({ error: 'Unknown error' }));
-            throw new Error(error.error || `HTTP error! status: ${res.status}`);
+            throw new Error("Delete failed");
         }
-        return res;
+
+        return res.json();
     })
-    .then(res => res.json())
-    .then(data => {
-        alert("✅ Order deleted/cancelled successfully!");
-        
-        
-        try {
-           
-            if (adminWS && adminWS.readyState === WebSocket.OPEN) {
-                adminWS.send(JSON.stringify({
-                    type: 'ORDER_DELETED',
-                    orderId: orderId,
-                    reason: reason || 'Order cancelled by admin'
-                }));
-                console.log("Broadcast sent via WebSocket");
-            } else {
-                console.log("WebSocket not available, skipping broadcast");
-              
-                if (!adminWS || adminWS.readyState !== WebSocket.OPEN) {
-                    initializeAdminWebSocket();
-                }
-            }
-        } catch (e) {
-            console.log('Broadcast error (non-critical):', e);
-          
+    .then(() => {
+        alert("✅ Order deleted successfully!");
+
+    
+        if (adminWS && adminWS.readyState === WebSocket.OPEN) {
+            adminWS.send(JSON.stringify({
+                type: 'ORDER_DELETED',
+                orderId: orderId,
+                reason: 'Order deleted by admin'
+            }));
         }
-        
-        loadOrders(); 
+
+        loadOrders();
     })
     .catch(err => {
-        console.error("Error deleting order:", err);
-        alert("❌ Failed to delete order: " + err.message);
-        
+        console.error(err);
+        alert("❌ Failed to delete order");
+
         if (deleteBtn) {
             deleteBtn.innerHTML = originalText;
             deleteBtn.disabled = false;
         }
     });
 }
-
 
 //functions global
 window.loadOrders = loadOrders;
