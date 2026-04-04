@@ -1095,10 +1095,12 @@ function displayOrders(orders, stats) {
             <tbody>
     `;
     
-    orders.forEach(order => {
+    orders
+.filter(order => order && order.orderStatus !== 'deleted' && order.action !== 'delete')
+.forEach(order => {
         const itemsCount = order.items?.reduce((sum, item) => sum + (item.quantity || 1), 0) || 0;
         
-        // Get status display text and class
+        
         let statusDisplay = '';
         let statusClass = '';
         
@@ -1161,7 +1163,7 @@ function displayOrders(orders, stats) {
                         <button class="orders-btn btn-view" onclick="viewOrderDetails('${order._id}')">
                             <i class="fas fa-eye"></i> View
                         </button>
-                        <button class="orders-btn btn-delete" onclick="deleteOrder('${order._id}')">
+                        <button class="orders-btn btn-delete" onclick="deleteOrder('${order._id}', this)">
                             <i class="fas fa-trash"></i> Delete
                         </button>
                     </div>
@@ -1292,7 +1294,7 @@ function viewOrderDetails(orderId) {
 }
 
 
-function deleteOrder(orderId) {
+function deleteOrder(orderId, btn) {
 
  
     const row = document.querySelector(`tr[data-status] button[onclick*="${orderId}"]`)?.closest("tr");
@@ -1306,7 +1308,7 @@ function deleteOrder(orderId) {
 
     if (!confirm("⚠️ Delete this order permanently?")) return;
 
-    const deleteBtn = event?.target;
+    const deleteBtn = btn;
     const originalText = deleteBtn?.innerHTML;
 
     if (deleteBtn) {
@@ -1359,8 +1361,11 @@ function deleteOrder(orderId) {
                 reason: 'Order deleted by admin'
             }));
         }
-
-        loadOrders();
+const row = btn?.closest("tr");
+if (row) row.remove();
+        setTimeout(() => {
+    loadOrders();
+}, 500);
     })
     .catch(err => {
         console.error(err);
