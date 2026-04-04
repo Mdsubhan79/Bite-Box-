@@ -1095,8 +1095,8 @@ function displayOrders(orders, stats) {
             <tbody>
     `;
     
-    orders
-.filter(order => order && order.orderStatus !== 'deleted' && order.action !== 'delete')
+orders
+.filter(order => !order.deleted)  
 .forEach(order => {
         const itemsCount = order.items?.reduce((sum, item) => sum + (item.quantity || 1), 0) || 0;
         
@@ -1181,19 +1181,19 @@ function displayOrders(orders, stats) {
     content.innerHTML = html;
 }
 
-// Filter orders by status
+
 function filterOrders(status) {
-    // Remove active class from all filter buttons
+   
     document.querySelectorAll('.status-filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
     
-    // Add active class to clicked button
+    
     if (event && event.target) {
         event.target.classList.add('active');
     }
     
-    // Get all order rows
+
     const rows = document.querySelectorAll('.orders-table tbody tr');
     
     rows.forEach(row => {
@@ -1322,9 +1322,7 @@ function deleteOrder(orderId, btn) {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + localStorage.getItem("adminToken")
         },
-        body: JSON.stringify({
-            action: "delete" 
-        })
+        body: JSON.stringify({ deleted: true })
     })
     .then(res => {
         if (!res.ok) throw new Error("Delete failed");
