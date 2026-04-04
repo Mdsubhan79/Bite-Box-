@@ -1096,7 +1096,6 @@ function displayOrders(orders, stats) {
     `;
     
 orders
-.filter(order => !order.deleted)  
 .forEach(order => {
         const itemsCount = order.items?.reduce((sum, item) => sum + (item.quantity || 1), 0) || 0;
         
@@ -1288,18 +1287,11 @@ function updateOrderStatus(orderId, status) {
     });
 }
 
-
-function viewOrderDetails(orderId) { 
-    alert(`Viewing order #${orderId} - Details feature coming soon!`);
-}
-
-
 function deleteOrder(orderId, btn) {
 
     const row = btn?.closest("tr");
     const status = row?.getAttribute("data-status");
 
-    
     if (status !== "delivered" && status !== "cancelled") {
         alert("❌ You can delete only Delivered or Cancelled orders");
         return;
@@ -1308,21 +1300,20 @@ function deleteOrder(orderId, btn) {
     if (!confirm("⚠️ Delete this order permanently?")) return;
 
     const deleteBtn = btn;
-    const originalText = deleteBtn?.innerHTML;
+    const originalText = deleteBtn.innerHTML;
 
-    if (deleteBtn) {
-        deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
-        deleteBtn.disabled = true;
-    }
+    deleteBtn.innerHTML = 'Deleting...';
+    deleteBtn.disabled = true;
 
-  
     fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + localStorage.getItem("adminToken")
         },
-        body: JSON.stringify({ deleted: true })
+        body: JSON.stringify({
+            action: "delete"   
+        })
     })
     .then(res => {
         if (!res.ok) throw new Error("Delete failed");
@@ -1332,19 +1323,8 @@ function deleteOrder(orderId, btn) {
 
         alert("✅ Order deleted successfully!");
 
-       
-        if (adminWS && adminWS.readyState === WebSocket.OPEN) {
-            adminWS.send(JSON.stringify({
-                type: 'ORDER_DELETED',
-                orderId: orderId,
-                reason: 'Order deleted by admin'
-            }));
-        }
-
-      
         if (row) row.remove();
 
-    
         setTimeout(() => {
             loadOrders();
         }, 500);
@@ -1353,10 +1333,8 @@ function deleteOrder(orderId, btn) {
         console.error(err);
         alert("❌ Failed to delete order");
 
-        if (deleteBtn) {
-            deleteBtn.innerHTML = originalText;
-            deleteBtn.disabled = false;
-        }
+        deleteBtn.innerHTML = originalText;
+        deleteBtn.disabled = false;
     });
 }
 
