@@ -1296,11 +1296,10 @@ function viewOrderDetails(orderId) {
 
 function deleteOrder(orderId, btn) {
 
- 
-    const row = document.querySelector(`tr[data-status] button[onclick*="${orderId}"]`)?.closest("tr");
+    const row = btn?.closest("tr");
     const status = row?.getAttribute("data-status");
 
- 
+    
     if (status !== "delivered" && status !== "cancelled") {
         alert("❌ You can delete only Delivered or Cancelled orders");
         return;
@@ -1316,7 +1315,6 @@ function deleteOrder(orderId, btn) {
         deleteBtn.disabled = true;
     }
 
- 
     fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
         method: "DELETE",
         headers: {
@@ -1325,10 +1323,7 @@ function deleteOrder(orderId, btn) {
     })
     .then(async res => {
 
-        
         if (res.status === 404 || res.status === 405) {
-            console.log("DELETE not supported → using PUT");
-
             return fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
                 method: "PUT",
                 headers: {
@@ -1336,15 +1331,13 @@ function deleteOrder(orderId, btn) {
                     "Authorization": "Bearer " + localStorage.getItem("adminToken")
                 },
                 body: JSON.stringify({
-                    action: "delete", 
+                    action: "delete",
                     status: "cancelled"
                 })
             });
         }
 
-        if (!res.ok) {
-            throw new Error("Delete failed");
-        }
+        if (!res.ok) throw new Error("Delete failed");
 
         return res;
     })
@@ -1361,11 +1354,13 @@ function deleteOrder(orderId, btn) {
                 reason: 'Order deleted by admin'
             }));
         }
-const row = btn?.closest("tr");
-if (row) row.remove();
+
+       
+        if (row) row.remove();
+
         setTimeout(() => {
-    loadOrders();
-}, 500);
+            loadOrders();
+        }, 500);
     })
     .catch(err => {
         console.error(err);
