@@ -84,6 +84,7 @@ if (saved && tracker) {
     let trackerInterval = null;
     let trackerWS = null;
     let activeOrder = null;
+    window.activeOrder = null;
     let isDragging = false;
     let currentX, currentY, initialX, initialY;
     let xOffset = 0, yOffset = 0;
@@ -147,6 +148,8 @@ if (saved && tracker) {
             
             if (order) {
                 activeOrder = order;
+window.activeOrder = order;
+localStorage.setItem('lastOrderItems', JSON.stringify(order.items || []));
                 updatePopup(order);
                 startCancellationTimer(order);
             } else {
@@ -300,18 +303,18 @@ if (saved && tracker) {
                     removeTracker();
                     showDeliveryFeedback({ _id: orderId });
                     
-                } else if (data.type === 'ORDER_CANCELLED' && data.order._id === orderId) {
-                   
-                    removeTracker();
-                    showCancellationPopup(data.order);
-                    
-                } else if (data.type === 'ORDER_DELETED' && data.orderId === orderId) {
-                    removeTracker();
-                    showCancellationPopup({ 
-                        _id: orderId, 
-                        adminNotes: data.reason || 'Order cancelled by admin' 
-                    });
-                }
+                }else if (data.type === 'ORDER_CANCELLED' && data.order._id === orderId) {
+    localStorage.removeItem('activeOrderId'); 
+    removeTracker();
+    showCancellationPopup(data.order);
+} else if (data.type === 'ORDER_DELETED' && data.orderId === orderId) {
+    localStorage.removeItem('activeOrderId');
+    removeTracker();
+    showCancellationPopup({ 
+        _id: orderId,
+        adminNotes: data.reason || 'Order cancelled by admin'
+    });
+}
             } catch (error) {
                 console.error('WebSocket message error:', error);
             }
@@ -427,19 +430,18 @@ if (saved && tracker) {
         }
     }
     
-    function reorderItems() {
-        if (activeOrder && activeOrder.items) {
-            localStorage.setItem('cart', JSON.stringify(activeOrder.items));
-            window.location.href = 'orderdetail.html';
-        } else {
-           
-            const lastOrder = localStorage.getItem('lastOrderItems');
-            if (lastOrder) {
-                localStorage.setItem('cart', lastOrder);
-                window.location.href = 'orderdetail.html';
-            }
+function reorderItems() {
+    if (activeOrder && activeOrder.items) {
+        localStorage.setItem('cart', JSON.stringify(activeOrder.items));
+        window.location.href = 'cart.html';
+    } else {
+        const lastOrder = localStorage.getItem('lastOrderItems');
+        if (lastOrder) {
+            localStorage.setItem('cart', lastOrder);
+            window.location.href = 'cart.html';
         }
     }
+}
     
 function makeDraggable(element) {
     if (!element) return;
@@ -630,27 +632,32 @@ function showCancellationPopup(order) {
 }
 
 function reorderCancelledItems() {
-    
+
+    let items = [];
+
     if (window.activeOrder && window.activeOrder.items) {
-        localStorage.setItem('cart', JSON.stringify(window.activeOrder.items));
-        window.location.href = 'orderdetail.html';
-        return;
-    }
-    
- 
-    const lastOrder = localStorage.getItem('lastOrderItems');
-    if (lastOrder) {
-        localStorage.setItem('cart', lastOrder);
-        window.location.href = 'orderdetail.html';
+        items = window.activeOrder.items;
     } else {
-        alert('No items to reorder. Please add items to cart first.');
+        const lastOrder = localStorage.getItem('lastOrderItems');
+        if (lastOrder) {
+            items = JSON.parse(lastOrder);
+        }
+    }
+
+    if (items.length > 0) {
+        localStorage.setItem('cart', JSON.stringify(items));
+        
+        window.location.href = 'cart.html';
+    } else {
+        alert('No items to reorder');
         window.location.href = 'veg.html';
     }
 }
 
 function closeCancellationPopup() {
     const popup = document.getElementById('cancellationPopup');
-    const overlay = document.querySelector('.popup-overlay:last-child');
+    const overlay = document.querySelector('.popup-overlay');
+
     if (popup) popup.remove();
     if (overlay) overlay.remove();
 }
