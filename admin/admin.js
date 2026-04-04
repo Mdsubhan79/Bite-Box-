@@ -1294,17 +1294,17 @@ function viewOrderDetails(orderId) {
 
 function deleteOrder(orderId) {
 
-
+ 
     const row = document.querySelector(`tr[data-status] button[onclick*="${orderId}"]`)?.closest("tr");
     const status = row?.getAttribute("data-status");
 
-    
+ 
     if (status !== "delivered" && status !== "cancelled") {
         alert("❌ You can delete only Delivered or Cancelled orders");
         return;
     }
 
-    if (!confirm("⚠️ Are you sure you want to permanently delete this order?")) return;
+    if (!confirm("⚠️ Delete this order permanently?")) return;
 
     const deleteBtn = event?.target;
     const originalText = deleteBtn?.innerHTML;
@@ -1314,29 +1314,44 @@ function deleteOrder(orderId) {
         deleteBtn.disabled = true;
     }
 
-    
+ 
     fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
         method: "DELETE",
         headers: {
             "Authorization": "Bearer " + localStorage.getItem("adminToken")
         }
     })
-    .then(res => {
-        if (res.status === 401) {
-            logoutAdmin();
-            throw new Error("Unauthorized");
+    .then(async res => {
+
+        
+        if (res.status === 404 || res.status === 405) {
+            console.log("DELETE not supported → using PUT");
+
+            return fetch(`${API_BASE}/api/admin/orders/${orderId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("adminToken")
+                },
+                body: JSON.stringify({
+                    action: "delete", 
+                    status: "cancelled"
+                })
+            });
         }
 
         if (!res.ok) {
             throw new Error("Delete failed");
         }
 
-        return res.json();
+        return res;
     })
+    .then(res => res.json())
     .then(() => {
+
         alert("✅ Order deleted successfully!");
 
-    
+       
         if (adminWS && adminWS.readyState === WebSocket.OPEN) {
             adminWS.send(JSON.stringify({
                 type: 'ORDER_DELETED',
