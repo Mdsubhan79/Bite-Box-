@@ -977,6 +977,8 @@ function loadOrders() {
         `;
     });
 }
+
+
 function displayOrders(orders, stats) {
     const content = document.getElementById("content");
     
@@ -1178,8 +1180,29 @@ orders
     `;
     
     content.innerHTML = html;
+  
+makeTableMobileResponsive();
 }
 
+function makeTableMobileResponsive() {
+    const table = document.querySelector(".orders-table");
+    if (!table) return;
+
+   
+    const ths = table.querySelectorAll("thead th");
+    const headers = Array.from(ths).map(th => th.innerText.trim());
+
+   
+    const rows = table.querySelectorAll("tbody tr");
+    rows.forEach(row => {
+        const cells = row.querySelectorAll("td");
+        cells.forEach((td, i) => {
+            if (headers[i]) {
+                td.setAttribute("data-label", headers[i]);
+            }
+        });
+    });
+}
 
 function filterOrders(status) {
    

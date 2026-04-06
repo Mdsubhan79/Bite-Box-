@@ -680,52 +680,148 @@ padding:6px 8px;
   overflow-x: auto;
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .orders-stats {
-    gap: 12px;
-  }
-  
-  .orders-card {
-    padding: 12px;
-  }
-  
-  .orders-card p {
-    font-size: 22px;
-  }
-  
+/* ===== MOBILE FIX (WORKING) ===== */
+@media (max-width: 480px) {
+
   .orders-table {
-    font-size: 12px;
-    min-width: 700px;
+    width: 100%;
+    border: none;
+    min-width: 100%;
   }
 
-  .orders-table th,
+  .orders-table thead {
+    display: none;
+  }
+
+  .orders-table tbody {
+    display: block;
+  }
+
+  .orders-table tr {
+    display: block;
+    background: #fff;
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
   .orders-table td {
-    padding: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 12px;
+    border: none;
   }
 
-  .orders-btn {
-    font-size: 10px;
-    padding: 4px 8px;
+  .orders-table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #444;
+    font-size: 11px;
   }
-  
-  .order-status-badge {
-    padding: 4px 10px;
-    font-size: 10px;
+
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
   }
-  
-  .status-filter-btn {
-    padding: 6px 15px;
-    font-size: 12px;
+
+  .orders-btn,
+  .order-status-select {
+    width: 100%;
+    font-size: 11px;
+    padding: 6px;
   }
 }
 
-@media (max-width: 480px) {
-  .orders-stats {
-    grid-template-columns: 1fr;
+/* ===== ULTRA SMALL (240px) ===== */
+@media (max-width: 260px) {
+
+  .orders-table td {
+    font-size: 10px;
   }
-  
+
+  .orders-table td::before {
+    font-size: 9px;
+  }
+
+  .orders-btn,
+  .order-status-select {
+    font-size: 9px;
+    padding: 5px;
+  }
+}
+
+/* ===== LARGE SCREENS (1200px and above) ===== */
+@media (min-width: 1200px) {
+
+  .content {
+    max-width: 1400px;
+    margin: 30px auto;
+  }
+
+  /* Stats cards bigger */
+  .orders-stats {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+  }
+
+  .orders-card {
+    padding: 25px;
+  }
+
+  .orders-card h4 {
+    font-size: 16px;
+  }
+
+  .orders-card p {
+    font-size: 32px;
+  }
+
+  /* Filters spacing */
   .status-filters {
-    justify-content: center;
+    gap: 15px;
+  }
+
+  .status-filter-btn {
+    padding: 10px 22px;
+    font-size: 15px;
+  }
+
+  /* Table improvements */
+  .orders-table {
+    font-size: 15px;
+    min-width: 1000px;
+  }
+
+  .orders-table th {
+    padding: 16px;
+    font-size: 15px;
+  }
+
+  .orders-table td {
+    padding: 16px;
+    font-size: 15px;
+  }
+
+  /* Buttons bigger */
+  .orders-btn {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  .order-status-select {
+    font-size: 13px;
+    padding: 6px;
+  }
+
+  /* Action buttons inline */
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
   }
 }
