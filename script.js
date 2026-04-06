@@ -96,7 +96,7 @@ function updateCartCount() {
 
 function showNotification(message, type = 'success') {
     const colors = {
-        success: '#02741dff',
+        success: '#157402ff',
         error: '#dc3545',
         warning: '#ffc107',
         info: '#17a2b8'
@@ -108,11 +108,11 @@ function showNotification(message, type = 'success') {
     notification.style.cssText = `
         position: fixed;
         top: 20px;
-        right: 20px;
+        right: 43px;
         background: ${colors[type] || colors.success};
         color: white;
         padding: 12px 24px;
-        border-radius: 5px;
+        border-radius: 10px;
         z-index: 9999;
         animation: slideIn 0.3s ease;
         box-shadow: 0 3px 10px rgba(0,0,0,0.2);
