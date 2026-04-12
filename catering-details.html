@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Catering Booking Details | Brio Bite</title>
+  <link rel="icon" type="image/x-icon" href="briobite.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #fef8f0;
+    }
+
+    .navbar {
+      background-color: #0c2f2c;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+    }
+
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .nav-logo {
+      font-family: 'Lucida Handwriting', cursive;
+      font-size: 1.8rem;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .nav-tagline {
+      font-family: 'Lucida Handwriting', cursive;
+      font-size: 0.9rem;
+      color: #f7c948;
+    }
+
+    .booking-container {
+      max-width: 800px;
+      margin: 100px auto 50px;
+      padding: 2rem;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .booking-container h2 {
+      color: #0c2f2c;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #0c2f2c;
+    }
+
+    .booking-summary {
+      background: #f0f7f6;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .booking-summary h3 {
+      color: #0c2f2c;
+      margin-bottom: 1rem;
+    }
+
+    .booking-summary p {
+      margin: 0.5rem 0;
+      color: #555;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #0c2f2c 0%, #1a5c55 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .submit-btn:hover {
+      transform: scale(1.02);
+    }
+
+    footer {
+      background-color: #222;
+      color: white;
+      padding: 40px 20px 20px;
+      margin-top: 50px;
+    }
+
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .footer-section h3 {
+      color: #ff6b6b;
+      margin-bottom: 10px;
+    }
+
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-section ul li a {
+      color: #ccc;
+      text-decoration: none;
+    }
+
+    .copyright {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.9rem;
+      color: #bbb;
+    }
+
+    .back-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      .booking-container {
+        margin: 80px 20px 30px;
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo-container">
+    <a href="index.html" class="nav-logo">Brio Bite</a>
+    <div class="nav-tagline">Where Every Bite is a Flavor Bomb</div>
+  </div>
+</nav>
+
+<div class="booking-container">
+  <h2><i class="fas fa-clipboard-list"></i> Catering Booking Details</h2>
+  <div id="bookingSummary" class="booking-summary"></div>
+
+  <form id="bookingForm">
+    <div class="form-group">
+      <label for="name">Full Name *</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email Address *</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone Number *</label>
+      <input type="tel" id="phone" name="phone" required>
+    </div>
+
+    <div class="form-group">
+      <label for="eventDate">Event Date *</label>
+      <input type="date" id="eventDate" name="eventDate" required>
+    </div>
+
+    <div class="form-group">
+      <label for="eventTime">Event Time *</label>
+      <input type="time" id="eventTime" name="eventTime" required>
+    </div>
+
+    <div class="form-group">
+      <label for="venue">Venue Address *</label>
+      <textarea id="venue" name="venue" rows="3" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="specialRequests">Special Requests (Optional)</label>
+      <textarea id="specialRequests" name="specialRequests" rows="3" placeholder="Any dietary restrictions or special instructions..."></textarea>
+    </div>
+
+    <button type="submit" class="submit-btn"><i class="fas fa-check-circle"></i> Confirm Booking</button>
+  </form>
+</div>
+
+<footer>
+  <div class="footer-container">
+    <div class="footer-section">
+      <h3>About Brio Bite</h3>
+      <p>Delivering delicious meals with explosive flavors.</p>
+    </div>
+    <div class="footer-section">
+      <h3>Contact</h3>
+      <ul>
+        <li><i class="fas fa-phone"></i> +91 9627024287</li>
+        <li><i class="fas fa-envelope"></i> Official.briobite@gmail.com</li>
+      </ul>
+    </div>
+  </div>
+  <div class="copyright">
+    <p>&copy; 2026 Brio Bite. All Rights Reserved.</p>
+  </div>
+</footer>
+
+<button onclick="goBack()" class="back-btn">
+  <i class="fas fa-arrow-left"></i> Back
+</button>
+
+<script>
+  const bookingData = JSON.parse(localStorage.getItem('cateringBooking'));
+
+  if (!bookingData) {
+    window.location.href = 'catering.html';
+  }
+
+  const serviceNames = {
+    cooking: 'Food Cooking Team',
+    serving: 'Food Serving Team',
+    dishwasher: 'Dishwasher Service',
+    dishes: 'Wedding & Parties Dishes',
+    tent: 'Tent Equipment',
+    decoration: 'Decoration Services',
+    cardecor: 'Car Decoration'
+  };
+
+  const summaryDiv = document.getElementById('bookingSummary');
+  let summaryHTML = '<h3><i class="fas fa-receipt"></i> Booking Summary</h3>';
+  summaryHTML += `<p><strong>Service:</strong> ${serviceNames[bookingData.service]}</p>`;
+
+  if (bookingData.teamPackage) {
+    summaryHTML += `<p><strong>Package:</strong> ${bookingData.teamPackage.toUpperCase()}</p>`;
+    summaryHTML += `<p><strong>Details:</strong> ${bookingData.description}</p>`;
+  }
+  if (bookingData.guests) {
+    summaryHTML += `<p><strong>Guests:</strong> ${bookingData.guests}</p>`;
+    summaryHTML += `<p><strong>Food Type:</strong> ${bookingData.foodType === 'veg' ? 'Vegetarian' : 'Non-Vegetarian'}</p>`;
+    summaryHTML += `<p><strong>Package Type:</strong> ${bookingData.packageType === 'full' ? 'Full Package' : 'Only Booking Team'}</p>`;
+  }
+  if (bookingData.selectedPackage) {
+    summaryHTML += `<p><strong>Selected Package:</strong> ${bookingData.selectedPackage.toUpperCase()}</p>`;
+  }
+  summaryHTML += `<p><strong><i class="fas fa-rupee-sign"></i> Total Cost:</strong> ₹${bookingData.cost.toLocaleString('en-IN')}</p>`;
+  summaryDiv.innerHTML = summaryHTML;
+
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('eventDate').min = today;
+
+  document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const formData = {
+      ...bookingData,
+      bookingId: 'CAT' + Date.now(),
+      customerName: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      phone: document.getElementById('phone').value,
+      eventDate: document.getElementById('eventDate').value,
+      eventTime: document.getElementById('eventTime').value,
+      venue: document.getElementById('venue').value,
+      specialRequests: document.getElementById('specialRequests').value,
+      status: 'Pending',
+      bookedAt: new Date().toISOString()
+    };
+
+    let bookings = JSON.parse(localStorage.getItem('cateringBookings') || '[]');
+    bookings.push(formData);
+    localStorage.setItem('cateringBookings', JSON.stringify(bookings));
+    localStorage.removeItem('cateringBooking');
+
+    alert(`✅ Booking Confirmed!\n\nBooking ID: ${formData.bookingId}\nTotal Amount: ₹${formData.cost.toLocaleString('en-IN')}\n\nWe will contact you within 24 hours.`);
+    window.location.href = 'catering.html';
+  });
+
+  function goBack() {
+    window.history.back();
+  }
+</script>
+</body>
+</html>

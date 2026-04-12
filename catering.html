@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Catering Services | Brio Bite</title>
+  <link rel="icon" type="image/x-icon" href="briobite.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #fef8f0;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      background-color: #0c2f2c;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      position: relative;
+    }
+
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .nav-logo {
+      font-family: 'Lucida Handwriting', cursive;
+      font-size: 1.8rem;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .nav-tagline {
+      font-family: 'Lucida Handwriting', cursive;
+      font-size: 0.9rem;
+      color: #f7c948;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .menu-toggle {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .menu-line {
+      width: 25px;
+      height: 3px;
+      background-color: white;
+    }
+
+    .dropdown-menu {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 99%;
+      right: 0rem;
+      background-color: #0c2f2c;
+      padding: 1rem;
+      border-radius: 2px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+      z-index: 100;
+    }
+
+    .dropdown-menu a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #1e4642;
+    }
+
+    .dropdown-menu.active {
+      display: flex;
+    }
+
+    @media (min-width: 768px) {
+      .menu-toggle {
+        display: none;
+      }
+      .dropdown-menu {
+        display: flex !important;
+        position: static;
+        flex-direction: row;
+        gap: 1.5rem;
+        background: none;
+        box-shadow: none;
+        padding: 0;
+      }
+      .dropdown-menu a {
+        border-bottom: none;
+        padding: 0;
+      }
+    }
+
+    /* Hero Section */
+    .catering-hero {
+      background: linear-gradient(135deg, #0c2f2c 0%, #1a5c55 100%);
+      padding: 4rem 2rem;
+      text-align: center;
+      color: white;
+    }
+
+    .catering-hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .catering-hero p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    /* Services Grid */
+    .services-container {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      color: #0c2f2c;
+      margin-bottom: 3rem;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .service-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+
+    .service-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .service-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #0c2f2c 0%, #1a5c55 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+
+    .service-icon i {
+      font-size: 2.5rem;
+      color: #f7c948;
+    }
+
+    .service-card h3 {
+      font-size: 1.3rem;
+      color: #0c2f2c;
+      margin-bottom: 1rem;
+    }
+
+    .service-card p {
+      color: #666;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .service-btn {
+      background: linear-gradient(135deg, #0c2f2c 0%, #1a5c55 100%);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.3s;
+    }
+
+    .service-btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 2000;
+      overflow-y: auto;
+    }
+
+    .modal-content {
+      background: white;
+      max-width: 800px;
+      margin: 50px auto;
+      border-radius: 15px;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-100px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, #0c2f2c 0%, #1a5c55 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 15px 15px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+    }
+
+    .close-modal {
+      font-size: 2rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .close-modal:hover {
+      transform: scale(1.2);
+    }
+
+    .modal-body {
+      padding: 2rem;
+    }
+
+    /* Form Elements */
+    .guest-options, .food-type, .package-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .guest-btn, .food-btn, .package-btn, .team-btn {
+      padding: 1rem;
+      background: #f0f0f0;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .guest-btn:hover, .guest-btn.active,
+    .food-btn:hover, .food-btn.active,
+    .package-btn:hover, .package-btn.active,
+    .team-btn:hover, .team-btn.active {
+      background: linear-gradient(135deg, #0c2f2c 0%, #1a5c55 100%);
+      color: white;
+      border-color: transparent;
+    }
+
+    .menu-items {
+      margin: 2rem 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      border-radius: 10px;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .menu-category {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    .menu-category strong {
+      color: #0c2f2c;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .menu-item {
+      padding: 0.3rem 0;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .cost-display {
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: #e8f5e9;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .cost-display h3 {
+      color: #2e7d32;
+      font-size: 1.5rem;
+    }
+
+    .team-details {
+      margin: 1rem 0;
+    }
+
+    .book-btn {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #0c2f2c 0%, #1a5c55 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+      margin-top: 1rem;
+    }
+
+    .book-btn:hover {
+      transform: scale(1.02);
+    }
+
+    /* Footer */
+    footer {
+      background-color: #222;
+      color: white;
+      padding: 40px 20px 20px;
+      margin-top: 50px;
+    }
+
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .footer-section h3 {
+      color: #ff6b6b;
+      margin-bottom: 10px;
+    }
+
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 8px;
+    }
+
+    .footer-section ul li a {
+      color: #ccc;
+      text-decoration: none;
+    }
+
+    .social-links a {
+      color: white;
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+
+    .copyright {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.9rem;
+      color: #bbb;
+    }
+
+    .back-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+      .modal-content {
+        margin: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo-container">
+    <a href="index.html" class="nav-logo">Brio Bite</a>
+    <div class="nav-tagline">Where Every Bite is a Flavor Bomb</div>
+  </div>
+  <div class="menu-toggle" id="menuToggle">
+    <div class="menu-line"></div>
+    <div class="menu-line"></div>
+    <div class="menu-line"></div>
+  </div>
+  <div class="dropdown-menu" id="dropdownMenu">
+    <a href="index.html">Home</a>
+    <a href="cartpage.html">Cart</a>
+    <a href="aboutus.html">About Us</a>
+    <a href="terms&privay.html">Terms & Policy</a>
+    <a href="contactus.html">Contact Us</a>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="catering-hero">
+  <h1>Premium Catering Services</h1>
+  <p>Making Your Events Memorable with Exquisite Food & Professional Service</p>
+</section>
+
+<!-- Services Grid -->
+<div class="services-container">
+  <h2 class="section-title">Our Catering Services</h2>
+  <div class="services-grid">
+    <div class="service-card" onclick="showService('serving')">
+      <div class="service-icon"><i class="fas fa-users"></i></div>
+      <h3>Food Serving Team</h3>
+      <p>Professional serving staff for your events</p>
+      <button class="service-btn">View Details</button>
+    </div>
+
+    <div class="service-card" onclick="showService('dishwasher')">
+      <div class="service-icon"><i class="fas fa-soap"></i></div>
+      <h3>Dishwasher Service</h3>
+      <p>Complete dishwashing and cleanup service</p>
+      <button class="service-btn">View Details</button>
+    </div>
+
+    <div class="service-card" onclick="showService('dishes')">
+      <div class="service-icon"><i class="fas fa-utensils"></i></div>
+      <h3>Wedding & Parties Dishes</h3>
+      <p>Extensive menu for all occasions</p>
+      <button class="service-btn">View Details</button>
+    </div>
+
+    <div class="service-card" onclick="showService('cooking')">
+      <div class="service-icon"><i class="fas fa-chef"></i></div>
+      <h3>Food Cooking Team</h3>
+      <p>Expert chefs for your special events</p>
+      <button class="service-btn">View Details</button>
+    </div>
+
+    <div class="service-card" onclick="showService('tent')">
+      <div class="service-icon"><i class="fas fa-campground"></i></div>
+      <h3>Tent Equipments</h3>
+      <p>Premium tents and furniture setup</p>
+      <button class="service-btn">View Details</button>
+    </div>
+
+    <div class="service-card" onclick="showService('decoration')">
+      <div class="service-icon"><i class="fas fa-palette"></i></div>
+      <h3>Wedding Decoration</h3>
+      <p>Beautiful decoration for your events</p>
+      <button class="service-btn">View Details</button>
+    </div>
+
+    <div class="service-card" onclick="showService('cardecor')">
+      <div class="service-icon"><i class="fas fa-car"></i></div>
+      <h3>Barat Car Decoration</h3>
+      <p>Elegant car decoration for wedding processions</p>
+      <button class="service-btn">View Details</button>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-section">
+      <h3>About Brio Bite</h3>
+      <p>Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+    <div class="footer-section">
+      <h3>Contact Info</h3>
+      <ul>
+        <li><i class="fas fa-map-marker-alt"></i> Clement Town, Dehradun</li>
+        <li><i class="fas fa-phone"></i> +91 9627024287</li>
+        <li><i class="fas fa-envelope"></i> Official.briobite@gmail.com</li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Our Services</a></li>
+        <li><a href="veg.html">Vegetarian</a></li>
+        <li><a href="non-veg.html">Non-Vegetarian</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="copyright">
+    <p>&copy; 2026 Brio Bite. All Rights Reserved.</p>
+  </div>
+</footer>
+
+<button onclick="goBack()" class="back-btn">
+  <i class="fas fa-arrow-left"></i> Back
+</button>
+
+<script>
+  // Menu Data
+  const vegMenu = {
+    'Starters': ['Paneer Tikka', 'Veg Spring Rolls', 'Hara Bhara Kabab', 'Veg Manchurian', 'Crispy Corn'],
+    'Main Course': ['Paneer Butter Masala', 'Dal Makhani', 'Veg Biryani', 'Shahi Paneer', 'Mix Veg', 'Kadai Paneer'],
+    'Breads': ['Butter Naan', 'Garlic Naan', 'Tandoori Roti', 'Stuffed Kulcha'],
+    'Rice': ['Jeera Rice', 'Ghee Rice', 'Veg Pulao', 'Lemon Rice'],
+    'Desserts': ['Gulab Jamun', 'Rasmalai', 'Ice Cream', 'Fruit Salad', 'Gajar Ka Halwa']
+  };
+
+  const nonVegMenu = {
+    'Starters': ['Chicken Tikka', 'Fish Fry', 'Mutton Seekh Kabab', 'Chicken Lollipop', 'Prawn Tempura'],
+    'Main Course': ['Butter Chicken', 'Chicken Curry', 'Mutton Rogan Josh', 'Fish Curry', 'Egg Curry', 'Chicken Biryani'],
+    'Breads': ['Butter Naan', 'Garlic Naan', 'Tandoori Roti', 'Roomali Roti'],
+    'Rice': ['Chicken Biryani', 'Mutton Biryani', 'Ghee Rice', 'Jeera Rice'],
+    'Desserts': ['Gulab Jamun', 'Rasmalai', 'Ice Cream', 'Fruit Salad', 'Double Ka Meetha']
+  };
+
+  const pricing = {
+    veg: { 100: 350, 150: 320, 200: 300, 300: 280 },
+    nonVeg: { 100: 450, 150: 420, 200: 400, 300: 380 }
+  };
+
+  const teamPackages = {
+    cooking: {
+      basic: { price: 15000, desc: '2 Chefs + 2 Helpers for 4 hours' },
+      premium: { price: 25000, desc: '3 Chefs + 4 Helpers for 6 hours' },
+      luxury: { price: 40000, desc: '5 Chefs + 6 Helpers + Head Chef for 8 hours' }
+    },
+    serving: {
+      basic: { price: 8000, desc: '4 Servers for 4 hours' },
+      premium: { price: 12000, desc: '6 Servers for 6 hours' },
+      luxury: { price: 18000, desc: '10 Servers for 8 hours' }
+    },
+    dishwasher: {
+      basic: { price: 5000, desc: '2 Staff + Equipment for 4 hours' },
+      premium: { price: 8000, desc: '3 Staff + Equipment for 6 hours' },
+      luxury: { price: 12000, desc: '5 Staff + Equipment for 8 hours' }
+    }
+  };
+
+  let currentService = null;
+  let selectedGuests = null;
+  let selectedFoodType = null;
+  let selectedPackage = null;
+  let selectedTeam = null;
+
+  function showService(service) {
+    currentService = service;
+    const modal = document.getElementById('serviceModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+
+    const titles = {
+      serving: 'Food Serving Team',
+      dishwasher: 'Dishwasher Service',
+      dishes: 'Wedding & Parties Dishes',
+      cooking: 'Food Cooking Team',
+      tent: 'Tent Equipment Rental',
+      decoration: 'Decoration Services',
+      cardecor: 'Car Decoration Services'
+    };
+    modalTitle.innerHTML = titles[service];
+
+    if (service === 'cooking' || service === 'serving' || service === 'dishwasher') {
+      modalBody.innerHTML = getTeamServiceHTML(service);
+    } else {
+      modalBody.innerHTML = getServiceHTML(service);
+    }
+
+    modal.style.display = 'block';
+    if (service === 'dishes') attachDishEventListeners();
+    else if (service === 'cooking' || service === 'serving' || service === 'dishwasher') attachTeamEventListeners();
+    else attachSimpleEventListeners();
+  }
+
+  function getTeamServiceHTML(service) {
+    const titles = {
+      cooking: 'Cooking Team',
+      serving: 'Serving Team',
+      dishwasher: 'Dishwasher Service'
+    };
+    return `
+      <div class="service-description">
+        <h3>Professional ${titles[service]}</h3>
+        <div class="team-packages">
+          <h4>Choose Package:</h4>
+          <div class="package-options">
+            <button class="team-btn" data-team="basic">Basic Package</button>
+            <button class="team-btn" data-team="premium">Premium Package</button>
+            <button class="team-btn" data-team="luxury">Luxury Package</button>
+          </div>
+        </div>
+        <div id="teamDetails" class="team-details"></div>
+        <button class="book-btn" onclick="proceedToBooking()">Book Now</button>
+      </div>
+    `;
+  }
+
+  function getServiceHTML(service) {
+    if (service === 'dishes') {
+      return `
+        <div class="service-description">
+          <h3>Select Event Details</h3>
+          <div class="guest-selection">
+            <h4>Estimated Guests Count:</h4>
+            <div class="guest-options">
+              <button class="guest-btn" data-guests="100">100 Guests</button>
+              <button class="guest-btn" data-guests="150">150 Guests</button>
+              <button class="guest-btn" data-guests="200">200 Guests</button>
+              <button class="guest-btn" data-guests="300">300 Guests</button>
+            </div>
+          </div>
+          <div class="food-selection">
+            <h4>Food Type:</h4>
+            <div class="food-type">
+              <button class="food-btn" data-food="veg">Vegetarian</button>
+              <button class="food-btn" data-food="nonveg">Non-Vegetarian</button>
+            </div>
+          </div>
+          <div id="menuDisplay" style="display:none;">
+            <div class="menu-items">
+              <h4>Selected Menu:</h4>
+              <div id="menuList"></div>
+            </div>
+            <div class="cost-display">
+              <h3>Estimated Cost: ₹<span id="estimatedCost">0</span></h3>
+            </div>
+            <div class="package-options">
+              <h4>Choose Option:</h4>
+              <button class="package-btn" data-package="full">Full Package (Food + Setup)</button>
+              <button class="package-btn" data-package="booking">Only Booking Team</button>
+            </div>
+            <button class="book-btn" onclick="proceedToBooking()">Proceed to Book</button>
+          </div>
+        </div>
+      `;
+    } else if (service === 'tent') {
+      return `
+        <div class="service-description">
+          <h3>Tent & Equipment Packages</h3>
+          <div class="package-options">
+            <button class="package-btn" data-package="basic" data-price="25000">Basic Package - ₹25,000</button>
+            <button class="package-btn" data-package="premium" data-price="45000">Premium Package - ₹45,000</button>
+            <button class="package-btn" data-package="luxury" data-price="75000">Luxury Package - ₹75,000</button>
+          </div>
+          <div id="packageDetails"></div>
+          <button class="book-btn" onclick="proceedToBooking()">Book Now</button>
+        </div>
+      `;
+    } else if (service === 'decoration') {
+      return `
+        <div class="service-description">
+          <h3>Decoration Themes</h3>
+          <div class="package-options">
+            <button class="package-btn" data-package="traditional" data-price="35000">Traditional - ₹35,000</button>
+            <button class="package-btn" data-package="modern" data-price="40000">Modern - ₹40,000</button>
+            <button class="package-btn" data-package="royal" data-price="60000">Royal - ₹60,000</button>
+            <button class="package-btn" data-package="floral" data-price="50000">Floral - ₹50,000</button>
+          </div>
+          <button class="book-btn" onclick="proceedToBooking()">Book Now</button>
+        </div>
+      `;
+    } else if (service === 'cardecor') {
+      return `
+        <div class="service-description">
+          <h3>Car Decoration Styles</h3>
+          <div class="package-options">
+            <button class="package-btn" data-package="simple" data-price="5000">Simple - ₹5,000</button>
+            <button class="package-btn" data-package="premium" data-price="10000">Premium - ₹10,000</button>
+            <button class="package-btn" data-package="luxury" data-price="15000">Luxury - ₹15,000</button>
+            <button class="package-btn" data-package="royal" data-price="25000">Royal - ₹25,000</button>
+          </div>
+          <button class="book-btn" onclick="proceedToBooking()">Book Now</button>
+        </div>
+      `;
+    }
+    return '<p>Service details coming soon...</p>';
+  }
+
+  function attachDishEventListeners() {
+    document.querySelectorAll('.guest-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.guest-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        selectedGuests = parseInt(this.dataset.guests);
+        if (selectedFoodType) updateMenuAndCost();
+      });
+    });
+
+    document.querySelectorAll('.food-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.food-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        selectedFoodType = this.dataset.food;
+        if (selectedGuests) updateMenuAndCost();
+      });
+    });
+
+    document.querySelectorAll('.package-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.package-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        selectedPackage = this.dataset.package;
+      });
+    });
+  }
+
+  function updateMenuAndCost() {
+    const menuDisplay = document.getElementById('menuDisplay');
+    const menuList = document.getElementById('menuList');
+    const costSpan = document.getElementById('estimatedCost');
+
+    menuDisplay.style.display = 'block';
+    const menu = selectedFoodType === 'veg' ? vegMenu : nonVegMenu;
+    
+    let menuHTML = '<div class="menu-grid">';
+    for (const [category, items] of Object.entries(menu)) {
+      menuHTML += `<div class="menu-category"><strong>${category}</strong>`;
+      items.forEach(item => {
+        menuHTML += `<div class="menu-item">• ${item}</div>`;
+      });
+      menuHTML += '</div>';
+    }
+    menuHTML += '</div>';
+    menuList.innerHTML = menuHTML;
+
+    const cost = pricing[selectedFoodType][selectedGuests] * selectedGuests;
+    costSpan.innerText = cost.toLocaleString('en-IN');
+  }
+
+  function attachTeamEventListeners() {
+    document.querySelectorAll('.team-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.team-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        selectedTeam = this.dataset.team;
+        const teamDetails = document.getElementById('teamDetails');
+        const pkg = teamPackages[currentService][selectedTeam];
+        teamDetails.innerHTML = `<div class="cost-display"><h3>${pkg.desc}<br>Price: ₹${pkg.price.toLocaleString('en-IN')}</h3></div>`;
+      });
+    });
+  }
+
+  function attachSimpleEventListeners() {
+    document.querySelectorAll('.package-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.package-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        selectedPackage = this.dataset.package;
+      });
+    });
+  }
+
+  function proceedToBooking() {
+    let bookingData = { service: currentService, timestamp: new Date().toISOString() };
+
+    if (currentService === 'cooking' || currentService === 'serving' || currentService === 'dishwasher') {
+      if (!selectedTeam) {
+        alert('Please select a package first');
+        return;
+      }
+      bookingData.teamPackage = selectedTeam;
+      bookingData.cost = teamPackages[currentService][selectedTeam].price;
+      bookingData.description = teamPackages[currentService][selectedTeam].desc;
+    } else if (currentService === 'dishes') {
+      if (!selectedGuests || !selectedFoodType) {
+        alert('Please select guest count and food type');
+        return;
+      }
+      if (!selectedPackage) {
+        alert('Please select Full Package or Only Booking Team');
+        return;
+      }
+      bookingData.guests = selectedGuests;
+      bookingData.foodType = selectedFoodType;
+      bookingData.packageType = selectedPackage;
+      bookingData.cost = pricing[selectedFoodType][selectedGuests] * selectedGuests;
+    } else {
+      const selected = document.querySelector('.package-btn.active');
+      if (!selected) {
+        alert('Please select a package');
+        return;
+      }
+      bookingData.selectedPackage = selected.dataset.package;
+      bookingData.cost = parseInt(selected.dataset.price);
+    }
+
+    localStorage.setItem('cateringBooking', JSON.stringify(bookingData));
+    window.location.href = 'catering-details.html';
+  }
+
+  function goBack() {
+    window.history.back();
+  }
+
+  // Modal setup
+  const modalDiv = document.createElement('div');
+  modalDiv.id = 'serviceModal';
+  modalDiv.className = 'modal';
+  modalDiv.innerHTML = `
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Service Details</h2>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  `;
+  document.body.appendChild(modalDiv);
+
+  const modal = document.getElementById('serviceModal');
+  document.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
+  window.onclick = (event) => { if (event.target == modal) modal.style.display = 'none'; };
+
+  // Navbar toggle
+  document.getElementById('menuToggle').addEventListener('click', () => {
+    document.getElementById('dropdownMenu').classList.toggle('active');
+  });
+
+  document.addEventListener('click', function(e) {
+    const sidebar = document.getElementById('dropdownMenu');
+    const toggle = document.getElementById('menuToggle');
+    if (sidebar && toggle && !sidebar.contains(e.target) && !toggle.contains(e.target)) {
+      sidebar.classList.remove('active');
+    }
+  });
+</script>
+</body>
+</html>
