@@ -217,26 +217,30 @@ main {
       transform: scale(1.1);
     }
 
-    .profile-panel {
-      position: fixed;
-      top: 0;
-      left: -320px;
-      width: 300px;
-      height: 100%;
-      background: rgba(10, 40, 35, 0.98);
-      box-shadow: 3px 0 10px rgba(0,0,0,0.4);
-      color: white;
-      padding: 20px;
-      transition: right 0.4s ease;
-      z-index: 10;
-    }
+.profile-panel {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 80%;              /* better for mobile */
+  max-width: 320px;       /* limit for desktop */
+  height: 100vh;
+  background: rgba(10, 40, 35, 0.98);
+  box-shadow: 3px 0 15px rgba(0,0,0,0.5);
+  color: white;
+  padding: 15px;
+  transition: left 0.3s ease;
+  z-index: 10;
+
+  overflow-y: auto;       /* scroll inside */
+  overflow-x: hidden;     /* stop overflow */
+}
     .close-btn {
       position: absolute;
       top: 15px;
       right: 15px;
       background: none;
       border: none;
-      font-size: 22px;
+      font-size: 18px;
       color: #ffd87c;
       cursor: pointer;
     }
@@ -613,7 +617,11 @@ main {
     
   }
 
-
+@media (max-width: 600px) {
+  .profile-panel {
+    width: 75%;
+  }
+}
 
     @media (max-width: 600px) {
       .tiffin-menu-btn {
@@ -633,7 +641,54 @@ main {
         }
     }
 
+/* Fix text overflow */
+.profile-panel p,
+.profile-panel h3,
+.subscription-details p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
 
+/* Make everything fit */
+.profile-panel * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.manage-subscription-btn,
+.tiffin-menu-btn,
+.logout-btn {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 0.8rem;
+  border-radius: 6px;
+}
+
+/* Fix subscription box */
+.subscription-details {
+  width: 100%;
+  padding: 10px;
+}
+
+/* SMALL SCREEN FIX */
+@media (max-width: 600px) {
+  .profile-panel {
+    width: 75%;
+    padding: 15px;
+  }
+
+  .profile-info p {
+    font-size: 0.85rem;
+  }
+
+  .subscription-section h4 {
+    font-size: 0.9rem;
+  }
+
+  .subscription-details p {
+    font-size: 0.8rem;
+  }
+}
   </style>
 </head>
 
