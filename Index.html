@@ -19,17 +19,17 @@
       font-family: "Poppins", sans-serif;
     }
 
-    body {
-      background-color: #092724;
-      height: 100vh;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      overflow: auto;
-    }
-
+body {
+  background-color: #092724;
+  min-height: 100vh;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+main {
+  flex: 1;
+}
     .overlay {
       position: absolute;
       inset: 0;
@@ -93,8 +93,8 @@
     }
 
     .menu-btn {
-      margin-top: 10px;
-      margin-bottom: 0;
+      margin-top: 40px;
+      margin-bottom: 20px;
       background: #e4bf3c;
       border: none;
       box-shadow: 0 1px 8px rgb(199, 188, 37);
@@ -125,17 +125,20 @@
       z-index: 2;
     }
 .footer-links {
-  text-align: center;
-  margin-top: 1px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 8px;
   margin-bottom: 5px;
 }
 
 .footer-links a {
-  margin: 0 10px;
+  font-size: 0.65rem;
+  color: #aaa;
   text-decoration: none;
-  font-size: 0.6rem;
-  color: #464646c4;
+  white-space: nowrap;
 }
+
 
     @keyframes glow {
       from {
@@ -484,15 +487,18 @@
 }   
 
 .seo-container {
-   padding: 30px 20px 10px; 
+   padding: 20px 30px 10px; 
   margin-bottom: 0;
   text-align: center;
+   position: relative;
+  z-index: 2;
+  padding-top: 10px;
   
 }
 
 .seo-box {
   max-width: 800px;
-  margin: 40px auto;
+  margin: 20px auto;
   padding: 25px;
   background: rgba(255,255,255,0.05);
   border-radius: 12px;
@@ -521,11 +527,7 @@
 .seo-links a:hover {
   text-decoration: underline;
 }
-.seo-container {
-  position: relative;
-  z-index: 2;
-  padding-top: 10px;
-}
+
 
 @media (max-width: 300px) {
 
