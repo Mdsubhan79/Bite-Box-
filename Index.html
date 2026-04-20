@@ -18,7 +18,7 @@
 <meta property="og:image" content="https://briobite11.netlify.app/briobite.png">
 <meta property="og:type" content="website">
   <style>
-    /* KEEP THEM ALL */
+    
     * {
       margin: 0;
       padding: 0;
@@ -36,6 +36,18 @@ body {
 }
 main {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;   
+}
+.hero {
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+.seo-container {
+  padding-top: 5px;
+  margin-top: 0;  
 }
     .overlay {
       position: absolute;
@@ -228,8 +240,8 @@ main {
   position: fixed;
   top: 0;
   left: -100%;
-  width: 80%;              /* better for mobile */
-  max-width: 320px;       /* limit for desktop */
+  width: 80%;             
+  max-width: 320px;     
   height: 100vh;
   background: rgba(10, 40, 35, 0.98);
   box-shadow: 3px 0 15px rgba(0,0,0,0.5);
@@ -238,8 +250,8 @@ main {
   transition: left 0.3s ease;
   z-index: 10;
 
-  overflow-y: auto;       /* scroll inside */
-  overflow-x: hidden;     /* stop overflow */
+  overflow-y: auto;       
+  overflow-x: hidden;     
 }
     .close-btn {
       position: absolute;
@@ -281,7 +293,7 @@ main {
     .logout-btn:hover {
       background-color: #ad221d;
     }
-    /* Subscription Details Styles */
+
     .subscription-section {
       margin-top: 25px;
       padding: 15px;
@@ -338,7 +350,7 @@ main {
       font-style: italic;
       padding: 20px 0;
     }
-    /* Additional styles for multiple subscription buttons */
+    
     .manage-subscription-btn {
       width: 100%;
       background: #f7c948;
@@ -371,7 +383,7 @@ main {
       background: #218838;
     }
 
-    /* Make sure buttons are properly spaced */
+   
     .subscription-section button {
       margin-bottom: 8px;
     }
