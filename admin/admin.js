@@ -374,7 +374,12 @@ function deleteNonVeg(id) {
 function loadCateringServices() {
 
     const content =
-    document.getElementById("content");
+    document.getElementById("contentBody");
+
+    document.getElementById(
+        "pageTitle"
+    ).innerText =
+    "Catering Services";
 
     content.innerHTML = `
     
@@ -396,17 +401,7 @@ function loadCateringServices() {
     
     `;
 
-    fetch(`${API_BASE}/api/catering/services`, {
-
-        headers: {
-
-            Authorization:
-            "Bearer " +
-            localStorage.getItem("adminToken")
-
-        }
-
-    })
+    fetch(`${API_BASE}/api/catering/services`)
 
     .then(res => res.json())
 
@@ -421,9 +416,9 @@ function loadCateringServices() {
         if (!services || services.length === 0) {
 
             html = `
-                <div class="empty-catering">
-                    No Catering Services Found
-                </div>
+            <div class="empty-catering">
+                No Catering Services Found
+            </div>
             `;
 
         } else {
@@ -459,24 +454,6 @@ function loadCateringServices() {
                         <h4>
                             ₹${service.price}
                         </h4>
-
-                        ${
-                            service.items?.length
-                            ?
-                            `
-                            <ul class="catering-items">
-
-                                ${
-                                    service.items.map(item => `
-                                        <li>${item}</li>
-                                    `).join("")
-                                }
-
-                            </ul>
-                            `
-                            :
-                            ""
-                        }
 
                     </div>
 
@@ -520,10 +497,9 @@ function loadCateringServices() {
 
 }
 
-
 function showAddCateringForm() {
 
-    document.getElementById("content").innerHTML = `
+    document.getElementById("contentBody").innerHTML = `
     
     <div class="add-catering-form">
 
