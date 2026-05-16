@@ -1,884 +1,1656 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Catering Services | Brio Bite</title>
-  <link rel="icon" type="image/x-icon" href="briobite.png">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catering Services - Choose Your Staff & Decor</title>
+    <style>
+        :root {
+            --primary: #e74c3c;
+            --secondary: #c0392b;
+            --accent: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --white: #ffffff;
+            --green: #27ae60;
+            --red: #e74c3c;
+            --orange: #f39c12;
+            --shadow: 0 10px 40px rgba(0,0,0,0.1);
+            --card-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
 
-    body {
-      background: #fef8f0;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* Navbar Styles */
-    .navbar {
-      background-color: #0c2f2c;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 1.5rem;
-      position: relative;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-    .logo-container {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
+        /* Header */
+        .page-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #081b19 0%, #012c27 100%);
+            color: white;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
 
-    .nav-logo {
-      font-family: 'Lucida Handwriting', cursive;
-      font-size: 1.8rem;
-      color: #fff;
-      text-decoration: none;
-    }
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
 
-    .nav-tagline {
-      font-family: 'Lucida Handwriting', cursive;
-      font-size: 0.9rem;
-      color: #f7c948;
-      margin-top: 2px;
-      font-weight: 500;
-    }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
-    .menu-toggle {
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
+        .page-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
 
-    .menu-line {
-      width: 25px;
-      height: 3px;
-      background-color: white;
-    }
+        .page-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
 
-    .dropdown-menu {
-      display: none;
-      flex-direction: column;
-      position: absolute;
-      top: 99%;
-      right: 0rem;
-      background-color: #0c2f2c;
-      padding: 1rem;
-      border-radius: 2px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.8);
-      z-index: 100;
-    }
+        /* ServiceCard */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+        }
 
-    .dropdown-menu a {
-      color: white;
-      text-decoration: none;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid #1e4642;
-    }
+        .service-card {
+            background:  #10332F;
+            border-radius: 20px;
+            padding: 35px 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
 
-    .dropdown-menu.active {
-      display: flex;
-    }
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(200, 255, 0, 0.15);
+            border-color: var(--primary);
+        }
 
-    @media (min-width: 768px) {
-      .menu-toggle {
-        display: none;
-      }
-      .dropdown-menu {
-        display: flex !important;
-        position: static;
-        flex-direction: row;
-        gap: 1.5rem;
-        background: none;
-        box-shadow: none;
-        padding: 0;
-      }
-      .dropdown-menu a {
-        border-bottom: none;
-        padding: 0;
-      }
-    }
+        .service-card .icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
 
-    /* Hero Section */
-    .catering-hero {
-      background: linear-gradient(135deg, #0c2f2c 0%, #1a5c55 100%);
-      padding: 4rem 2rem;
-      text-align: center;
-      color: white;
-    }
+        .service-card h3 {
+            font-size: 1.4rem;
+            color: var(--light);
+            margin-bottom: 8px;
+        }
 
-    .catering-hero h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-    }
+        .service-card .tagline {
+            color: #b1b1b1;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
 
-    .catering-hero p {
-      font-size: 1.2rem;
-      opacity: 0.9;
-    }
+        .service-card .badge {
+            display: inline-block;
+            background: var(--accent);
+            color: rgb(0, 0, 0);
+            padding: 6px 18px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
 
-    /* Services Grid */
-    .services-container {
-      max-width: 1200px;
-      margin: 4rem auto;
-      padding: 0 2rem;
-    }
+        /* Package Card */
+        .package-card {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(238, 90, 36, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
 
-    .section-title {
-      text-align: center;
-      font-size: 2rem;
-      color: #0c2f2c;
-      margin-bottom: 3rem;
-    }
+        .package-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(238, 90, 36, 0.4);
+        }
 
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-    }
+        .package-card .offer-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: white;
+            color: #ee5a24;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+        }
 
-    .service-card {
-      background: white;
-      border-radius: 15px;
-      padding: 2rem;
-      text-align: center;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-      transition: transform 0.3s, box-shadow 0.3s;
-      cursor: pointer;
-    }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
 
-    .service-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    }
+        .package-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
 
-    .service-icon {
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(135deg, #0c2f2c 0%, #1a5c55 100%);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1.5rem;
-    }
+        .package-card .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 15px 0;
+        }
 
-    .service-icon i {
-      font-size: 2.5rem;
-      color: #f7c948;
-    }
+        .package-card .features {
+            list-style: none;
+            text-align: left;
+            max-width: 300px;
+            margin: 0 auto;
+        }
 
-    .service-card h3 {
-      font-size: 1.3rem;
-      color: #0c2f2c;
-      margin-bottom: 1rem;
-    }
+        .package-card .features li {
+            padding: 8px 0;
+            font-size: 0.95rem;
+        }
 
-    .service-card p {
-      color: #666;
-      margin-bottom: 1.5rem;
-      line-height: 1.6;
-    }
+        .package-card .features li::before {
+            content: '✓ ';
+            font-weight: bold;
+        }
 
-    .service-btn {
-      background: linear-gradient(135deg, #0c2f2c 0%, #1a5c55 100%);
-      color: white;
-      border: none;
-      padding: 0.8rem 1.5rem;
-      border-radius: 25px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: transform 0.3s;
-    }
+        /* Modal Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
 
-    .service-btn:hover {
-      transform: scale(1.05);
-    }
+        .modal-overlay.active {
+            display: flex;
+        }
 
-    /* Modal Styles */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.6);
-      z-index: 2000;
-      overflow-y: auto;
-    }
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
 
-    .modal-content {
-      background: white;
-      max-width: 800px;
-      margin: 50px auto;
-      border-radius: 15px;
-      animation: slideDown 0.3s ease;
-    }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    @keyframes slideDown {
-      from {
-        transform: translateY(-100px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
 
-    .modal-header {
-      background: linear-gradient(135deg, #0c2f2c 0%, #1a5c55 100%);
-      color: white;
-      padding: 1.5rem;
-      border-radius: 15px 15px 0 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        .modal-close:hover {
+            color: var(--primary);
+        }
 
-    .modal-header h2 {
-      margin: 0;
-    }
+        .modal h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
 
-    .close-modal {
-      font-size: 2rem;
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
+        .staff-counter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 25px 0;
+        }
 
-    .close-modal:hover {
-      transform: scale(1.2);
-    }
+        .staff-counter button {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
 
-    .modal-body {
-      padding: 2rem;
-    }
+        .staff-counter button:hover {
+            background: var(--primary);
+            color: white;
+        }
 
-    /* Form Elements */
-    .guest-options, .food-type, .package-options {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 1rem;
-      margin: 1.5rem 0;
-    }
+        .staff-counter .quantity {
+            font-size: 2.5rem;
+            font-weight: 700;
+            min-width: 60px;
+            text-align: center;
+            color: var(--dark);
+        }
 
-    .guest-btn, .food-btn, .package-btn, .team-btn {
-      padding: 1rem;
-      background: #f0f0f0;
-      border: 2px solid #ddd;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: all 0.3s;
-    }
+        .staff-price {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
 
-    .guest-btn:hover, .guest-btn.active,
-    .food-btn:hover, .food-btn.active,
-    .package-btn:hover, .package-btn.active,
-    .team-btn:hover, .team-btn.active {
-      background: linear-gradient(135deg, #0c2f2c 0%, #1a5c55 100%);
-      color: white;
-      border-color: transparent;
-    }
+        .staff-price span {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
 
-    .menu-items {
-      margin: 2rem 0;
-      padding: 1rem;
-      background: #f9f9f9;
-      border-radius: 10px;
-    }
+        .total-staff-price {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
 
-    .menu-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-    }
+        /* Tent Options */
+        .tent-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
 
-    .menu-category {
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
-    }
+        .tent-option {
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
 
-    .menu-category strong {
-      color: #0c2f2c;
-      display: block;
-      margin-bottom: 0.5rem;
-    }
+        .tent-option:hover,
+        .tent-option.selected {
+            border-color: var(--primary);
+            background: #fff5f5;
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.15);
+        }
 
-    .menu-item {
-      padding: 0.3rem 0;
-      font-size: 0.9rem;
-      color: #555;
-    }
+        .tent-option.selected {
+            background: #ffebee;
+            border-color: var(--secondary);
+        }
 
-    .cost-display {
-      margin: 1.5rem 0;
-      padding: 1rem;
-      background: #e8f5e9;
-      border-radius: 10px;
-      text-align: center;
-    }
+        .tent-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: var(--green);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
 
-    .cost-display h3 {
-      color: #2e7d32;
-      font-size: 1.5rem;
-    }
+        .tent-option img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: #f0f0f0;
+        }
 
-    .team-details {
-      margin: 1rem 0;
-    }
+        .tent-option .tent-size {
+            font-weight: 700;
+            color: var(--dark);
+        }
 
-    .book-btn {
-      width: 100%;
-      padding: 1rem;
-      background: linear-gradient(135deg, #0c2f2c 0%, #1a5c55 100%);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: transform 0.3s;
-      margin-top: 1rem;
-    }
+        .tent-option .tent-price {
+            color: var(--primary);
+            font-weight: 600;
+            margin: 5px 0;
+        }
 
-    .book-btn:hover {
-      transform: scale(1.02);
-    }
+        .tent-option .tent-items {
+            font-size: 0.8rem;
+            color: #888;
+        }
 
-    /* Footer */
-    footer {
-      background-color: #222;
-      color: white;
-      padding: 40px 20px 20px;
-      margin-top: 50px;
-    }
+        .custom-size-input {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            align-items: center;
+        }
 
-    .footer-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      max-width: 1200px;
-      margin: auto;
-    }
+        .custom-size-input input {
+            width: 80px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            text-align: center;
+        }
 
-    .footer-section h3 {
-      color: #ff6b6b;
-      margin-bottom: 10px;
-    }
+        .custom-size-input span {
+            font-weight: 600;
+            color: #666;
+        }
 
-    .footer-section ul {
-      list-style: none;
-      padding: 0;
-    }
+        /* Date Picker */
+        .date-picker-container {
+            margin: 20px 0;
+            text-align: center;
+        }
 
-    .footer-section ul li {
-      margin-bottom: 8px;
-    }
+        .date-picker-container input[type="date"] {
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 300px;
+            cursor: pointer;
+        }
 
-    .footer-section ul li a {
-      color: #ccc;
-      text-decoration: none;
-    }
+        .date-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
 
-    .social-links a {
-      color: white;
-      margin-right: 10px;
-      font-size: 1.2rem;
-    }
+        .date-status.available {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
 
-    .copyright {
-      text-align: center;
-      margin-top: 30px;
-      font-size: 0.9rem;
-      color: #bbb;
-    }
+        .date-status.unavailable {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
 
-    .back-btn {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background-color: #ff6b6b;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-    }
+        .date-status.urgent {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
 
-    @media (max-width: 768px) {
-      .services-grid {
-        grid-template-columns: 1fr;
-      }
-      .modal-content {
-        margin: 20px;
-      }
-    }
-  </style>
+        .urgent-checkbox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .urgent-checkbox input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* Cart */
+        .cart-popup {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+        }
+
+        .cart-toggle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .cart-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--dark);
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .cart-drawer {
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            width: 380px;
+            max-height: 60vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        .cart-drawer.active {
+            display: block;
+        }
+
+        .cart-drawer h4 {
+            margin-bottom: 15px;
+            color: var(--dark);
+            font-size: 1.2rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+
+        .cart-item .remove-item {
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+
+        .cart-item .remove-item:hover {
+            color: var(--red);
+        }
+
+        .cart-total {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #333;
+            font-weight: 700;
+            font-size: 1.3rem;
+            text-align: right;
+            color: var(--dark);
+        }
+
+        .cart-date-indicator {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .cart-date-indicator.green {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .cart-date-indicator.red {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .cart-date-indicator.orange {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 30px;
+            border-radius: 25px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            .cart-drawer {
+                width: 90%;
+                right: 5%;
+                left: 5%;
+            }
+            .modal {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+
+
+       /* =========================================================
+   ULTRA RESPONSIVE CATERING PAGE
+   260px TO LARGE SCREENS
+========================================================= */
+
+/* ===============================
+   260px - 320px
+================================ */
+@media screen and (max-width:320px){
+
+body{
+padding:6px;
+overflow-x:hidden;
+}
+
+/* HEADER */
+.page-header{
+padding:20px 10px;
+border-radius:18px;
+margin-bottom:20px;
+}
+
+.page-header h1{
+font-size:1.3rem;
+line-height:1.2;
+}
+
+.page-header p{
+font-size:0.65rem;
+margin-top:6px;
+line-height:1.3;
+}
+
+/* GRID */
+.services-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+padding:0;
+}
+
+/* CARDS */
+.service-card{
+padding:18px 8px;
+border-radius:18px;
+min-height:190px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+.service-card .icon{
+font-size:2.3rem;
+margin-bottom:10px;
+}
+
+.service-card h3{
+font-size:0.95rem;
+line-height:1.2;
+margin-bottom:8px;
+}
+
+.service-card .tagline{
+font-size:0.62rem;
+line-height:1.4;
+margin-bottom:12px;
+}
+
+.service-card .badge{
+font-size:0.6rem;
+padding:7px 12px;
+border-radius:20px;
+}
+
+/* PACKAGE */
+.package-card{
+padding:22px 12px;
+border-radius:20px;
+margin-top:5px;
+}
+
+.package-card .offer-badge{
+top:10px;
+right:10px;
+font-size:0.58rem;
+padding:5px 10px;
+}
+
+.package-card h3{
+font-size:1.3rem;
+margin-top:18px;
+}
+
+.package-card p{
+font-size:0.68rem;
+margin-top:6px;
+}
+
+.package-card .price{
+font-size:2rem;
+margin:14px 0;
+}
+
+.package-card .features{
+max-width:100%;
+}
+
+.package-card .features li{
+font-size:0.62rem;
+padding:4px 0;
+line-height:1.4;
+}
+
+/* FLOAT CART */
+.cart-popup{
+bottom:16px;
+right:16px;
+}
+
+.cart-toggle{
+width:58px;
+height:58px;
+font-size:1.3rem;
+}
+
+.cart-count{
+width:20px;
+height:20px;
+font-size:0.52rem;
+}
+
+/* CART DRAWER */
+.cart-drawer{
+width:96%;
+left:2%;
+right:2%;
+bottom:82px;
+padding:16px 12px;
+border-radius:18px;
+max-height:70vh;
+}
+
+.cart-drawer h4{
+font-size:1rem;
+margin-bottom:10px;
+}
+
+.cart-item{
+font-size:0.7rem;
+padding:8px 0;
+line-height:1.5;
+}
+
+.cart-total{
+font-size:1rem;
+margin-top:12px;
+}
+
+/* MODALS */
+.modal{
+width:96%;
+padding:18px 12px;
+border-radius:18px;
+max-height:90vh;
+overflow-y:auto;
+}
+
+.modal h3{
+font-size:1.1rem;
+margin-bottom:14px;
+}
+
+/* STAFF COUNTER */
+.staff-counter{
+gap:14px;
+margin:20px 0;
+}
+
+.staff-counter button{
+width:36px;
+height:36px;
+font-size:1rem;
+}
+
+.staff-counter .quantity{
+font-size:1.5rem;
+min-width:30px;
+}
+
+.staff-price{
+font-size:0.8rem;
+}
+
+.staff-price span{
+font-size:1rem;
+}
+
+.total-staff-price{
+font-size:1rem;
+padding:10px;
+}
+
+/* TENT */
+.tent-options{
+grid-template-columns:1fr;
+gap:12px;
+}
+
+.tent-option{
+padding:12px;
+border-radius:14px;
+}
+
+.tent-option img{
+height:90px;
+}
+
+.tent-option .tent-size{
+font-size:0.85rem;
+}
+
+.tent-option .tent-price{
+font-size:0.8rem;
+}
+
+.tent-option .tent-items{
+font-size:0.62rem;
+line-height:1.4;
+}
+
+/* CUSTOM SIZE */
+.custom-size-input{
+flex-direction:column;
+gap:10px;
+}
+
+.custom-size-input input{
+width:100%;
+font-size:0.8rem;
+padding:10px;
+}
+
+.custom-size-input button{
+width:100%;
+}
+
+/* DATE */
+.date-picker-container input[type="date"]{
+font-size:0.8rem;
+padding:10px;
+}
+
+.date-status{
+font-size:0.72rem;
+padding:10px;
+line-height:1.4;
+}
+
+.urgent-checkbox{
+font-size:0.7rem;
+line-height:1.4;
+}
+
+/* BUTTONS */
+.btn{
+padding:10px 14px;
+font-size:0.75rem;
+border-radius:22px;
+}
+
+.modal-actions{
+flex-direction:column;
+gap:10px;
+}
+
+}
+
+
+/* ===============================
+   321px - 480px
+================================ */
+@media screen and (min-width:321px) and (max-width:480px){
+
+.services-grid{
+grid-template-columns:1fr 1fr;
+gap:16px;
+}
+
+.service-card{
+min-height:210px;
+padding:20px 12px;
+}
+
+.service-card .icon{
+font-size:2.5rem;
+}
+
+.service-card h3{
+font-size:1rem;
+}
+
+.service-card .tagline{
+font-size:0.72rem;
+}
+
+.package-card{
+padding:25px 16px;
+}
+
+.cart-drawer{
+width:92%;
+right:4%;
+left:4%;
+}
+
+}
+
+
+/* ===============================
+   481px - 768px
+================================ */
+@media screen and (min-width:481px) and (max-width:768px){
+
+.services-grid{
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+}
+
+.service-card{
+min-height:230px;
+}
+
+.package-card{
+grid-column:span 2;
+}
+
+}
+
+
+/* ===============================
+   769px - 1024px
+================================ */
+@media screen and (min-width:769px) and (max-width:1024px){
+
+.services-grid{
+grid-template-columns:repeat(2,1fr);
+gap:24px;
+}
+
+.package-card{
+grid-column:span 2;
+}
+
+}
+
+
+/* ===============================
+   1025px+
+================================ */
+@media screen and (min-width:1025px){
+
+.services-grid{
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+}
+
+}
+       
+
+
+    </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="logo-container">
-    <a href="index.html" class="nav-logo">Brio Bite</a>
-    <div class="nav-tagline">Where Every Bite is a Flavor Bomb</div>
-  </div>
-  <div class="menu-toggle" id="menuToggle">
-    <div class="menu-line"></div>
-    <div class="menu-line"></div>
-    <div class="menu-line"></div>
-  </div>
-  <div class="dropdown-menu" id="dropdownMenu">
-    <a href="index.html">Home</a>
-    <a href="cartpage.html">Cart</a>
-    <a href="aboutus.html">About Us</a>
-    <a href="terms&privay.html">Terms & Policy</a>
-    <a href="contactus.html">Contact Us</a>
-  </div>
-</nav>
-
-<!-- Hero Section -->
-<section class="catering-hero">
-  <h1>Premium Catering Services</h1>
-  <p>Making Your Events Memorable with Exquisite Food & Professional Service</p>
-</section>
-
-<!-- Services Grid -->
-<div class="services-container">
-  <h2 class="section-title">Our Catering Services</h2>
-  <div class="services-grid">
-    <div class="service-card" onclick="showService('serving')">
-      <div class="service-icon"><i class="fas fa-users"></i></div>
-      <h3>Food Serving Team</h3>
-      <p>Professional serving staff for your events</p>
-      <button class="service-btn">View Details</button>
+    <!-- Header -->
+    <div class="page-header">
+        <h1>🍽️ Catering Services</h1>
+        <p>Choose from our premium staff & decoration options</p>
     </div>
 
-    <div class="service-card" onclick="showService('dishwasher')">
-      <div class="service-icon"><i class="fas fa-soap"></i></div>
-      <h3>Dishwasher Service</h3>
-      <p>Complete dishwashing and cleanup service</p>
-      <button class="service-btn">View Details</button>
+    <!-- Service Options Grid -->
+    <div class="services-grid">
+        <!-- Serving Staff -->
+        <div class="service-card" onclick="openStaffModal('serving')">
+            <span class="icon">👨‍🍳</span>
+            <h3>Serving Staff</h3>
+            <p class="tagline">Professional & well-trained servers for your event</p>
+            <span class="badge">₹500/staff</span>
+        </div>
+
+        <!-- Cleaning Staff -->
+        <div class="service-card" onclick="openStaffModal('cleaning')">
+            <span class="icon">🧹</span>
+            <h3>Cleaning Staff</h3>
+            <p class="tagline">Keep your venue spotless throughout the event</p>
+            <span class="badge">₹400/staff</span>
+        </div>
+
+        <!-- Cooking Staff -->
+        <div class="service-card" onclick="openStaffModal('cooking')">
+            <span class="icon">👨‍🍳</span>
+            <h3>Cooking Staff</h3>
+            <p class="tagline">Expert chefs for live cooking & meal prep</p>
+            <span class="badge">₹800/staff</span>
+        </div>
+
+        <!-- Tent & Decoration -->
+        <div class="service-card" onclick="openTentModal()">
+            <span class="icon">🎪</span>
+            <h3>Tent & Decorations</h3>
+            <p class="tagline">Beautiful tents with complete decoration setup</p>
+            <span class="badge">From ₹5,000</span>
+        </div>
+
+        <!-- Full Package -->
+        <div class="package-card" onclick="selectFullPackage()">
+            <div class="offer-badge">🔥 BEST DEAL</div>
+            <span class="icon" style="font-size: 3rem;">🎉</span>
+            <h3>Complete Package</h3>
+            <p>Everything you need in one bundle</p>
+            <div class="price">₹12,999</div>
+            <ul class="features">
+                <li>4 Serving Staff</li>
+                <li>2 Cleaning Staff</li>
+                <li>3 Cooking Staff</li>
+                <li>40x50 Tent + Decor</li>
+                <li>Free Date Priority</li>
+            </ul>
+        </div>
     </div>
 
-    <div class="service-card" onclick="showService('dishes')">
-      <div class="service-icon"><i class="fas fa-utensils"></i></div>
-      <h3>Wedding & Parties Dishes</h3>
-      <p>Extensive menu for all occasions</p>
-      <button class="service-btn">View Details</button>
+    <!-- Staff Modal -->
+    <div class="modal-overlay" id="staffModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('staffModal')">&times;</button>
+            <h3 id="staffModalTitle">Select Staff</h3>
+            <p style="text-align:center;color:#666;">Choose quantity and see pricing</p>
+            <div class="staff-counter">
+                <button onclick="changeStaffQty(-1)">−</button>
+                <span class="quantity" id="staffQty">1</span>
+                <button onclick="changeStaffQty(1)">+</button>
+            </div>
+            <div class="staff-price">
+                Price per staff: <span id="staffUnitPrice">₹500</span>
+            </div>
+            <div class="total-staff-price">
+                Total: <span id="staffTotalPrice">₹500</span>
+            </div>
+            <button class="btn btn-primary btn-block" onclick="confirmStaffSelection()">
+                Confirm & Add to Cart
+            </button>
+        </div>
     </div>
 
-    <div class="service-card" onclick="showService('cooking')">
-      <div class="service-icon"><i class="fas fa-chef"></i></div>
-      <h3>Food Cooking Team</h3>
-      <p>Expert chefs for your special events</p>
-      <button class="service-btn">View Details</button>
+    <!-- Tent Modal -->
+    <div class="modal-overlay" id="tentModal">
+        <div class="modal" style="max-width: 700px;">
+            <button class="modal-close" onclick="closeModal('tentModal')">&times;</button>
+            <h3>Select Tent & Decoration</h3>
+            <div class="tent-options" id="tentOptions">
+                <!-- 40x50 -->
+                <div class="tent-option" onclick="selectTent('40x50', 5000, '8 Chairs, 2 Tables, Lighting, Drapes')">
+                    <div style="background:#f0f0f0;height:100px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2rem;">🎪</div>
+                    <div class="tent-size">40 x 50 ft</div>
+                    <div class="tent-price">₹5,000</div>
+                    <div class="tent-items">8 Chairs, 2 Tables, Lighting, Drapes</div>
+                </div>
+                <!-- 60x70 -->
+                <div class="tent-option" onclick="selectTent('60x70', 9000, '16 Chairs, 4 Tables, Premium Lighting, Drapes, Stage')">
+                    <div style="background:#f0f0f0;height:100px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2rem;">🎪</div>
+                    <div class="tent-size">60 x 70 ft</div>
+                    <div class="tent-price">₹9,000</div>
+                    <div class="tent-items">16 Chairs, 4 Tables, Premium Lighting, Drapes, Stage</div>
+                </div>
+                <!-- 30x40 -->
+                <div class="tent-option" onclick="selectTent('30x40', 3500, '6 Chairs, 1 Table, Basic Lighting')">
+                    <div style="background:#f0f0f0;height:100px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2rem;">🎪</div>
+                    <div class="tent-size">30 x 40 ft</div>
+                    <div class="tent-price">₹3,500</div>
+                    <div class="tent-items">6 Chairs, 1 Table, Basic Lighting</div>
+                </div>
+            </div>
+            <!-- Custom Size -->
+            <div style="margin-top:20px;padding:15px;background:#f9f9f9;border-radius:10px;">
+                <h4 style="margin-bottom:10px;">📐 Custom Size</h4>
+                <div class="custom-size-input">
+                    <input type="number" id="customWidth" placeholder="Width (ft)" min="10" max="100">
+                    <span>×</span>
+                    <input type="number" id="customHeight" placeholder="Height (ft)" min="10" max="100">
+                    <button class="btn btn-primary" onclick="calculateCustomTent()">Calculate</button>
+                </div>
+                <div id="customTentResult" style="margin-top:10px;display:none;">
+                    <strong>Estimated Price:</strong> <span id="customTentPrice">₹0</span><br>
+                    <small style="color:#888;">Equipment: Chairs, Tables, Lighting based on size</small>
+                    <button class="btn btn-primary btn-block" style="margin-top:10px;" onclick="confirmCustomTent()">Select Custom Size</button>
+                </div>
+            </div>
+            <div id="selectedTentInfo" style="display:none;margin-top:15px;padding:15px;background:#ffebee;border-radius:10px;text-align:center;">
+                <strong>Selected:</strong> <span id="selectedTentText"></span>
+            </div>
+        </div>
     </div>
 
-    <div class="service-card" onclick="showService('tent')">
-      <div class="service-icon"><i class="fas fa-campground"></i></div>
-      <h3>Tent Equipments</h3>
-      <p>Premium tents and furniture setup</p>
-      <button class="service-btn">View Details</button>
+    <!-- Date Modal -->
+    <div class="modal-overlay" id="dateModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('dateModal')">&times;</button>
+            <h3>📅 Select Service Date</h3>
+            <div class="date-picker-container">
+                <input type="date" id="serviceDate" onchange="checkDateAvailability()" min="2026-01-01">
+            </div>
+            <div class="date-status" id="dateStatus" style="display:none;"></div>
+            <div class="urgent-checkbox" id="urgentCheckbox" style="display:none;">
+                <input type="checkbox" id="urgentBooking" onchange="handleUrgentCheck()">
+                <label for="urgentBooking">Book on urgent basis (priority slot)</label>
+            </div>
+            <button class="btn btn-primary btn-block" id="confirmDateBtn" onclick="confirmDate()" disabled>
+                Confirm Date & Finish
+            </button>
+        </div>
     </div>
 
-    <div class="service-card" onclick="showService('decoration')">
-      <div class="service-icon"><i class="fas fa-palette"></i></div>
-      <h3>Wedding Decoration</h3>
-      <p>Beautiful decoration for your events</p>
-      <button class="service-btn">View Details</button>
+    <!-- Cart Popup -->
+    <div class="cart-popup">
+        <button class="cart-toggle" onclick="toggleCart()">
+            🛒
+            <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <div class="cart-drawer" id="cartDrawer">
+            <h4>🛒 Catering Service Cart</h4>
+            <div id="cartItems">
+                <p style="color:#999;text-align:center;">No items yet</p>
+            </div>
+            <div class="cart-total" id="cartTotal">Total: ₹0</div>
+            <button class="btn btn-primary btn-block" onclick="proceedToDate()" id="proceedBtn" disabled>
+                Proceed to Select Date →
+            </button>
+        </div>
     </div>
 
-    <div class="service-card" onclick="showService('cardecor')">
-      <div class="service-icon"><i class="fas fa-car"></i></div>
-      <h3>Barat Car Decoration</h3>
-      <p>Elegant car decoration for wedding processions</p>
-      <button class="service-btn">View Details</button>
-    </div>
-  </div>
-</div>
+    <script>
+        // State
+        let cart = {
+            servingStaff: { qty: 0, pricePerUnit: 500 },
+            cleaningStaff: { qty: 0, pricePerUnit: 400 },
+            cookingStaff: { qty: 0, pricePerUnit: 800 },
+            tent: null,
+            date: null,
+            isUrgent: false
+        };
 
-<!-- Footer -->
-<footer>
-  <div class="footer-container">
-    <div class="footer-section">
-      <h3>About Brio Bite</h3>
-      <p>Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.</p>
-      <div class="social-links">
-        <a href="#"><i class="fab fa-facebook-f"></i></a>
-        <a href="#"><i class="fab fa-instagram"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fab fa-whatsapp"></i></a>
-      </div>
-    </div>
-    <div class="footer-section">
-      <h3>Contact Info</h3>
-      <ul>
-        <li><i class="fas fa-map-marker-alt"></i> Clement Town, Dehradun</li>
-        <li><i class="fas fa-phone"></i> +91 9627024287</li>
-        <li><i class="fas fa-envelope"></i> Official.briobite@gmail.com</li>
-      </ul>
-    </div>
-    <div class="footer-section">
-      <h3>Quick Links</h3>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="services.html">Our Services</a></li>
-        <li><a href="veg.html">Vegetarian</a></li>
-        <li><a href="non-veg.html">Non-Vegetarian</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="copyright">
-    <p>&copy; 2026 Brio Bite. All Rights Reserved.</p>
-  </div>
-</footer>
+        let currentStaffType = null;
+        let tempStaffQty = 1;
+        let tempTentSelection = null;
+        let tempCustomTent = null;
 
-<button onclick="goBack()" class="back-btn">
-  <i class="fas fa-arrow-left"></i> Back
-</button>
+        // Database simulation (would be replaced with actual API calls)
+        const bookedDates = ['2026-04-10', '2026-04-12', '2026-04-18', '2026-04-20', '2026-04-25'];
 
-<script>
-  // Menu Data
-  const vegMenu = {
-    'Starters': ['Paneer Tikka', 'Veg Spring Rolls', 'Hara Bhara Kabab', 'Veg Manchurian', 'Crispy Corn'],
-    'Main Course': ['Paneer Butter Masala', 'Dal Makhani', 'Veg Biryani', 'Shahi Paneer', 'Mix Veg', 'Kadai Paneer'],
-    'Breads': ['Butter Naan', 'Garlic Naan', 'Tandoori Roti', 'Stuffed Kulcha'],
-    'Rice': ['Jeera Rice', 'Ghee Rice', 'Veg Pulao', 'Lemon Rice'],
-    'Desserts': ['Gulab Jamun', 'Rasmalai', 'Ice Cream', 'Fruit Salad', 'Gajar Ka Halwa']
-  };
+        // Open Staff Modal
+        function openStaffModal(type) {
+            currentStaffType = type;
+            tempStaffQty = 1;
+            document.getElementById('staffQty').textContent = '1';
 
-  const nonVegMenu = {
-    'Starters': ['Chicken Tikka', 'Fish Fry', 'Mutton Seekh Kabab', 'Chicken Lollipop', 'Prawn Tempura'],
-    'Main Course': ['Butter Chicken', 'Chicken Curry', 'Mutton Rogan Josh', 'Fish Curry', 'Egg Curry', 'Chicken Biryani'],
-    'Breads': ['Butter Naan', 'Garlic Naan', 'Tandoori Roti', 'Roomali Roti'],
-    'Rice': ['Chicken Biryani', 'Mutton Biryani', 'Ghee Rice', 'Jeera Rice'],
-    'Desserts': ['Gulab Jamun', 'Rasmalai', 'Ice Cream', 'Fruit Salad', 'Double Ka Meetha']
-  };
+            const titles = {
+                serving: '👨‍🍳 Serving Staff',
+                cleaning: '🧹 Cleaning Staff',
+                cooking: '👨‍🍳 Cooking Staff'
+            };
+            const prices = {
+                serving: 500,
+                cleaning: 400,
+                cooking: 800
+            };
 
-  const pricing = {
-    veg: { 100: 350, 150: 320, 200: 300, 300: 280 },
-    nonVeg: { 100: 450, 150: 420, 200: 400, 300: 380 }
-  };
+            document.getElementById('staffModalTitle').textContent = titles[type];
+            document.getElementById('staffUnitPrice').textContent = '₹' + prices[type];
+            document.getElementById('staffTotalPrice').textContent = '₹' + prices[type];
+            document.getElementById('staffModal').classList.add('active');
+        }
 
-  const teamPackages = {
-    cooking: {
-      basic: { price: 15000, desc: '2 Chefs + 2 Helpers for 4 hours' },
-      premium: { price: 25000, desc: '3 Chefs + 4 Helpers for 6 hours' },
-      luxury: { price: 40000, desc: '5 Chefs + 6 Helpers + Head Chef for 8 hours' }
-    },
-    serving: {
-      basic: { price: 8000, desc: '4 Servers for 4 hours' },
-      premium: { price: 12000, desc: '6 Servers for 6 hours' },
-      luxury: { price: 18000, desc: '10 Servers for 8 hours' }
-    },
-    dishwasher: {
-      basic: { price: 5000, desc: '2 Staff + Equipment for 4 hours' },
-      premium: { price: 8000, desc: '3 Staff + Equipment for 6 hours' },
-      luxury: { price: 12000, desc: '5 Staff + Equipment for 8 hours' }
+        function changeStaffQty(delta) {
+            tempStaffQty = Math.max(1, tempStaffQty + delta);
+            document.getElementById('staffQty').textContent = tempStaffQty;
+            const price = getStaffPrice(currentStaffType);
+            document.getElementById('staffTotalPrice').textContent = '₹' + (price * tempStaffQty);
+        }
+
+        function getStaffPrice(type) {
+            return { serving: 500, cleaning: 400, cooking: 800 }[type];
+        }
+
+        function confirmStaffSelection() {
+            if (currentStaffType === 'serving') cart.servingStaff.qty = tempStaffQty;
+            if (currentStaffType === 'cleaning') cart.cleaningStaff.qty = tempStaffQty;
+            if (currentStaffType === 'cooking') cart.cookingStaff.qty = tempStaffQty;
+
+            closeModal('staffModal');
+            updateCart();
+            alert(`${currentStaffType.charAt(0).toUpperCase() + currentStaffType.slice(1)} Staff: ${tempStaffQty} added to cart!`);
+        }
+
+        // Open Tent Modal
+        function openTentModal() {
+            tempTentSelection = null;
+            tempCustomTent = null;
+            document.querySelectorAll('.tent-option').forEach(el => el.classList.remove('selected'));
+            document.getElementById('selectedTentInfo').style.display = 'none';
+            document.getElementById('customTentResult').style.display = 'none';
+            document.getElementById('tentModal').classList.add('active');
+        }
+
+        function selectTent(size, price, items) {
+            tempTentSelection = { size, price, items, isCustom: false };
+            tempCustomTent = null;
+            document.querySelectorAll('.tent-option').forEach(el => el.classList.remove('selected'));
+            event.target.closest('.tent-option').classList.add('selected');
+            document.getElementById('selectedTentInfo').style.display = 'block';
+            document.getElementById('selectedTentText').textContent = `${size} ft - ₹${price} (${items})`;
+            document.getElementById('customTentResult').style.display = 'none';
+            confirmTentSelection();
+        }
+
+        function calculateCustomTent() {
+            const width = parseInt(document.getElementById('customWidth').value);
+            const height = parseInt(document.getElementById('customHeight').value);
+
+            if (!width || !height || width < 10 || height < 10) {
+                alert('Please enter valid dimensions (minimum 10 ft each)');
+                return;
+            }
+
+            const area = width * height;
+            const pricePerSqFt = 2.5;
+            const price = Math.round(area * pricePerSqFt);
+            const chairs = Math.round(area / 50);
+            const tables = Math.round(area / 200);
+
+            tempCustomTent = {
+                size: `${width}x${height}`,
+                price: price,
+                items: `${chairs} Chairs, ${tables} Tables, Lighting, Drapes`,
+                isCustom: true
+            };
+
+            document.getElementById('customTentResult').style.display = 'block';
+            document.getElementById('customTentPrice').textContent = `₹${price} (${tempCustomTent.items})`;
+            document.querySelectorAll('.tent-option').forEach(el => el.classList.remove('selected'));
+            document.getElementById('selectedTentInfo').style.display = 'none';
+        }
+
+        function confirmCustomTent() {
+            if (!tempCustomTent) return;
+            tempTentSelection = tempCustomTent;
+            document.getElementById('selectedTentInfo').style.display = 'block';
+            document.getElementById('selectedTentText').textContent = `${tempCustomTent.size} ft (Custom) - ₹${tempCustomTent.price} (${tempCustomTent.items})`;
+            confirmTentSelection();
+        }
+
+        function confirmTentSelection() {
+            if (!tempTentSelection) {
+                alert('Please select a tent option');
+                return;
+            }
+            cart.tent = tempTentSelection;
+            closeModal('tentModal');
+            updateCart();
+            alert(`Tent ${tempTentSelection.size} ft added to cart!`);
+        }
+
+        // Full Package
+        function selectFullPackage() {
+            cart.servingStaff.qty = 4;
+            cart.cleaningStaff.qty = 2;
+            cart.cookingStaff.qty = 3;
+            cart.tent = { size: '40x50', price: 5000, items: '8 Chairs, 2 Tables, Lighting, Drapes', isCustom: false };
+            cart.isUrgent = false;
+            updateCart();
+            alert('🎉 Complete Package added to cart! Total: ₹12,999');
+        }
+
+        // Date Functions
+        function proceedToDate() {
+            document.getElementById('dateModal').classList.add('active');
+            document.getElementById('serviceDate').value = '';
+            document.getElementById('dateStatus').style.display = 'none';
+            document.getElementById('urgentCheckbox').style.display = 'none';
+            document.getElementById('confirmDateBtn').disabled = true;
+            document.getElementById('urgentBooking').checked = false;
+            cart.date = null;
+            cart.isUrgent = false;
+        }
+
+        function checkDateAvailability() {
+
+    const dateInput = document.getElementById('serviceDate').value;
+
+    const statusDiv = document.getElementById('dateStatus');
+
+    const urgentDiv = document.getElementById('urgentCheckbox');
+
+    const confirmBtn = document.getElementById('confirmDateBtn');
+
+    if (!dateInput) {
+        statusDiv.style.display = 'none';
+        urgentDiv.style.display = 'none';
+        confirmBtn.disabled = true;
+        return;
     }
-  };
 
-  let currentService = null;
-  let selectedGuests = null;
-  let selectedFoodType = null;
-  let selectedPackage = null;
-  let selectedTeam = null;
+    fetch("https://bbbackend-bng2.onrender.com/api/catering/check-date", {
 
-  function showService(service) {
-    currentService = service;
-    const modal = document.getElementById('serviceModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBody = document.getElementById('modalBody');
+        method: "POST",
 
-    const titles = {
-      serving: 'Food Serving Team',
-      dishwasher: 'Dishwasher Service',
-      dishes: 'Wedding & Parties Dishes',
-      cooking: 'Food Cooking Team',
-      tent: 'Tent Equipment Rental',
-      decoration: 'Decoration Services',
-      cardecor: 'Car Decoration Services'
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            date: dateInput
+        })
+
+    })
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        statusDiv.style.display = 'flex';
+        urgentDiv.style.display = 'flex';
+
+        if (data.available) {
+
+            statusDiv.className = 'date-status available';
+
+            statusDiv.innerHTML =
+                '🟢 This date is available';
+
+            confirmBtn.disabled = false;
+
+        } else {
+
+            statusDiv.className = 'date-status unavailable';
+
+            statusDiv.innerHTML =
+                '🔴 This date is NOT available';
+
+            confirmBtn.disabled = true;
+        }
+
+    })
+
+    .catch(err => {
+
+        console.log(err);
+
+        alert("Date check failed");
+
+    });
+
+}
+
+        function handleUrgentCheck() {
+            const isChecked = document.getElementById('urgentBooking').checked;
+            const statusDiv = document.getElementById('dateStatus');
+            const confirmBtn = document.getElementById('confirmDateBtn');
+            const dateInput = document.getElementById('serviceDate').value;
+
+            if (isChecked && dateInput) {
+                statusDiv.className = 'date-status urgent';
+                statusDiv.innerHTML = '🟠 Urgent booking - Priority slot';
+                confirmBtn.disabled = false;
+            } else if (!isChecked && dateInput) {
+                checkDateAvailability();
+            }
+        }
+
+        function confirmDate() {
+
+    const dateInput =
+        document.getElementById('serviceDate').value;
+
+    const isUrgent =
+        document.getElementById('urgentBooking').checked;
+
+    if (!dateInput) {
+
+        alert("Please select date");
+
+        return;
+    }
+
+    cart.date = dateInput;
+
+    cart.isUrgent = isUrgent;
+
+    const bookingData = {
+
+        customerName: "Guest User",
+
+        phone: "0000000000",
+
+        servingStaff: {
+            qty: cart.servingStaff.qty,
+            price: cart.servingStaff.pricePerUnit
+        },
+
+        cleaningStaff: {
+            qty: cart.cleaningStaff.qty,
+            price: cart.cleaningStaff.pricePerUnit
+        },
+
+        cookingStaff: {
+            qty: cart.cookingStaff.qty,
+            price: cart.cookingStaff.pricePerUnit
+        },
+
+        tent: cart.tent,
+
+        date: cart.date,
+
+        urgentBooking: cart.isUrgent,
+
+        totalPrice: calculateTotal()
+
     };
-    modalTitle.innerHTML = titles[service];
 
-    if (service === 'cooking' || service === 'serving' || service === 'dishwasher') {
-      modalBody.innerHTML = getTeamServiceHTML(service);
-    } else {
-      modalBody.innerHTML = getServiceHTML(service);
-    }
+    fetch("https://bbbackend-bng2.onrender.com/api/catering/book", {
 
-    modal.style.display = 'block';
-    if (service === 'dishes') attachDishEventListeners();
-    else if (service === 'cooking' || service === 'serving' || service === 'dishwasher') attachTeamEventListeners();
-    else attachSimpleEventListeners();
-  }
+        method: "POST",
 
-  function getTeamServiceHTML(service) {
-    const titles = {
-      cooking: 'Cooking Team',
-      serving: 'Serving Team',
-      dishwasher: 'Dishwasher Service'
-    };
-    return `
-      <div class="service-description">
-        <h3>Professional ${titles[service]}</h3>
-        <div class="team-packages">
-          <h4>Choose Package:</h4>
-          <div class="package-options">
-            <button class="team-btn" data-team="basic">Basic Package</button>
-            <button class="team-btn" data-team="premium">Premium Package</button>
-            <button class="team-btn" data-team="luxury">Luxury Package</button>
-          </div>
-        </div>
-        <div id="teamDetails" class="team-details"></div>
-        <button class="book-btn" onclick="proceedToBooking()">Book Now</button>
-      </div>
-    `;
-  }
+        headers: {
+            "Content-Type": "application/json"
+        },
 
-  function getServiceHTML(service) {
-    if (service === 'dishes') {
-      return `
-        <div class="service-description">
-          <h3>Select Event Details</h3>
-          <div class="guest-selection">
-            <h4>Estimated Guests Count:</h4>
-            <div class="guest-options">
-              <button class="guest-btn" data-guests="100">100 Guests</button>
-              <button class="guest-btn" data-guests="150">150 Guests</button>
-              <button class="guest-btn" data-guests="200">200 Guests</button>
-              <button class="guest-btn" data-guests="300">300 Guests</button>
-            </div>
-          </div>
-          <div class="food-selection">
-            <h4>Food Type:</h4>
-            <div class="food-type">
-              <button class="food-btn" data-food="veg">Vegetarian</button>
-              <button class="food-btn" data-food="nonveg">Non-Vegetarian</button>
-            </div>
-          </div>
-          <div id="menuDisplay" style="display:none;">
-            <div class="menu-items">
-              <h4>Selected Menu:</h4>
-              <div id="menuList"></div>
-            </div>
-            <div class="cost-display">
-              <h3>Estimated Cost: ₹<span id="estimatedCost">0</span></h3>
-            </div>
-            <div class="package-options">
-              <h4>Choose Option:</h4>
-              <button class="package-btn" data-package="full">Full Package (Food + Setup)</button>
-              <button class="package-btn" data-package="booking">Only Booking Team</button>
-            </div>
-            <button class="book-btn" onclick="proceedToBooking()">Proceed to Book</button>
-          </div>
-        </div>
-      `;
-    } else if (service === 'tent') {
-      return `
-        <div class="service-description">
-          <h3>Tent & Equipment Packages</h3>
-          <div class="package-options">
-            <button class="package-btn" data-package="basic" data-price="25000">Basic Package - ₹25,000</button>
-            <button class="package-btn" data-package="premium" data-price="45000">Premium Package - ₹45,000</button>
-            <button class="package-btn" data-package="luxury" data-price="75000">Luxury Package - ₹75,000</button>
-          </div>
-          <div id="packageDetails"></div>
-          <button class="book-btn" onclick="proceedToBooking()">Book Now</button>
-        </div>
-      `;
-    } else if (service === 'decoration') {
-      return `
-        <div class="service-description">
-          <h3>Decoration Themes</h3>
-          <div class="package-options">
-            <button class="package-btn" data-package="traditional" data-price="35000">Traditional - ₹35,000</button>
-            <button class="package-btn" data-package="modern" data-price="40000">Modern - ₹40,000</button>
-            <button class="package-btn" data-package="royal" data-price="60000">Royal - ₹60,000</button>
-            <button class="package-btn" data-package="floral" data-price="50000">Floral - ₹50,000</button>
-          </div>
-          <button class="book-btn" onclick="proceedToBooking()">Book Now</button>
-        </div>
-      `;
-    } else if (service === 'cardecor') {
-      return `
-        <div class="service-description">
-          <h3>Car Decoration Styles</h3>
-          <div class="package-options">
-            <button class="package-btn" data-package="simple" data-price="5000">Simple - ₹5,000</button>
-            <button class="package-btn" data-package="premium" data-price="10000">Premium - ₹10,000</button>
-            <button class="package-btn" data-package="luxury" data-price="15000">Luxury - ₹15,000</button>
-            <button class="package-btn" data-package="royal" data-price="25000">Royal - ₹25,000</button>
-          </div>
-          <button class="book-btn" onclick="proceedToBooking()">Book Now</button>
-        </div>
-      `;
-    }
-    return '<p>Service details coming soon...</p>';
-  }
+        body: JSON.stringify(bookingData)
 
-  function attachDishEventListeners() {
-    document.querySelectorAll('.guest-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.guest-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        selectedGuests = parseInt(this.dataset.guests);
-        if (selectedFoodType) updateMenuAndCost();
-      });
+    })
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        if (data.success) {
+
+            alert("✅ Catering Service Booked");
+
+            closeModal('dateModal');
+
+            updateCart();
+
+        } else {
+
+            alert("Booking failed");
+
+        }
+
+    })
+
+    .catch(err => {
+
+        console.log(err);
+
+        alert("Server Error");
+
     });
 
-    document.querySelectorAll('.food-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.food-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        selectedFoodType = this.dataset.food;
-        if (selectedGuests) updateMenuAndCost();
-      });
-    });
+}
 
-    document.querySelectorAll('.package-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.package-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        selectedPackage = this.dataset.package;
-      });
-    });
-  }
+        // Modal Helpers
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
 
-  function updateMenuAndCost() {
-    const menuDisplay = document.getElementById('menuDisplay');
-    const menuList = document.getElementById('menuList');
-    const costSpan = document.getElementById('estimatedCost');
+        // Cart Functions
+        function toggleCart() {
+            document.getElementById('cartDrawer').classList.toggle('active');
+        }
 
-    menuDisplay.style.display = 'block';
-    const menu = selectedFoodType === 'veg' ? vegMenu : nonVegMenu;
-    
-    let menuHTML = '<div class="menu-grid">';
-    for (const [category, items] of Object.entries(menu)) {
-      menuHTML += `<div class="menu-category"><strong>${category}</strong>`;
-      items.forEach(item => {
-        menuHTML += `<div class="menu-item">• ${item}</div>`;
-      });
-      menuHTML += '</div>';
+        function updateCart() {
+            const cartItemsDiv = document.getElementById('cartItems');
+            const cartTotalDiv = document.getElementById('cartTotal');
+            const cartCountSpan = document.getElementById('cartCount');
+            const proceedBtn = document.getElementById('proceedBtn');
+
+            let items = [];
+            let totalCount = 0;
+            let totalPrice = 0;
+
+            if (cart.servingStaff.qty > 0) {
+                const price = cart.servingStaff.qty * cart.servingStaff.pricePerUnit;
+                items.push({ name: 'Serving Staff', qty: cart.servingStaff.qty, price: cart.servingStaff.pricePerUnit, total: price });
+                totalCount += cart.servingStaff.qty;
+                totalPrice += price;
+            }
+            if (cart.cleaningStaff.qty > 0) {
+                const price = cart.cleaningStaff.qty * cart.cleaningStaff.pricePerUnit;
+                items.push({ name: 'Cleaning Staff', qty: cart.cleaningStaff.qty, price: cart.cleaningStaff.pricePerUnit, total: price });
+                totalCount += cart.cleaningStaff.qty;
+                totalPrice += price;
+            }
+            if (cart.cookingStaff.qty > 0) {
+                const price = cart.cookingStaff.qty * cart.cookingStaff.pricePerUnit;
+                items.push({ name: 'Cooking Staff', qty: cart.cookingStaff.qty, price: cart.cookingStaff.pricePerUnit, total: price });
+                totalCount += cart.cookingStaff.qty;
+                totalPrice += price;
+            }
+            if (cart.tent) {
+                items.push({ name: `Tent ${cart.tent.size}`, qty: 1, price: cart.tent.price, total: cart.tent.price, items: cart.tent.items });
+                totalCount += 1;
+                totalPrice += cart.tent.price;
+            }
+
+            // Render items
+            if (items.length === 0) {
+                cartItemsDiv.innerHTML = '<p style="color:#999;text-align:center;">No items yet</p>';
+            } else {
+                cartItemsDiv.innerHTML = items.map((item, index) => `
+                    <div class="cart-item">
+                        <div>
+                            <strong>${item.name}</strong>
+                            ${item.qty > 1 ? ` × ${item.qty}` : ''}
+                            <br><small style="color:#888;">${item.items || ''}${item.qty > 1 ? `${item.qty} × ₹${item.price}` : `₹${item.price}`}</small>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <span>₹${item.total}</span>
+                            <button class="remove-item" onclick="removeCartItem(${index})">×</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Date indicator
+            if (cart.date) {
+                let dateClass = cart.isUrgent ? 'orange' : 'green';
+                let dateLabel = cart.isUrgent ? '🟠 Urgent' : '🟢 Available';
+                cartItemsDiv.innerHTML += `
+                    <div class="cart-item">
+                        <div><strong>📅 Date:</strong> ${cart.date}</div>
+                        <span class="cart-date-indicator ${dateClass}">${dateLabel}</span>
+                    </div>
+                `;
+            }
+
+            cartTotalDiv.textContent = `Total: ₹${totalPrice.toLocaleString()}`;
+            cartCountSpan.textContent = totalCount;
+            proceedBtn.disabled = totalCount === 0;
+        }
+        function calculateTotal() {
+
+    let total = 0;
+
+    total +=
+        cart.servingStaff.qty *
+        cart.servingStaff.pricePerUnit;
+
+    total +=
+        cart.cleaningStaff.qty *
+        cart.cleaningStaff.pricePerUnit;
+
+    total +=
+        cart.cookingStaff.qty *
+        cart.cookingStaff.pricePerUnit;
+
+    if (cart.tent) {
+        total += cart.tent.price;
     }
-    menuHTML += '</div>';
-    menuList.innerHTML = menuHTML;
 
-    const cost = pricing[selectedFoodType][selectedGuests] * selectedGuests;
-    costSpan.innerText = cost.toLocaleString('en-IN');
-  }
+    return total;
+} 
 
-  function attachTeamEventListeners() {
-    document.querySelectorAll('.team-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.team-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        selectedTeam = this.dataset.team;
-        const teamDetails = document.getElementById('teamDetails');
-        const pkg = teamPackages[currentService][selectedTeam];
-        teamDetails.innerHTML = `<div class="cost-display"><h3>${pkg.desc}<br>Price: ₹${pkg.price.toLocaleString('en-IN')}</h3></div>`;
-      });
-    });
-  }
 
-  function attachSimpleEventListeners() {
-    document.querySelectorAll('.package-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.package-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        selectedPackage = this.dataset.package;
-      });
-    });
-  }
 
-  function proceedToBooking() {
-    let bookingData = { service: currentService, timestamp: new Date().toISOString() };
+        function removeCartItem(index) {
+            const items = [];
+            if (cart.servingStaff.qty > 0) items.push('servingStaff');
+            if (cart.cleaningStaff.qty > 0) items.push('cleaningStaff');
+            if (cart.cookingStaff.qty > 0) items.push('cookingStaff');
+            if (cart.tent) items.push('tent');
 
-    if (currentService === 'cooking' || currentService === 'serving' || currentService === 'dishwasher') {
-      if (!selectedTeam) {
-        alert('Please select a package first');
-        return;
-      }
-      bookingData.teamPackage = selectedTeam;
-      bookingData.cost = teamPackages[currentService][selectedTeam].price;
-      bookingData.description = teamPackages[currentService][selectedTeam].desc;
-    } else if (currentService === 'dishes') {
-      if (!selectedGuests || !selectedFoodType) {
-        alert('Please select guest count and food type');
-        return;
-      }
-      if (!selectedPackage) {
-        alert('Please select Full Package or Only Booking Team');
-        return;
-      }
-      bookingData.guests = selectedGuests;
-      bookingData.foodType = selectedFoodType;
-      bookingData.packageType = selectedPackage;
-      bookingData.cost = pricing[selectedFoodType][selectedGuests] * selectedGuests;
-    } else {
-      const selected = document.querySelector('.package-btn.active');
-      if (!selected) {
-        alert('Please select a package');
-        return;
-      }
-      bookingData.selectedPackage = selected.dataset.package;
-      bookingData.cost = parseInt(selected.dataset.price);
-    }
+            if (index < items.length) {
+                const key = items[index];
+                if (key === 'tent') {
+                    cart.tent = null;
+                } else {
+                    cart[key].qty = 0;
+                }
+            }
+            updateCart();
+        }
 
-    localStorage.setItem('cateringBooking', JSON.stringify(bookingData));
-    window.location.href = 'catering-details.html';
-  }
+        // Close modals on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
 
-  function goBack() {
-    window.history.back();
-  }
-
-  // Modal setup
-  const modalDiv = document.createElement('div');
-  modalDiv.id = 'serviceModal';
-  modalDiv.className = 'modal';
-  modalDiv.innerHTML = `
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="modalTitle">Service Details</h2>
-        <span class="close-modal">&times;</span>
-      </div>
-      <div class="modal-body" id="modalBody"></div>
-    </div>
-  `;
-  document.body.appendChild(modalDiv);
-
-  const modal = document.getElementById('serviceModal');
-  document.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
-  window.onclick = (event) => { if (event.target == modal) modal.style.display = 'none'; };
-
-  // Navbar toggle
-  document.getElementById('menuToggle').addEventListener('click', () => {
-    document.getElementById('dropdownMenu').classList.toggle('active');
-  });
-
-  document.addEventListener('click', function(e) {
-    const sidebar = document.getElementById('dropdownMenu');
-    const toggle = document.getElementById('menuToggle');
-    if (sidebar && toggle && !sidebar.contains(e.target) && !toggle.contains(e.target)) {
-      sidebar.classList.remove('active');
-    }
-  });
-</script>
+        // Initialize
+        updateCart();
+    </script>
 </body>
 </html>
