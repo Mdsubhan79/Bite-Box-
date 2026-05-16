@@ -326,7 +326,27 @@
     <div class="services-grid" id="servicesGrid">
         <div class="loading">Loading catering services...</div>
     </div>
+     html += `
 
+<div class="tent-option custom-option">
+
+    <h3>Add Your Own Size</h3>
+
+    <input
+        type="text"
+        id="customTentSize"
+        placeholder="Enter custom size"
+    >
+
+    <input
+        type="number"
+        id="customTentPrice"
+        placeholder="Enter custom price"
+    >
+
+</div>
+
+`;
     <!-- Staff Modal -->
     <div class="modal-overlay" id="staffModal">
         <div class="modal">

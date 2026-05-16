@@ -512,6 +512,40 @@ function showAddCateringForm() {
                 <label>Price *</label>
                 <input type="number" id="cateringPrice" placeholder="Price in INR" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
             </div>
+            <div id="tentSizesContainer">
+
+    <h3>Tent Sizes</h3>
+
+    <div class="tent-size-box">
+
+        <input
+            type="text"
+            class="tentSize"
+            placeholder="Size Example 40x50"
+        >
+
+        <input
+            type="number"
+            class="tentPrice"
+            placeholder="Price"
+        >
+
+        <textarea
+            class="tentItems"
+            placeholder="Items comma separated"
+        ></textarea>
+
+    </div>
+
+</div>
+
+<button
+type="button"
+onclick="addTentSizeField()">
+
+    + Add More Tent Size
+
+</button>
             
             <div style="margin-bottom: 15px;">
                 <label>Unit (e.g., staff, item)</label>
@@ -535,8 +569,63 @@ function showAddCateringForm() {
         </div>
     `;
 }
+function addTentSizeField() {
 
+    const container =
+    document.getElementById(
+        "tentSizesContainer"
+    );
+
+    container.innerHTML += `
+
+    <div class="tent-size-box">
+
+        <input
+            type="text"
+            class="tentSize"
+            placeholder="Size Example 60x70"
+        >
+
+        <input
+            type="number"
+            class="tentPrice"
+            placeholder="Price"
+        >
+
+        <textarea
+            class="tentItems"
+            placeholder="Items comma separated"
+        ></textarea>
+
+    </div>
+
+    `;
+
+}
 function addCateringService() {
+    const sizes = [];
+
+document.querySelectorAll(
+    ".tent-size-box"
+).forEach(box => {
+
+    sizes.push({
+
+        size:
+        box.querySelector(".tentSize").value,
+
+        price:
+        box.querySelector(".tentPrice").value,
+
+        items:
+        box.querySelector(".tentItems")
+        .value
+        .split(",")
+        .map(i => i.trim())
+
+    });
+
+});
     const data = {
         title: document.getElementById("cateringTitle").value,
         tagline: document.getElementById("cateringTagline").value,
@@ -668,7 +757,7 @@ function updateCateringService(id) {
         category: document.getElementById("cateringCategory").value,
         price: Number(document.getElementById("cateringPrice").value),
         unit: document.getElementById("cateringUnit").value,
-        items: document.getElementById("cateringItems").value.split(",").map(i => i.trim()).filter(i => i),
+        items:document.getElementById("cateringItems").value.split(",").map(i => i.trim()),sizes: sizes,
         active: true
     };
     
