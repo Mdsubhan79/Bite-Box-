@@ -374,7 +374,7 @@ function deleteNonVeg(id) {
 function loadCateringServices() {
 
     const content =
-    document.getElementById("contentBody");
+    document.getElementById("content");
 
     content.innerHTML = `
     
@@ -523,7 +523,7 @@ function loadCateringServices() {
 
 function showAddCateringForm() {
 
-    document.getElementById("contentBody").innerHTML = `
+    document.getElementById("content").innerHTML = `
     
     <div class="add-catering-form">
 
