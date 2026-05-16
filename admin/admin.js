@@ -371,34 +371,54 @@ function deleteNonVeg(id) {
 }
 
 /* ========= CATERING SERVICES ========= */
-
 function loadCateringServices() {
 
-    const content = document.getElementById("content");
+    const content =
+    document.getElementById("contentBody");
 
     content.innerHTML = `
     
     <div class="catering-admin-header">
+
         <h2>🍽 Catering Services</h2>
 
         <button onclick="showAddCateringForm()">
             + Add Service
         </button>
+
     </div>
 
     <div id="cateringServicesList">
+
         Loading Catering Services...
+
     </div>
     
     `;
 
-    fetch(`${API_BASE}/api/catering/services`)
+    fetch(`${API_BASE}/api/catering/services`, {
+
+        headers: {
+
+            Authorization:
+            "Bearer " +
+            localStorage.getItem("adminToken")
+
+        }
+
+    })
+
     .then(res => res.json())
+
     .then(data => {
+
+        console.log(data);
+
+        const services = data.services;
 
         let html = "";
 
-        if (!data.length) {
+        if (!services || services.length === 0) {
 
             html = `
                 <div class="empty-catering">
@@ -408,7 +428,7 @@ function loadCateringServices() {
 
         } else {
 
-            data.forEach(service => {
+            services.forEach(service => {
 
                 html += `
                 
@@ -417,9 +437,15 @@ function loadCateringServices() {
                     <div class="catering-admin-top">
 
                         <div>
-                            <h3>${service.title}</h3>
 
-                            <p>${service.tagline || ""}</p>
+                            <h3>
+                                ${service.title}
+                            </h3>
+
+                            <p>
+                                ${service.tagline || ""}
+                            </p>
+
                         </div>
 
                         <span class="catering-category">
@@ -430,36 +456,22 @@ function loadCateringServices() {
 
                     <div class="catering-admin-body">
 
-                        <h4>₹${service.price}</h4>
-
-                        ${
-                            service.sizes?.length
-                            ?
-                            `
-                            <div class="tent-sizes">
-                                ${
-                                    service.sizes.map(size => `
-                                        <div class="tent-size-box">
-                                            ${size.size} - ₹${size.price}
-                                        </div>
-                                    `).join("")
-                                }
-                            </div>
-                            `
-                            :
-                            ""
-                        }
+                        <h4>
+                            ₹${service.price}
+                        </h4>
 
                         ${
                             service.items?.length
                             ?
                             `
                             <ul class="catering-items">
+
                                 ${
                                     service.items.map(item => `
                                         <li>${item}</li>
                                     `).join("")
                                 }
+
                             </ul>
                             `
                             :
@@ -470,15 +482,12 @@ function loadCateringServices() {
 
                     <div class="catering-admin-actions">
 
-                        <button onclick="editCateringService('${service._id}')">
-                            Edit
-                        </button>
+                        <button
+                        class="delete-btn"
+                        onclick="deleteCateringService('${service._id}')">
 
-                        <button 
-                            class="delete-btn"
-                            onclick="deleteCateringService('${service._id}')"
-                        >
                             Delete
+
                         </button>
 
                     </div>
@@ -496,6 +505,7 @@ function loadCateringServices() {
         ).innerHTML = html;
 
     })
+
     .catch(err => {
 
         console.log(err);
@@ -505,12 +515,15 @@ function loadCateringServices() {
         ).innerHTML = `
             <p>Failed to load catering services</p>
         `;
+
     });
 
 }
+
+
 function showAddCateringForm() {
 
-    document.getElementById("content").innerHTML = `
+    document.getElementById("contentBody").innerHTML = `
     
     <div class="add-catering-form">
 
@@ -577,70 +590,124 @@ function showAddCateringForm() {
 }
 function addCateringService() {
 
-    fetch(`${API_BASE}/api/catering/services`, {
+    const data = {
+
+        title: document.getElementById(
+            "cateringTitle"
+        ).value,
+
+        tagline: document.getElementById(
+            "cateringTagline"
+        ).value,
+
+        category: document.getElementById(
+            "cateringCategory"
+        ).value,
+
+        price: Number(
+            document.getElementById(
+                "cateringPrice"
+            ).value
+        ),
+
+        items: document.getElementById(
+            "cateringItems"
+        ).value
+        .split(",")
+        .map(i => i.trim())
+
+    };
+
+    console.log(data);
+
+    fetch(`${API_BASE}/api/catering/admin/add-service`, {
 
         method: "POST",
 
         headers: {
-            "Content-Type": "application/json"
+
+            "Content-Type": "application/json",
+
+            Authorization:
+            "Bearer " +
+            localStorage.getItem("adminToken")
         },
 
-        body: JSON.stringify({
-
-            title: document.getElementById(
-                "cateringTitle"
-            ).value,
-
-            tagline: document.getElementById(
-                "cateringTagline"
-            ).value,
-
-            category: document.getElementById(
-                "cateringCategory"
-            ).value,
-
-            price: document.getElementById(
-                "cateringPrice"
-            ).value,
-
-            items: document.getElementById(
-                "cateringItems"
-            ).value
-            .split(",")
-            .map(i => i.trim())
-
-        })
+        body: JSON.stringify(data)
 
     })
-    .then(res => res.json())
-    .then(() => {
 
-        alert("Catering Service Added");
+    .then(async res => {
+
+        const response =
+        await res.json();
+
+        console.log(response);
+
+        if (!res.ok) {
+
+            throw new Error(
+                response.message ||
+                "Failed"
+            );
+        }
+
+        return response;
+
+    })
+
+    .then(data => {
+
+        alert("✅ Catering Service Added");
 
         loadCateringServices();
 
     })
-    .catch(() => {
 
-        alert("Failed to add service");
+    .catch(err => {
+
+        console.log(err);
+
+        alert(err.message);
 
     });
 
 }
 function deleteCateringService(id) {
 
-    if (!confirm("Delete this service?")) return;
+    if (!confirm("Delete this service?"))
+    return;
 
-    fetch(`${API_BASE}/api/catering/services/${id}`, {
+    fetch(
+    `${API_BASE}/api/catering/admin/delete-service/${id}`, {
 
-        method: "DELETE"
+        method: "DELETE",
+
+        headers: {
+
+            Authorization:
+            "Bearer " +
+            localStorage.getItem("adminToken")
+
+        }
 
     })
-    .then(() => {
+
+    .then(res => res.json())
+
+    .then(data => {
 
         alert("Deleted");
 
         loadCateringServices();
+
+    })
+
+    .catch(err => {
+
+        console.log(err);
+
+        alert("Delete Failed");
 
     });
 
