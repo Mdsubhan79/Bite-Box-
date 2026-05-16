@@ -326,27 +326,7 @@
     <div class="services-grid" id="servicesGrid">
         <div class="loading">Loading catering services...</div>
     </div>
-     html += `
-
-<div class="tent-option custom-option">
-
-    <h3>Add Your Own Size</h3>
-
-    <input
-        type="text"
-        id="customTentSize"
-        placeholder="Enter custom size"
-    >
-
-    <input
-        type="number"
-        id="customTentPrice"
-        placeholder="Enter custom price"
-    >
-
-</div>
-
-`;
+     
     <!-- Staff Modal -->
     <div class="modal-overlay" id="staffModal">
         <div class="modal">
@@ -414,7 +394,7 @@
         let tempStaffQty = 1;
         let tempTentSelection = null;
         
-        // Load dynamic services from backend
+       
         async function loadServices() {
             const grid = document.getElementById('servicesGrid');
             grid.innerHTML = '<div class="loading">Loading catering services...</div>';
@@ -466,15 +446,92 @@
                             </div>
                         `;
                     } else if (service.category === 'tent') {
-                        html += `
-                            <div class="service-card" onclick="openTentModalFromService(${JSON.stringify(escapeHtmlObj(service)).replace(/"/g, '&quot;')})">
-                                <span class="icon">${service.icon || '🎪'}</span>
-                                <h3>${escapeHtml(service.title)}</h3>
-                                <p class="tagline">${escapeHtml(service.tagline || 'Beautiful tents with decor')}</p>
-                                <span class="badge">From ₹${Math.min(...(service.sizes?.map(s=>s.price) || [service.price])) || service.price}</span>
-                            </div>
-                        `;
-                    } else if (service.category === 'package') {
+
+    html += `
+
+    <div class="service-card"
+    onclick="openTentModalFromService(${JSON.stringify(escapeHtmlObj(service)).replace(/"/g, '&quot;')})">
+
+        <span class="icon">
+            ${service.icon || '🎪'}
+        </span>
+
+        <h3>
+            ${escapeHtml(service.title)}
+        </h3>
+
+        <p class="tagline">
+            ${escapeHtml(service.tagline || 'Beautiful tents with decor')}
+        </p>
+
+        <span class="badge">
+            From ₹${Math.min(...(service.sizes?.map(s=>s.price) || [service.price])) || service.price}
+        </span>
+
+    </div>
+
+    `;
+
+    
+    if(service.sizes && service.sizes.length > 0){
+
+        service.sizes.forEach(size => {
+
+            html += `
+
+            <div class="tent-option">
+
+                <h3>${size.size}</h3>
+
+                <p>₹${size.price}</p>
+
+                <ul>
+
+                    ${
+                        size.items
+                        ?
+                        size.items.map(item => `
+                            <li>${item}</li>
+                        `).join("")
+                        :
+                        ""
+                    }
+
+                </ul>
+
+            </div>
+
+            `;
+
+        });
+
+    }
+
+    
+    html += `
+
+    <div class="tent-option custom-option">
+
+        <h3>Add Your Own Size</h3>
+
+        <input
+            type="text"
+            id="customTentSize"
+            placeholder="Enter custom size"
+        >
+
+        <input
+            type="number"
+            id="customTentPrice"
+            placeholder="Enter custom price"
+        >
+
+    </div>
+
+    `;
+
+}
+                     else if (service.category === 'package') {
                         html += `
                             <div class="package-card" onclick="selectFullPackageFromService(${JSON.stringify(escapeHtmlObj(service)).replace(/"/g, '&quot;')})">
                                 <div class="offer-badge">🔥 BEST DEAL</div>
