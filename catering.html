@@ -529,6 +529,54 @@
         }
         .remove-item:hover { color: #e74c3c; }
         .date-status { margin: 15px 0; text-align: center; font-weight: 600; }
+        .tent-package-card{
+    background:#ffffff;
+    border-radius:20px;
+    padding:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+    border:2px solid #f0f0f0;
+    text-align:center;
+}
+
+.tent-package-card h3{
+    font-size:22px;
+    margin-bottom:10px;
+    color:#0e2b28;
+}
+
+.tent-package-card h2{
+    color:#ff5722;
+    margin-bottom:15px;
+}
+
+.tent-items{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    margin-bottom:20px;
+}
+
+.tent-item{
+    background:#fff3e0;
+    color:#ff5722;
+    padding:8px 14px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:700;
+}
+
+.select-tent-btn{
+    width:100%;
+    border:none;
+    background:#0e2b28;
+    color:white;
+    padding:14px;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+}
     </style>
 </head>
 <body>
@@ -692,17 +740,36 @@
                                 <span class="badge">₹${service.price}/${service.unit || 'staff'}</span>
                             </div>
                         `;
-                    } else if (service.category === 'tent') {
-                        const serviceStr = JSON.stringify(escapeHtmlObj(service)).replace(/"/g, '&quot;');
-                        html += `
-                            <div class="service-card" onclick="openTentModalFromService(${serviceStr})">
-                                <span class="icon">${service.icon || '🎪'}</span>
-                                <h3>${escapeHtml(service.title)}</h3>
-                                <p class="tagline">${escapeHtml(service.tagline || 'Beautiful tents with decor')}</p>
-                                <span class="badge">From ₹${service.sizes ? Math.min(...service.sizes.map(s=>s.price)) : (service.price || 0)}</span>
-                            </div>
-                        `;
-                    } else if (service.category === 'package') {
+                    } else if(service.category === 'tent'){
+
+    html += `
+
+    <div class="service-card"
+    onclick='openTentModalFromService(${JSON.stringify(service).replace(/'/g,"&#39;")})'>
+
+        <span class="icon">
+            ${service.icon || '🎪'}
+        </span>
+
+        <h3>
+            ${service.title}
+        </h3>
+
+        <p class="tagline">
+            ${service.tagline || ''}
+        </p>
+
+        <span class="badge">
+            View Tent Packages
+        </span>
+
+    </div>
+
+    `;
+
+}
+                    
+                    else if (service.category === 'package') {
                         const pkgStr = JSON.stringify(escapeHtmlObj(service)).replace(/"/g, '&quot;');
                         html += `
                             <div class="package-card" onclick="selectFullPackageFromService(${pkgStr})">
