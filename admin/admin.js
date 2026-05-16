@@ -638,67 +638,142 @@ function addTentSizeField() {
     `;
 
 }
-function addCateringService() {
-    const sizes = [];
 
-document.querySelectorAll(
-    ".tent-size-box"
-).forEach(box => {
+function addCateringService(){
 
-    sizes.push({
+    const category =
+    document.getElementById(
+        "cateringCategory"
+    ).value;
 
-        size:
-        box.querySelector(".tentSize").value,
+    const title =
+    document.getElementById(
+        "cateringTitle"
+    ).value;
 
-        price:
-        box.querySelector(".tentPrice").value,
+    const tagline =
+    document.getElementById(
+        "cateringTagline"
+    ).value;
 
-        items:
-        box.querySelector(".tentItems")
-        .value
-        .split(",")
-        .map(i => i.trim())
+    const price =
+    document.getElementById(
+        "cateringPrice"
+    ).value;
 
-    });
+    const unit =
+    document.getElementById(
+        "cateringUnit"
+    ).value;
 
-});
-    const data = {
-        title: document.getElementById("cateringTitle").value,
-        tagline: document.getElementById("cateringTagline").value,
-        category: document.getElementById("cateringCategory").value,
-        price: Number(document.getElementById("cateringPrice").value),
-        unit: document.getElementById("cateringUnit").value || "staff",
-        items: document.getElementById("cateringItems").value.split(",").map(i => i.trim()).filter(i => i),
-        icon: document.getElementById("cateringIcon").value || "🍽️",
-        active: true
-    };
+    const items =
+    document.getElementById(
+        "cateringItems"
+    ).value
+    .split(",");
+
+    const icon =
+    document.getElementById(
+        "cateringIcon"
+    ).value;
+
     
-    if (!data.title || !data.price) {
-        alert("Please fill in Title and Price");
-        return;
+    let sizes = [];
+
+    if(category === "tent"){
+
+        const sizeInputs =
+        document.querySelectorAll(
+            ".tentSize"
+        );
+
+        const priceInputs =
+        document.querySelectorAll(
+            ".tentPrice"
+        );
+
+        const itemInputs =
+        document.querySelectorAll(
+            ".tentItems"
+        );
+
+        for(let i=0; i<sizeInputs.length; i++){
+
+            sizes.push({
+
+                size:
+                sizeInputs[i].value,
+
+                price:
+                Number(
+                    priceInputs[i].value
+                ),
+
+                items:
+                itemInputs[i].value
+                .split(",")
+
+            });
+
+        }
+
     }
-    
-    fetch(`${API_BASE}/api/catering/admin/add-service`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + localStorage.getItem("adminToken")
+
+    fetch(
+        `${API_BASE}/api/catering/admin/add-service`,
+        {
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
         },
-        body: JSON.stringify(data)
+
+        body: JSON.stringify({
+
+            category,
+            title,
+            tagline,
+            price,
+            unit,
+            items,
+            icon,
+            sizes
+
+        })
+
     })
-    .then(async res => {
-        const response = await res.json();
-        if (!res.ok) throw new Error(response.message || "Failed to add");
-        return response;
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        if(data.success){
+
+            alert(
+                "Service Added Successfully"
+            );
+
+            loadCateringServices();
+
+        }else{
+
+            alert(
+                "Failed To Add Service"
+            );
+
+        }
+
     })
-    .then(() => {
-        alert("✅ Catering Service Added Successfully!");
-        loadCateringServices();
-    })
+
     .catch(err => {
-        console.error(err);
-        alert("Error: " + err.message);
+
+        console.log(err);
+
+        alert("Server Error");
+
     });
+
 }
 
 function deleteCateringService(id) {
