@@ -28,20 +28,25 @@ function loadPage(page) {
         loadNonVegMenu();
       break;
 
+    case "orders":
+       loadOrders();
+      break;
+
     case "tiffin":
        loadTiffins();
       break;
 
     case "tiffinBookings":
-  loadTiffinBookings();
-  break;
+       loadTiffinBookings();
+      break;
     
     case "defaultMenu":
-  loadDefaultMenu();
-  break;
+      loadDefaultMenu();
+    break;
 
-    case "orders":
-       loadOrders();
+    
+    case "catering":
+        loadCateringServices();
       break;
 
     case "users":
@@ -364,6 +369,283 @@ function deleteNonVeg(id) {
 })
     .catch(() => alert("Failed to delete veg item"));
 }
+
+/* ========= CATERING SERVICES ========= */
+
+function loadCateringServices() {
+
+    const content = document.getElementById("content");
+
+    content.innerHTML = `
+    
+    <div class="catering-admin-header">
+        <h2>🍽 Catering Services</h2>
+
+        <button onclick="showAddCateringForm()">
+            + Add Service
+        </button>
+    </div>
+
+    <div id="cateringServicesList">
+        Loading Catering Services...
+    </div>
+    
+    `;
+
+    fetch(`${API_BASE}/api/catering/services`)
+    .then(res => res.json())
+    .then(data => {
+
+        let html = "";
+
+        if (!data.length) {
+
+            html = `
+                <div class="empty-catering">
+                    No Catering Services Found
+                </div>
+            `;
+
+        } else {
+
+            data.forEach(service => {
+
+                html += `
+                
+                <div class="catering-admin-card">
+
+                    <div class="catering-admin-top">
+
+                        <div>
+                            <h3>${service.title}</h3>
+
+                            <p>${service.tagline || ""}</p>
+                        </div>
+
+                        <span class="catering-category">
+                            ${service.category}
+                        </span>
+
+                    </div>
+
+                    <div class="catering-admin-body">
+
+                        <h4>₹${service.price}</h4>
+
+                        ${
+                            service.sizes?.length
+                            ?
+                            `
+                            <div class="tent-sizes">
+                                ${
+                                    service.sizes.map(size => `
+                                        <div class="tent-size-box">
+                                            ${size.size} - ₹${size.price}
+                                        </div>
+                                    `).join("")
+                                }
+                            </div>
+                            `
+                            :
+                            ""
+                        }
+
+                        ${
+                            service.items?.length
+                            ?
+                            `
+                            <ul class="catering-items">
+                                ${
+                                    service.items.map(item => `
+                                        <li>${item}</li>
+                                    `).join("")
+                                }
+                            </ul>
+                            `
+                            :
+                            ""
+                        }
+
+                    </div>
+
+                    <div class="catering-admin-actions">
+
+                        <button onclick="editCateringService('${service._id}')">
+                            Edit
+                        </button>
+
+                        <button 
+                            class="delete-btn"
+                            onclick="deleteCateringService('${service._id}')"
+                        >
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+                
+                `;
+
+            });
+
+        }
+
+        document.getElementById(
+            "cateringServicesList"
+        ).innerHTML = html;
+
+    })
+    .catch(err => {
+
+        console.log(err);
+
+        document.getElementById(
+            "cateringServicesList"
+        ).innerHTML = `
+            <p>Failed to load catering services</p>
+        `;
+    });
+
+}
+function showAddCateringForm() {
+
+    document.getElementById("content").innerHTML = `
+    
+    <div class="add-catering-form">
+
+        <h2>Add Catering Service</h2>
+
+        <input 
+            type="text"
+            id="cateringTitle"
+            placeholder="Service Title"
+        >
+
+        <input 
+            type="text"
+            id="cateringTagline"
+            placeholder="Tagline"
+        >
+
+        <select id="cateringCategory">
+
+            <option value="serving">
+                Serving Staff
+            </option>
+
+            <option value="cleaning">
+                Cleaning Staff
+            </option>
+
+            <option value="cooking">
+                Cooking Staff
+            </option>
+
+            <option value="tent">
+                Tent & Decoration
+            </option>
+
+            <option value="package">
+                Full Package
+            </option>
+
+        </select>
+
+        <input 
+            type="number"
+            id="cateringPrice"
+            placeholder="Price"
+        >
+
+        <textarea
+            id="cateringItems"
+            placeholder="Items comma separated"
+        ></textarea>
+
+        <button onclick="addCateringService()">
+            Save Service
+        </button>
+
+        <button onclick="loadCateringServices()">
+            Cancel
+        </button>
+
+    </div>
+    
+    `;
+}
+function addCateringService() {
+
+    fetch(`${API_BASE}/api/catering/services`, {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+            title: document.getElementById(
+                "cateringTitle"
+            ).value,
+
+            tagline: document.getElementById(
+                "cateringTagline"
+            ).value,
+
+            category: document.getElementById(
+                "cateringCategory"
+            ).value,
+
+            price: document.getElementById(
+                "cateringPrice"
+            ).value,
+
+            items: document.getElementById(
+                "cateringItems"
+            ).value
+            .split(",")
+            .map(i => i.trim())
+
+        })
+
+    })
+    .then(res => res.json())
+    .then(() => {
+
+        alert("Catering Service Added");
+
+        loadCateringServices();
+
+    })
+    .catch(() => {
+
+        alert("Failed to add service");
+
+    });
+
+}
+function deleteCateringService(id) {
+
+    if (!confirm("Delete this service?")) return;
+
+    fetch(`${API_BASE}/api/catering/services/${id}`, {
+
+        method: "DELETE"
+
+    })
+    .then(() => {
+
+        alert("Deleted");
+
+        loadCateringServices();
+
+    });
+
+}
+
 
 function loadTiffinBookings() {
   const content = document.getElementById("content");
@@ -1383,3 +1665,7 @@ window.showAddTiffinForm = showAddTiffinForm;
 window.addTiffin = addTiffin;
 window.toggleAdminDay = toggleAdminDay;
 window.saveDefaultMenu = saveDefaultMenu;
+window.loadCateringServices = loadCateringServices;
+window.showAddCateringForm = showAddCateringForm;
+window.addCateringService = addCateringService;
+window.deleteCateringService = deleteCateringService;
