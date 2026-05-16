@@ -13,60 +13,55 @@ if (!token || token === "undefined") {
 }
 
 function loadPage(page) {
-  const contentBody = document.getElementById("contentBody");
-  const pageTitle = document.getElementById("pageTitle");
-  
-  if (!contentBody) {
-    console.error("contentBody not found");
-    return;
-  }
+  const content = document.getElementById("content");
 
   switch (page) {
     case "dashboard":
-      if (pageTitle) pageTitle.innerText = "Dashboard";
       loadDashboard();
       break;
+
     case "veg":
-      if (pageTitle) pageTitle.innerText = "Veg Menu";
       loadVegMenu();
       break;
+
     case "nonveg":
-      if (pageTitle) pageTitle.innerText = "Non-Veg Menu";
-      loadNonVegMenu();
+        loadNonVegMenu();
       break;
+
     case "orders":
-      if (pageTitle) pageTitle.innerText = "Orders";
-      loadOrders();
+       loadOrders();
       break;
+
     case "tiffin":
-      if (pageTitle) pageTitle.innerText = "Tiffin Services";
-      loadTiffins();
+       loadTiffins();
       break;
+
     case "tiffinBookings":
-      if (pageTitle) pageTitle.innerText = "Tiffin Bookings";
-      loadTiffinBookings();
+       loadTiffinBookings();
       break;
+    
     case "defaultMenu":
-      if (pageTitle) pageTitle.innerText = "Set Tiffin Menu";
       loadDefaultMenu();
-      break;
+    break;
+
+    
     case "catering":
-      if (pageTitle) pageTitle.innerText = "Catering Services";
-      loadCateringServices();
+        loadCateringServices();
       break;
+
     case "users":
-      if (pageTitle) pageTitle.innerText = "Users";
       loadUsers();
       break;
+
     case "settings":
-      if (pageTitle) pageTitle.innerText = "Settings";
-      contentBody.innerHTML = `
+      content.innerHTML = `
         <h2>Admin Settings</h2>
         <button onclick="logoutAdmin()">Logout</button>
       `;
       break;
+
     default:
-      contentBody.innerHTML = "<h2>Welcome Admin</h2>";
+      content.innerHTML = "<h2>Welcome Admin</h2>";
   }
 }
 
@@ -377,6 +372,7 @@ function deleteNonVeg(id) {
 
 /* ========= CATERING SERVICES ========= */
 
+// Add this function to your admin.js file, replacing the existing catering functions
 
 function loadCateringServices() {
     const contentBody = document.getElementById("content");
