@@ -13,7 +13,7 @@ if (!token || token === "undefined") {
 }
 
 function loadPage(page) {
-  
+  const content = document.getElementById("content");
 
   switch (page) {
     case "dashboard":
@@ -89,7 +89,7 @@ function makeTableMobileResponsive(tableId) {
 /* ========= DASHBOARD */
 
 function loadDashboard() {
-  const content = document.getElementById("contentBody");
+  const content = document.getElementById("content");
   content.innerHTML = "<h2>Loading dashboard...</h2>";
 
   fetch(`${API_BASE}/api/admin/dashboard-stats`, {
@@ -122,7 +122,7 @@ function loadDashboard() {
 
 /* ========= VEG MENU MANAGEMENT ========= */
 function loadVegMenu() {
-  const content = document.getElementById("contentBody");
+  const content = document.getElementById("content");
 
   content.innerHTML = "<h2>Loading Veg Menu...</h2>";
 
@@ -166,7 +166,7 @@ function loadVegMenu() {
 
 /* ========= ADD VEG ITEM ========= */
 function showAddVegForm() {
-  document.getElementById("contentBody").innerHTML = `
+  document.getElementById("content").innerHTML = `
     <h2>Add Veg Item</h2>
     <input id="vegName" placeholder="Item Name">
     <input id="vegPrice" type="number" placeholder="Price">
@@ -252,7 +252,7 @@ window.onload = () => {
 
 /* ========= ADD NON-VEG ITEM ========= */
 function loadNonVegMenu() {
-  const content = document.getElementById("contentBody");
+  const content = document.getElementById("content");
 
   content.innerHTML = "<h2>Loading Non-Veg Menu...</h2>";
 
@@ -294,7 +294,7 @@ function loadNonVegMenu() {
   });
 }
 function showAddNonVegForm() {
-  document.getElementById("contentBody").innerHTML = `
+  document.getElementById("content").innerHTML = `
     <h2>Add Non-Veg Item</h2>
 
     <input id="nonvegName" placeholder="Item Name">
@@ -371,327 +371,350 @@ function deleteNonVeg(id) {
 }
 
 /* ========= CATERING SERVICES ========= */
+
+// Add this function to your admin.js file, replacing the existing catering functions
+
 function loadCateringServices() {
-
-    const content =
-    document.getElementById("contentBody");
-
-    document.getElementById(
-        "pageTitle"
-    ).innerText =
-    "Catering Services";
-
-    content.innerHTML = `
+    const contentBody = document.getElementById("contentBody");
+    if (!contentBody) return;
     
-    <div class="catering-admin-header">
-
-        <h2>🍽 Catering Services</h2>
-
-        <button onclick="showAddCateringForm()">
-            + Add Service
-        </button>
-
-    </div>
-
-    <div id="cateringServicesList">
-
-        Loading Catering Services...
-
-    </div>
-    
+    contentBody.innerHTML = `
+        <div class="catering-admin-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+            <h2 style="margin:0;">🍽️ Catering Services Management</h2>
+            <button onclick="showAddCateringForm()" style="background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
+                + Add New Service
+            </button>
+        </div>
+        <div id="cateringServicesList" style="display: grid; gap: 20px;">
+            <div style="text-align: center; padding: 40px;">Loading catering services...</div>
+        </div>
     `;
 
-    fetch(`${API_BASE}/api/catering/services`)
-
-    .then(res => res.json())
-
-    .then(data => {
-
-        console.log(data);
-
-        const services = data.services;
-
-        let html = "";
-
-        if (!services || services.length === 0) {
-
-            html = `
-            <div class="empty-catering">
-                No Catering Services Found
-            </div>
-            `;
-
-        } else {
-
-            services.forEach(service => {
-
-                html += `
-                
-                <div class="catering-admin-card">
-
-                    <div class="catering-admin-top">
-
-                        <div>
-
-                            <h3>
-                                ${service.title}
-                            </h3>
-
-                            <p>
-                                ${service.tagline || ""}
-                            </p>
-
-                        </div>
-
-                        <span class="catering-category">
-                            ${service.category}
-                        </span>
-
-                    </div>
-
-                    <div class="catering-admin-body">
-
-                        <h4>
-                            ₹${service.price}
-                        </h4>
-
-                    </div>
-
-                    <div class="catering-admin-actions">
-
-                        <button
-                        class="delete-btn"
-                        onclick="deleteCateringService('${service._id}')">
-
-                            Delete
-
-                        </button>
-
-                    </div>
-
-                </div>
-                
-                `;
-
-            });
-
+    fetch(`${API_BASE}/api/catering/services`, {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
         }
-
-        document.getElementById(
-            "cateringServicesList"
-        ).innerHTML = html;
-
     })
-
+    .then(res => res.json())
+    .then(data => {
+        console.log("Catering services data:", data);
+        
+        let services = [];
+        if (data.services && Array.isArray(data.services)) {
+            services = data.services;
+        } else if (data.success && data.services) {
+            services = data.services;
+        } else if (Array.isArray(data)) {
+            services = data;
+        }
+        
+        let html = "";
+        
+        if (services.length === 0) {
+            html = `<div style="text-align: center; padding: 60px; background: #f8f9fa; border-radius: 16px;">
+                        <i class="fas fa-concierge-bell" style="font-size: 48px; color: #ccc;"></i>
+                        <h3>No Catering Services Found</h3>
+                        <p>Click "Add New Service" to create your first catering service.</p>
+                    </div>`;
+        } else {
+            services.forEach(service => {
+                html += `
+                    <div style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 10px;">
+                            <div>
+                                <h3 style="margin: 0 0 5px 0; color: #2c3e50;">${escapeHtml(service.title)}</h3>
+                                <p style="margin: 0 0 5px 0; color: #7f8c8d;">${escapeHtml(service.tagline || '')}</p>
+                                <span style="display: inline-block; background: ${getCategoryColor(service.category)}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px;">
+                                    ${escapeHtml(service.category)}
+                                </span>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 24px; font-weight: bold; color: #e74c3c;">₹${service.price}</div>
+                                ${service.unit ? `<small style="color: #666;">per ${service.unit}</small>` : ''}
+                            </div>
+                        </div>
+                        
+                        ${service.items && service.items.length ? `
+                            <div style="margin-top: 15px;">
+                                <strong>Includes:</strong>
+                                <ul style="margin: 8px 0 0 20px; color: #555;">
+                                    ${service.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                        
+                        ${service.sizes && service.sizes.length ? `
+                            <div style="margin-top: 15px;">
+                                <strong>Tent Sizes:</strong>
+                                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px;">
+                                    ${service.sizes.map(size => `
+                                        <span style="background: #f0f0f0; padding: 4px 12px; border-radius: 20px;">${escapeHtml(size.size)} - ₹${size.price}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
+                            <button onclick="editCateringService('${service._id}')" style="background: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button onclick="deleteCateringService('${service._id}')" style="background: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        document.getElementById("cateringServicesList").innerHTML = html;
+    })
     .catch(err => {
-
-        console.log(err);
-
-        document.getElementById(
-            "cateringServicesList"
-        ).innerHTML = `
-            <p>Failed to load catering services</p>
+        console.error("Error loading catering services:", err);
+        document.getElementById("cateringServicesList").innerHTML = `
+            <div style="text-align: center; padding: 40px; color: red;">
+                Failed to load catering services. Please check your connection.
+                <br><button onclick="loadCateringServices()" style="margin-top: 10px; padding: 8px 16px;">Retry</button>
+            </div>
         `;
-
     });
-
 }
 
 function showAddCateringForm() {
-
-    document.getElementById("contentBody").innerHTML = `
+    const contentBody = document.getElementById("contentBody");
     
-    <div class="add-catering-form">
-
-        <h2>Add Catering Service</h2>
-
-        <input 
-            type="text"
-            id="cateringTitle"
-            placeholder="Service Title"
-        >
-
-        <input 
-            type="text"
-            id="cateringTagline"
-            placeholder="Tagline"
-        >
-
-        <select id="cateringCategory">
-
-            <option value="serving">
-                Serving Staff
-            </option>
-
-            <option value="cleaning">
-                Cleaning Staff
-            </option>
-
-            <option value="cooking">
-                Cooking Staff
-            </option>
-
-            <option value="tent">
-                Tent & Decoration
-            </option>
-
-            <option value="package">
-                Full Package
-            </option>
-
-        </select>
-
-        <input 
-            type="number"
-            id="cateringPrice"
-            placeholder="Price"
-        >
-
-        <textarea
-            id="cateringItems"
-            placeholder="Items comma separated"
-        ></textarea>
-
-        <button onclick="addCateringService()">
-            Save Service
-        </button>
-
-        <button onclick="loadCateringServices()">
-            Cancel
-        </button>
-
-    </div>
-    
+    contentBody.innerHTML = `
+        <div style="max-width: 600px; margin: 0 auto;">
+            <h2>Add New Catering Service</h2>
+            
+            <div style="margin-bottom: 15px;">
+                <label>Category *</label>
+                <select id="cateringCategory" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                    <option value="serving">Serving Staff</option>
+                    <option value="cleaning">Cleaning Staff</option>
+                    <option value="cooking">Cooking Staff</option>
+                    <option value="tent">Tent & Decoration</option>
+                    <option value="package">Full Package</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label>Title *</label>
+                <input type="text" id="cateringTitle" placeholder="e.g., Professional Serving Staff" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label>Tagline</label>
+                <input type="text" id="cateringTagline" placeholder="Short description" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label>Price *</label>
+                <input type="number" id="cateringPrice" placeholder="Price in INR" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label>Unit (e.g., staff, item)</label>
+                <input type="text" id="cateringUnit" placeholder="staff / item / package" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label>Items Included (comma separated)</label>
+                <textarea id="cateringItems" placeholder="e.g., Professional Training, Uniform, Equipment" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;"></textarea>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label>Icon (emoji)</label>
+                <input type="text" id="cateringIcon" placeholder="🍽️" value="🍽️" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+            </div>
+            
+            <div style="display: flex; gap: 10px;">
+                <button onclick="addCateringService()" style="background: #27ae60; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">Save Service</button>
+                <button onclick="loadCateringServices()" style="background: #95a5a6; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
     `;
 }
+
 function addCateringService() {
-
     const data = {
-
-        title: document.getElementById(
-            "cateringTitle"
-        ).value,
-
-        tagline: document.getElementById(
-            "cateringTagline"
-        ).value,
-
-        category: document.getElementById(
-            "cateringCategory"
-        ).value,
-
-        price: Number(
-            document.getElementById(
-                "cateringPrice"
-            ).value
-        ),
-
-        items: document.getElementById(
-            "cateringItems"
-        ).value
-        .split(",")
-        .map(i => i.trim())
-
+        title: document.getElementById("cateringTitle").value,
+        tagline: document.getElementById("cateringTagline").value,
+        category: document.getElementById("cateringCategory").value,
+        price: Number(document.getElementById("cateringPrice").value),
+        unit: document.getElementById("cateringUnit").value || "staff",
+        items: document.getElementById("cateringItems").value.split(",").map(i => i.trim()).filter(i => i),
+        icon: document.getElementById("cateringIcon").value || "🍽️",
+        active: true
     };
-
-    console.log(data);
-
+    
+    if (!data.title || !data.price) {
+        alert("Please fill in Title and Price");
+        return;
+    }
+    
     fetch(`${API_BASE}/api/catering/admin/add-service`, {
-
         method: "POST",
-
         headers: {
-
             "Content-Type": "application/json",
-
-            Authorization:
-            "Bearer " +
-            localStorage.getItem("adminToken")
+            "Authorization": "Bearer " + localStorage.getItem("adminToken")
         },
-
         body: JSON.stringify(data)
-
     })
-
     .then(async res => {
-
-        const response =
-        await res.json();
-
-        console.log(response);
-
-        if (!res.ok) {
-
-            throw new Error(
-                response.message ||
-                "Failed"
-            );
-        }
-
+        const response = await res.json();
+        if (!res.ok) throw new Error(response.message || "Failed to add");
         return response;
-
     })
-
-    .then(data => {
-
-        alert("✅ Catering Service Added");
-
+    .then(() => {
+        alert("✅ Catering Service Added Successfully!");
         loadCateringServices();
-
     })
-
     .catch(err => {
-
-        console.log(err);
-
-        alert(err.message);
-
+        console.error(err);
+        alert("Error: " + err.message);
     });
-
 }
+
 function deleteCateringService(id) {
-
-    if (!confirm("Delete this service?"))
-    return;
-
-    fetch(
-    `${API_BASE}/api/catering/admin/delete-service/${id}`, {
-
+    if (!confirm("Are you sure you want to delete this service?")) return;
+    
+    fetch(`${API_BASE}/api/catering/admin/delete-service/${id}`, {
         method: "DELETE",
-
         headers: {
-
-            Authorization:
-            "Bearer " +
-            localStorage.getItem("adminToken")
-
+            "Authorization": "Bearer " + localStorage.getItem("adminToken")
         }
-
     })
-
-    .then(res => res.json())
-
-    .then(data => {
-
-        alert("Deleted");
-
+    .then(() => {
+        alert("✅ Service Deleted");
         loadCateringServices();
-
     })
-
     .catch(err => {
-
-        console.log(err);
-
-        alert("Delete Failed");
-
+        console.error(err);
+        alert("Failed to delete service");
     });
+}
 
+function editCateringService(id) {
+    // Fetch the service and populate edit form
+    fetch(`${API_BASE}/api/catering/services`, {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        let services = data.services || data;
+        const service = services.find(s => s._id === id);
+        if (!service) {
+            alert("Service not found");
+            return;
+        }
+        
+        const contentBody = document.getElementById("contentBody");
+        contentBody.innerHTML = `
+            <div style="max-width: 600px; margin: 0 auto;">
+                <h2>Edit Catering Service</h2>
+                
+                <div style="margin-bottom: 15px;">
+                    <label>Category</label>
+                    <select id="cateringCategory" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                        <option value="serving" ${service.category === 'serving' ? 'selected' : ''}>Serving Staff</option>
+                        <option value="cleaning" ${service.category === 'cleaning' ? 'selected' : ''}>Cleaning Staff</option>
+                        <option value="cooking" ${service.category === 'cooking' ? 'selected' : ''}>Cooking Staff</option>
+                        <option value="tent" ${service.category === 'tent' ? 'selected' : ''}>Tent & Decoration</option>
+                        <option value="package" ${service.category === 'package' ? 'selected' : ''}>Full Package</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label>Title</label>
+                    <input type="text" id="cateringTitle" value="${escapeHtml(service.title)}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label>Tagline</label>
+                    <input type="text" id="cateringTagline" value="${escapeHtml(service.tagline || '')}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label>Price</label>
+                    <input type="number" id="cateringPrice" value="${service.price}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label>Unit</label>
+                    <input type="text" id="cateringUnit" value="${escapeHtml(service.unit || 'staff')}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label>Items (comma separated)</label>
+                    <textarea id="cateringItems" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">${service.items ? service.items.join(', ') : ''}</textarea>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="updateCateringService('${id}')" style="background: #27ae60; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">Update Service</button>
+                    <button onclick="loadCateringServices()" style="background: #95a5a6; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">Cancel</button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function updateCateringService(id) {
+    const data = {
+        title: document.getElementById("cateringTitle").value,
+        tagline: document.getElementById("cateringTagline").value,
+        category: document.getElementById("cateringCategory").value,
+        price: Number(document.getElementById("cateringPrice").value),
+        unit: document.getElementById("cateringUnit").value,
+        items: document.getElementById("cateringItems").value.split(",").map(i => i.trim()).filter(i => i),
+        active: true
+    };
+    
+    fetch(`${API_BASE}/api/catering/admin/update-service/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("adminToken")
+        },
+        body: JSON.stringify(data)
+    })
+    .then(async res => {
+        const response = await res.json();
+        if (!res.ok) throw new Error(response.message);
+        return response;
+    })
+    .then(() => {
+        alert("✅ Service Updated!");
+        loadCateringServices();
+    })
+    .catch(err => {
+        alert("Error: " + err.message);
+    });
+}
+
+function getCategoryColor(category) {
+    const colors = {
+        'serving': '#3498db',
+        'cleaning': '#2ecc71',
+        'cooking': '#e67e22',
+        'tent': '#9b59b6',
+        'package': '#e74c3c'
+    };
+    return colors[category] || '#7f8c8d';
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 
 function loadTiffinBookings() {
-  const content = document.getElementById("contentBody");
+  const content = document.getElementById("content");
   content.innerHTML = "<h2>Loading Tiffin Bookings...</h2>";
 
   fetch(`${API_BASE}/api/admin/tiffin-bookings`, {
@@ -877,7 +900,7 @@ fetch(`${API_BASE}/api/admin/tiffin-bookings/${id}`, {
 
 
 function loadTiffins() {
-  const content = document.getElementById("contentBody");
+  const content = document.getElementById("content");
   content.innerHTML = "<h2>Loading Tiffin Plans...</h2>";
 
   fetch(`${API_BASE}/api/admin/tiffins`, {
@@ -940,7 +963,7 @@ function deleteTiffin(id) {
 }
 
 function showAddTiffinForm() {
-  document.getElementById("contentBody").innerHTML = `
+  document.getElementById("content").innerHTML = `
     <h2>Add Tiffin Plan</h2>
 
     <input id="planName" placeholder="Plan Name">
@@ -1004,7 +1027,7 @@ function addTiffin() {
 
 function loadDefaultMenu() {
 
-  const content = document.getElementById("contentBody");
+  const content = document.getElementById("content");
 
   content.innerHTML = `
     <h2>Set Weekly Tiffin Menu</h2>
@@ -1143,7 +1166,7 @@ function loadExistingDefaultMenu() {
 
 /* ========= USERS LIST ========= */
 function loadUsers() {
-  const content = document.getElementById("contentBody");
+  const content = document.getElementById("content");
   content.innerHTML = "<h2>Loading users...</h2>";
 
   fetch(`${API_BASE}/api/admin/users`, {
@@ -1260,7 +1283,7 @@ function showAdminNotification(message) {
 
 
 function loadOrders() {
-    const content = document.getElementById("contentBody");
+    const content = document.getElementById("content");
     
 
     content.innerHTML = `
@@ -1305,7 +1328,7 @@ function loadOrders() {
 
 
 function displayOrders(orders, stats) {
-    const content = document.getElementById("contentBody");
+    const content = document.getElementById("content");
     
     if (!orders || orders.length === 0) {
         content.innerHTML = `
