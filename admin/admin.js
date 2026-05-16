@@ -11,57 +11,47 @@ const token = localStorage.getItem("adminToken");
 if (!token || token === "undefined") {
   window.location.href = "login.html";
 }
-
 function loadPage(page) {
   const content = document.getElementById("content");
+  const contentBody = document.getElementById("contentBody");
 
   switch (page) {
     case "dashboard":
       loadDashboard();
       break;
-
     case "veg":
       loadVegMenu();
       break;
-
     case "nonveg":
-        loadNonVegMenu();
+      loadNonVegMenu();
       break;
-
     case "orders":
-       loadOrders();
+      loadOrders();
       break;
-
     case "tiffin":
-       loadTiffins();
+      loadTiffins();
       break;
-
     case "tiffinBookings":
-       loadTiffinBookings();
+      loadTiffinBookings();
       break;
-    
     case "defaultMenu":
       loadDefaultMenu();
-    break;
-
-    
-    case "catering":
-        loadCateringServices();
       break;
-
+    case "catering":
+      // FIX: Call the catering function here
+      loadCateringServices();
+      break;
     case "users":
       loadUsers();
       break;
-
     case "settings":
-      content.innerHTML = `
+      contentBody.innerHTML = `
         <h2>Admin Settings</h2>
         <button onclick="logoutAdmin()">Logout</button>
       `;
       break;
-
     default:
-      content.innerHTML = "<h2>Welcome Admin</h2>";
+      contentBody.innerHTML = "<h2>Welcome Admin</h2>";
   }
 }
 
