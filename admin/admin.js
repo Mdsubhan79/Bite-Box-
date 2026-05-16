@@ -489,7 +489,10 @@ function showAddCateringForm() {
             
             <div style="margin-bottom: 15px;">
                 <label>Category *</label>
-                <select id="cateringCategory" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                <select
+id="cateringCategory"
+onchange="toggleTentSection()"
+style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
                     <option value="serving">Serving Staff</option>
                     <option value="cleaning">Cleaning Staff</option>
                     <option value="cooking">Cooking Staff</option>
@@ -512,40 +515,46 @@ function showAddCateringForm() {
                 <label>Price *</label>
                 <input type="number" id="cateringPrice" placeholder="Price in INR" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
             </div>
-            <div id="tentSizesContainer">
+         <div
+id="tentSizesSection"
+style="display:none;">
 
-    <h3>Tent Sizes</h3>
+    <div id="tentSizesContainer">
 
-    <div class="tent-size-box">
+        <h3>Tent Sizes</h3>
 
-        <input
-            type="text"
-            class="tentSize"
-            placeholder="Size Example 40x50"
-        >
+        <div class="tent-size-box">
 
-        <input
-            type="number"
-            class="tentPrice"
-            placeholder="Price"
-        >
+            <input
+                type="text"
+                class="tentSize"
+                placeholder="Size Example 40x50"
+            >
 
-        <textarea
-            class="tentItems"
-            placeholder="Items comma separated"
-        ></textarea>
+            <input
+                type="number"
+                class="tentPrice"
+                placeholder="Price"
+            >
+
+            <textarea
+                class="tentItems"
+                placeholder="Items comma separated"
+            ></textarea>
+
+        </div>
 
     </div>
 
+    <button
+    type="button"
+    onclick="addTentSizeField()">
+
+        + Add More Tent Size
+
+    </button>
+
 </div>
-
-<button
-type="button"
-onclick="addTentSizeField()">
-
-    + Add More Tent Size
-
-</button>
             
             <div style="margin-bottom: 15px;">
                 <label>Unit (e.g., staff, item)</label>
@@ -569,6 +578,33 @@ onclick="addTentSizeField()">
         </div>
     `;
 }
+
+function toggleTentSection(){
+
+    const category =
+    document.getElementById(
+        "cateringCategory"
+    ).value;
+
+    const tentSection =
+    document.getElementById(
+        "tentSizesSection"
+    );
+
+    if(category === "tent"){
+
+        tentSection.style.display =
+        "block";
+
+    }else{
+
+        tentSection.style.display =
+        "none";
+
+    }
+
+}
+
 function addTentSizeField() {
 
     const container =

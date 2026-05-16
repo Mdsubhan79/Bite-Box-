@@ -29,42 +29,192 @@
             background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
             min-height: 100vh;
             padding: 20px;
+            transition: all 0.2s ease;
         }
 
+        /* ========== RESPONSIVE MEDIA QUERIES (250px to larger) ========== */
+        /* Base styles start from 250px (minimum supported) */
+        @media (min-width: 250px) {
+            body {
+                padding: 12px;
+            }
+            .page-header {
+                padding: 20px 12px;
+                margin-bottom: 24px;
+            }
+            .page-header h1 {
+                font-size: 1.4rem;
+            }
+            .page-header p {
+                font-size: 0.75rem;
+            }
+            .services-grid {
+                gap: 16px;
+                padding: 0 8px;
+                grid-template-columns: 1fr;
+            }
+            .service-card {
+                padding: 20px 16px;
+            }
+            .service-card .icon {
+                font-size: 2.5rem;
+            }
+            .service-card h3 {
+                font-size: 1.2rem;
+            }
+            .package-card {
+                padding: 25px 18px;
+            }
+            .package-card h3 {
+                font-size: 1.4rem;
+            }
+            .package-card .price {
+                font-size: 2rem;
+            }
+            .cart-drawer {
+                width: calc(100% - 24px);
+                right: 12px;
+                left: 12px;
+                bottom: 90px;
+                max-height: 55vh;
+                padding: 18px;
+            }
+            .modal {
+                padding: 20px;
+                width: 95%;
+            }
+            .tent-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Small phones (360px and up) */
+        @media (min-width: 360px) {
+            body {
+                padding: 14px;
+            }
+            .page-header h1 {
+                font-size: 1.6rem;
+            }
+            .services-grid {
+                gap: 18px;
+            }
+            .cart-drawer {
+                width: calc(100% - 30px);
+                right: 15px;
+                left: 15px;
+            }
+        }
+
+        /* Phones landscape & small tablets (480px and up) */
+        @media (min-width: 480px) {
+            body {
+                padding: 16px;
+            }
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            .page-header h1 {
+                font-size: 1.9rem;
+            }
+            .cart-drawer {
+                width: 400px;
+                right: 20px;
+                left: auto;
+                bottom: 100px;
+            }
+            .modal {
+                width: 90%;
+                max-width: 550px;
+            }
+        }
+
+        /* Tablets (640px and up) */
+        @media (min-width: 640px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .page-header {
+                padding: 30px 20px;
+            }
+        }
+
+        /* Desktop / large tablets (768px and up) */
+        @media (min-width: 768px) {
+            body {
+                padding: 24px;
+            }
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+            .service-card {
+                padding: 35px 25px;
+            }
+            .cart-drawer {
+                width: 420px;
+                right: 30px;
+                left: auto;
+            }
+        }
+
+        /* Large screens (1024px and up) */
+        @media (min-width: 1024px) {
+            .services-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Extra large (1280px and up) original 4 columns */
+        @media (min-width: 1280px) {
+            .services-grid {
+                grid-template-columns: repeat(4, 1fr);
+                max-width: 1400px;
+            }
+        }
+
+        /* Very large screens (1600px) */
+        @media (min-width: 1600px) {
+            .services-grid {
+                grid-template-columns: repeat(4, 1fr);
+                max-width: 1600px;
+            }
+            body {
+                padding: 32px;
+            }
+        }
+
+        /* Page header & card styles */
         .page-header {
             text-align: center;
-            padding: 40px 20px;
             background: linear-gradient(135deg, #081b19 0%, #012c27 100%);
             color: white;
             border-radius: 20px;
-            margin-bottom: 40px;
             position: relative;
             overflow: hidden;
         }
 
         .page-header h1 {
-            font-size: clamp(1.8rem, 6vw, 2.8rem);
             margin-bottom: 10px;
+            font-weight: 700;
         }
 
         .page-header p {
-            font-size: clamp(0.9rem, 4vw, 1.2rem);
             opacity: 0.9;
         }
 
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            max-width: 1400px;
             margin: 0 auto 40px;
-            padding: 0 20px;
         }
 
         .service-card {
             background: #10332F;
             border-radius: 20px;
-            padding: 35px 25px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -79,13 +229,11 @@
         }
 
         .service-card .icon {
-            font-size: 3.5rem;
             margin-bottom: 15px;
             display: block;
         }
 
         .service-card h3 {
-            font-size: 1.4rem;
             color: #ecf0f1;
             margin-bottom: 8px;
         }
@@ -146,7 +294,7 @@
         .package-card .features li { padding: 8px 0; font-size: 0.95rem; }
         .package-card .features li::before { content: '✓ '; font-weight: bold; }
 
-        /* Modal styles (same as before, condensed for brevity) */
+        /* Modal styles */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -164,12 +312,9 @@
         .modal {
             background: white;
             border-radius: 20px;
-            padding: 30px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
             position: relative;
+            max-height: 85vh;
+            overflow-y: auto;
         }
         .modal-close {
             position: absolute;
@@ -179,6 +324,8 @@
             border: none;
             font-size: 1.8rem;
             cursor: pointer;
+            color: #333;
+            z-index: 10;
         }
         .staff-counter {
             display: flex;
@@ -196,10 +343,11 @@
             color: var(--primary);
             font-size: 1.5rem;
             cursor: pointer;
+            transition: 0.2s;
         }
+        .staff-counter button:active { transform: scale(0.95); }
         .tent-options {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
             margin: 20px 0;
         }
@@ -209,6 +357,7 @@
             padding: 20px;
             text-align: center;
             cursor: pointer;
+            transition: 0.2s;
         }
         .tent-option.selected {
             border-color: var(--primary);
@@ -221,16 +370,19 @@
             z-index: 999;
         }
         .cart-toggle {
-            width: 40px;
-            height: 40px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
             background: var(--primary);
             color: white;
             border: none;
-            font-size: 1.2rem;
+            font-size: 1.6rem;
             cursor: pointer;
             position: relative;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
         }
+        .cart-toggle:hover { transform: scale(1.05); }
         .cart-count {
             position: absolute;
             top: -5px;
@@ -244,7 +396,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: bold;
         }
+        /* Cart Drawer - click outside will close it (managed by JS) */
         .cart-drawer {
             position: fixed;
             bottom: 110px;
@@ -252,18 +406,19 @@
             background: white;
             border-radius: 20px;
             padding: 25px;
-            width: 380px;
             max-height: 60vh;
             overflow-y: auto;
             box-shadow: 0 20px 50px rgba(0,0,0,0.3);
             display: none;
+            z-index: 1001;
+            transition: 0.2s ease;
         }
         .cart-drawer.active { display: block; }
         .cart-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
+            padding: 12px 0;
             border-bottom: 1px solid #eee;
         }
         .cart-total {
@@ -281,11 +436,13 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
+            transition: 0.2s;
         }
         .btn-primary {
             background: var(--primary);
             color: white;
         }
+        .btn-primary:active { transform: scale(0.97); }
         .btn-block {
             display: block;
             width: 100%;
@@ -297,23 +454,81 @@
             font-size: 1.2rem;
             color: #666;
         }
-
-        @media (max-width: 768px) {
-            .services-grid { grid-template-columns: 1fr; }
-            .cart-drawer { width: 90%; right: 5%; left: 5%; }
+        .custom-option {
+            margin-top: 20px;
+            background: #fff5f1;
+            border: 2px dashed #ff7b54;
+            border-radius: 18px;
+            padding: 20px;
+            text-align: center;
         }
-        @media (min-width: 260px) and (max-width: 480px) {
-            body { padding: 12px; }
-            .services-grid { grid-template-columns: 1fr; gap: 16px; }
-            .service-card { padding: 20px 16px; }
-            .cart-drawer { width: calc(100% - 40px); right: 20px; left: 20px; }
+        .custom-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ff5722;
+            margin-bottom: 8px;
         }
-        @media (min-width: 768px) {
-            .services-grid { grid-template-columns: repeat(2, 1fr); }
+        .custom-text {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 18px;
         }
-        @media (min-width: 1024px) {
-            .services-grid { grid-template-columns: repeat(4, 1fr); }
+        .custom-option input,
+        .custom-option textarea,
+        .custom-option select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 2px solid #ddd;
+            outline: none;
+            margin-bottom: 14px;
+            font-size: 14px;
+            resize: none;
+            background: white;
         }
+        .custom-option textarea {
+            min-height: 100px;
+        }
+        .custom-option input:focus,
+        .custom-option textarea:focus,
+        .custom-option select:focus {
+            border-color: #ff5722;
+        }
+        .custom-tent-btn {
+            background: #ff5722;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .custom-tent-btn:hover { background: #e64a19; transform: scale(1.02); }
+        .tent-size-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .tent-size-row input { margin-bottom: 0; flex: 1; }
+        .size-x { font-weight: bold; font-size: 1.2rem; }
+        .selected-tent-box {
+            background: #ffefef;
+            padding: 15px;
+            border-radius: 16px;
+        }
+        .remove-item {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.2s;
+        }
+        .remove-item:hover { color: #e74c3c; }
+        .date-status { margin: 15px 0; text-align: center; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -359,16 +574,16 @@
             <button class="modal-close" onclick="closeModal('dateModal')">&times;</button>
             <h3>📅 Select Service Date</h3>
             <div class="date-picker-container" style="margin:20px 0;text-align:center;">
-                <input type="date" id="serviceDate" min="2026-01-01" style="padding:12px;border-radius:10px;border:2px solid #ddd;">
+                <input type="date" id="serviceDate" min="2026-01-01" style="padding:12px;border-radius:10px;border:2px solid #ddd;width:100%;">
             </div>
             <div class="date-status" id="dateStatus" style="display:none;"></div>
             <button class="btn btn-primary btn-block" id="confirmDateBtn" onclick="confirmDate()" disabled>Confirm Date & Finish</button>
         </div>
     </div>
 
-    <!-- Cart Popup -->
+    <!-- Cart Popup with click anywhere to close -->
     <div class="cart-popup">
-        <button class="cart-toggle" onclick="toggleCart()">🛒<span class="cart-count" id="cartCount">0</span></button>
+        <button class="cart-toggle" id="cartToggleBtn">🛒<span class="cart-count" id="cartCount">0</span></button>
         <div class="cart-drawer" id="cartDrawer">
             <h4>🛒 Catering Cart</h4>
             <div id="cartItems"><p style="color:#999;text-align:center;">No items yet</p></div>
@@ -393,8 +608,40 @@
         let currentStaffType = null;
         let tempStaffQty = 1;
         let tempTentSelection = null;
+        let currentStaffPrice = 500;
         
-       
+        // ========== CLICK ANYWHERE TO CLOSE CART (with proper handling) ==========
+        function initCartCloseOnOutsideClick() {
+            const cartDrawer = document.getElementById('cartDrawer');
+            const cartToggleBtn = document.getElementById('cartToggleBtn');
+            
+            // Close cart when clicking anywhere on document EXCEPT cart drawer and toggle button
+            document.addEventListener('click', function(event) {
+                const isCartDrawer = cartDrawer && cartDrawer.contains(event.target);
+                const isToggleBtn = cartToggleBtn && cartToggleBtn.contains(event.target);
+                const isCartActive = cartDrawer && cartDrawer.classList.contains('active');
+                
+                // If cart is open and click is outside both drawer & toggle button, close it
+                if (isCartActive && !isCartDrawer && !isToggleBtn) {
+                    cartDrawer.classList.remove('active');
+                }
+            });
+            
+            // Prevent click inside cart drawer from closing (bubbling handled by parent)
+            if (cartDrawer) {
+                cartDrawer.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+            // Prevent toggle button click from propagating to document close handler
+            if (cartToggleBtn) {
+                cartToggleBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleCart();
+                });
+            }
+        }
+        
         async function loadServices() {
             const grid = document.getElementById('servicesGrid');
             grid.innerHTML = '<div class="loading">Loading catering services...</div>';
@@ -420,7 +667,7 @@
                 services.forEach(service => {
                     if (service.category === 'serving') {
                         html += `
-                            <div class="service-card" onclick="openStaffModal('serving', ${service.price}, '${service.title}')">
+                            <div class="service-card" onclick="openStaffModal('serving', ${service.price}, '${escapeHtml(service.title)}')">
                                 <span class="icon">${service.icon || '👨‍🍳'}</span>
                                 <h3>${escapeHtml(service.title)}</h3>
                                 <p class="tagline">${escapeHtml(service.tagline || 'Professional service')}</p>
@@ -429,7 +676,7 @@
                         `;
                     } else if (service.category === 'cleaning') {
                         html += `
-                            <div class="service-card" onclick="openStaffModal('cleaning', ${service.price}, '${service.title}')">
+                            <div class="service-card" onclick="openStaffModal('cleaning', ${service.price}, '${escapeHtml(service.title)}')">
                                 <span class="icon">${service.icon || '🧹'}</span>
                                 <h3>${escapeHtml(service.title)}</h3>
                                 <p class="tagline">${escapeHtml(service.tagline || 'Keep venue spotless')}</p>
@@ -438,7 +685,7 @@
                         `;
                     } else if (service.category === 'cooking') {
                         html += `
-                            <div class="service-card" onclick="openStaffModal('cooking', ${service.price}, '${service.title}')">
+                            <div class="service-card" onclick="openStaffModal('cooking', ${service.price}, '${escapeHtml(service.title)}')">
                                 <span class="icon">${service.icon || '👨‍🍳'}</span>
                                 <h3>${escapeHtml(service.title)}</h3>
                                 <p class="tagline">${escapeHtml(service.tagline || 'Expert chefs')}</p>
@@ -446,94 +693,19 @@
                             </div>
                         `;
                     } else if (service.category === 'tent') {
-
-    html += `
-
-    <div class="service-card"
-    onclick="openTentModalFromService(${JSON.stringify(escapeHtmlObj(service)).replace(/"/g, '&quot;')})">
-
-        <span class="icon">
-            ${service.icon || '🎪'}
-        </span>
-
-        <h3>
-            ${escapeHtml(service.title)}
-        </h3>
-
-        <p class="tagline">
-            ${escapeHtml(service.tagline || 'Beautiful tents with decor')}
-        </p>
-
-        <span class="badge">
-            From ₹${Math.min(...(service.sizes?.map(s=>s.price) || [service.price])) || service.price}
-        </span>
-
-    </div>
-
-    `;
-
-    
-    if(service.sizes && service.sizes.length > 0){
-
-        service.sizes.forEach(size => {
-
-            html += `
-
-            <div class="tent-option">
-
-                <h3>${size.size}</h3>
-
-                <p>₹${size.price}</p>
-
-                <ul>
-
-                    ${
-                        size.items
-                        ?
-                        size.items.map(item => `
-                            <li>${item}</li>
-                        `).join("")
-                        :
-                        ""
-                    }
-
-                </ul>
-
-            </div>
-
-            `;
-
-        });
-
-    }
-
-    
-    html += `
-
-    <div class="tent-option custom-option">
-
-        <h3>Add Your Own Size</h3>
-
-        <input
-            type="text"
-            id="customTentSize"
-            placeholder="Enter custom size"
-        >
-
-        <input
-            type="number"
-            id="customTentPrice"
-            placeholder="Enter custom price"
-        >
-
-    </div>
-
-    `;
-
-}
-                     else if (service.category === 'package') {
+                        const serviceStr = JSON.stringify(escapeHtmlObj(service)).replace(/"/g, '&quot;');
                         html += `
-                            <div class="package-card" onclick="selectFullPackageFromService(${JSON.stringify(escapeHtmlObj(service)).replace(/"/g, '&quot;')})">
+                            <div class="service-card" onclick="openTentModalFromService(${serviceStr})">
+                                <span class="icon">${service.icon || '🎪'}</span>
+                                <h3>${escapeHtml(service.title)}</h3>
+                                <p class="tagline">${escapeHtml(service.tagline || 'Beautiful tents with decor')}</p>
+                                <span class="badge">From ₹${service.sizes ? Math.min(...service.sizes.map(s=>s.price)) : (service.price || 0)}</span>
+                            </div>
+                        `;
+                    } else if (service.category === 'package') {
+                        const pkgStr = JSON.stringify(escapeHtmlObj(service)).replace(/"/g, '&quot;');
+                        html += `
+                            <div class="package-card" onclick="selectFullPackageFromService(${pkgStr})">
                                 <div class="offer-badge">🔥 BEST DEAL</div>
                                 <span class="icon" style="font-size:3rem;">${service.icon || '🎉'}</span>
                                 <h3>${escapeHtml(service.title)}</h3>
@@ -551,7 +723,7 @@
                 
             } catch (err) {
                 console.error(err);
-                grid.innerHTML = '<div class="loading">Failed to load services. Please refresh the page.</div>';
+                grid.innerHTML = '<div class="loading">Failed to load services. Please refresh.</div>';
             }
         }
         
@@ -575,72 +747,90 @@
             return newObj;
         }
         
-        // Staff functions
         function openStaffModal(type, price, title) {
             currentStaffType = type;
             tempStaffQty = 1;
+            currentStaffPrice = price;
             document.getElementById('staffQty').textContent = '1';
             document.getElementById('staffModalTitle').textContent = title;
             document.getElementById('staffUnitPrice').innerHTML = '₹' + price;
             document.getElementById('staffTotalPrice').innerHTML = '₹' + price;
-            
-            // Store price for this type
-            window.currentStaffPrice = price;
-            
             document.getElementById('staffModal').classList.add('active');
         }
         
         function changeStaffQty(delta) {
             tempStaffQty = Math.max(1, tempStaffQty + delta);
             document.getElementById('staffQty').textContent = tempStaffQty;
-            const price = window.currentStaffPrice || 500;
-            document.getElementById('staffTotalPrice').innerHTML = '₹' + (price * tempStaffQty);
+            document.getElementById('staffTotalPrice').innerHTML = '₹' + (currentStaffPrice * tempStaffQty);
         }
         
         function confirmStaffSelection() {
-            const price = window.currentStaffPrice || 500;
             if (currentStaffType === 'serving') {
                 cart.servingStaff.qty = tempStaffQty;
-                cart.servingStaff.pricePerUnit = price;
+                cart.servingStaff.pricePerUnit = currentStaffPrice;
             }
             if (currentStaffType === 'cleaning') {
                 cart.cleaningStaff.qty = tempStaffQty;
-                cart.cleaningStaff.pricePerUnit = price;
+                cart.cleaningStaff.pricePerUnit = currentStaffPrice;
             }
             if (currentStaffType === 'cooking') {
                 cart.cookingStaff.qty = tempStaffQty;
-                cart.cookingStaff.pricePerUnit = price;
+                cart.cookingStaff.pricePerUnit = currentStaffPrice;
             }
             closeModal('staffModal');
             updateCart();
             alert(`${currentStaffType} staff: ${tempStaffQty} added!`);
         }
         
-        // Tent functions
         function openTentModalFromService(service) {
             const tentOptionsDiv = document.getElementById('tentOptions');
             let html = '';
             
             if (service.sizes && service.sizes.length) {
                 service.sizes.forEach(size => {
+                    const itemsStr = size.items ? size.items.join(', ') : 'Complete setup';
                     html += `
-                        <div class="tent-option" onclick="selectTent('${size.size}', ${size.price}, '${size.items ? size.items.join(', ') : ''}')">
+                        <div class="tent-option" onclick="selectTent('${size.size}', ${size.price}, '${escapeHtml(itemsStr)}')">
                             <div style="background:#f0f0f0;height:80px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2rem;">🎪</div>
-                            <div class="tent-size">${size.size} ft</div>
+                            <div class="tent-size"><strong>${size.size} ft</strong></div>
                             <div class="tent-price">₹${size.price}</div>
-                            <div class="tent-items">${size.items ? size.items.join(', ') : 'Complete setup'}</div>
+                            <div class="tent-items small">${escapeHtml(itemsStr)}</div>
                         </div>
                     `;
                 });
             } else {
-                html = `<div class="tent-option" onclick="selectTent('Standard', ${service.price}, '${service.items ? service.items.join(', ') : 'Complete decoration'}')">
+                const itemsList = service.items ? service.items.join(', ') : 'Complete decoration';
+                html += `<div class="tent-option" onclick="selectTent('Standard', ${service.price}, '${escapeHtml(itemsList)}')">
                             <div style="background:#f0f0f0;height:80px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2rem;">🎪</div>
-                            <div class="tent-size">Standard Tent</div>
-                            <div class="tent-price">₹${service.price}</div>
-                            <div class="tent-items">${service.items ? service.items.join(', ') : 'Full decoration'}</div>
+                            <div><strong>Standard Tent</strong></div>
+                            <div>₹${service.price}</div>
+                            <div class="small">${escapeHtml(itemsList)}</div>
                         </div>`;
             }
             
+            html += `
+                <div class="tent-option custom-option" onclick="event.stopPropagation(); hideTentConfirmBox()">
+                    <h3 class="custom-title">✨ Create Your Own Tent Package</h3>
+                    <p class="custom-text">Select tent type, size & quantity</p>
+                    <select id="customTentType">
+                        <option value="">Select Tent Type</option>
+                        <option value="Wedding Tent">Wedding Tent</option>
+                        <option value="Party Tent">Party Tent</option>
+                        <option value="Birthday Tent">Birthday Tent</option>
+                        <option value="Reception Tent">Reception Tent</option>
+                        <option value="Outdoor Tent">Outdoor Tent</option>
+                        <option value="Custom Tent">Custom Tent</option>
+                    </select>
+                    <div class="tent-size-row">
+                        <input type="number" id="customTentWidth" placeholder="Width (ft)" min="1">
+                        <span class="size-x">X</span>
+                        <input type="number" id="customTentHeight" placeholder="Height (ft)" min="1">
+                    </div>
+                    <input type="number" id="customTentQuantity" placeholder="Tent Quantity" min="1">
+                    <textarea id="customTentItems" placeholder="Enter Equipment & Decoration Items&#10;Example:&#10;100 Chairs&#10;Stage&#10;Lighting&#10;Cooler"></textarea>
+                    <button class="custom-tent-btn" onclick="saveCustomTent()">Add Custom Tent</button>
+                </div>
+            `;
             tentOptionsDiv.innerHTML = html;
             document.getElementById('tentModal').classList.add('active');
         }
@@ -648,9 +838,21 @@
         function selectTent(size, price, items) {
             tempTentSelection = { size, price, items, isCustom: false };
             document.querySelectorAll('.tent-option').forEach(el => el.classList.remove('selected'));
-            event.target.closest('.tent-option').classList.add('selected');
-            document.getElementById('selectedTentInfo').style.display = 'block';
-            document.getElementById('selectedTentInfo').innerHTML = `<strong>Selected:</strong> ${size} ft - ₹${price} (${items})<br><button class="btn btn-primary" style="margin-top:10px;" onclick="confirmTentSelection()">Confirm & Add</button>`;
+            if(event && event.target) {
+                const targetEl = event.target.closest('.tent-option');
+                if(targetEl) targetEl.classList.add('selected');
+            }
+            const infoBox = document.getElementById('selectedTentInfo');
+            infoBox.style.display = 'block';
+            infoBox.innerHTML = `
+                <div class="selected-tent-box">
+                    <strong>Selected Tent:</strong><br><br>
+                    <span class="selected-size">${size} ft</span><br>
+                    <span class="selected-price">₹${price}</span><br><br>
+                    <small>${items}</small><br><br>
+                    <button class="btn btn-primary confirm-tent-btn" onclick="confirmTentSelection()">Confirm & Add</button>
+                </div>
+            `;
         }
         
         function confirmTentSelection() {
@@ -661,18 +863,43 @@
             alert(`Tent ${tempTentSelection.size} added!`);
         }
         
-        // Package function
+        function hideTentConfirmBox() {
+            document.getElementById("selectedTentInfo").style.display = "none";
+        }
+        
+        function saveCustomTent() {
+            const tentType = document.getElementById("customTentType").value;
+            const width = document.getElementById("customTentWidth").value;
+            const height = document.getElementById("customTentHeight").value;
+            const quantity = document.getElementById("customTentQuantity").value;
+            const items = document.getElementById("customTentItems").value;
+            if(!tentType || !width || !height || !quantity){
+                alert("Please fill all required fields (Type, Width, Height, Quantity)");
+                return;
+            }
+            const customTent = {
+                size: width + "x" + height + " ft",
+                price: Number(width) * Number(height) * 5 * Number(quantity),
+                items: items || "Custom decoration package",
+                quantity: quantity,
+                type: tentType,
+                isCustom: true
+            };
+            cart.tent = customTent;
+            updateCart();
+            closeModal("tentModal");
+            alert("Custom Tent Added Successfully");
+        }
+        
         function selectFullPackageFromService(service) {
-            // Parse package details from items or use defaults
             cart.servingStaff.qty = 4;
             cart.cleaningStaff.qty = 2;
             cart.cookingStaff.qty = 3;
-            cart.tent = { size: 'Standard', price: 5000, items: 'Complete tent & decor', isCustom: false };
+            cart.tent = { size: 'Premium Package Tent', price: 5000, items: 'Complete tent & decor', isCustom: false };
             updateCart();
             alert(`🎉 ${service.title} added! Total: ₹${service.price}`);
         }
         
-        // Date and Booking functions
         function proceedToDate() {
             if (cart.servingStaff.qty === 0 && cart.cleaningStaff.qty === 0 && cart.cookingStaff.qty === 0 && !cart.tent) {
                 alert('Please add items to cart first');
@@ -686,7 +913,6 @@
             const statusDiv = document.getElementById('dateStatus');
             const confirmBtn = document.getElementById('confirmDateBtn');
             if (!date) { statusDiv.style.display = 'none'; confirmBtn.disabled = true; return; }
-            
             try {
                 const res = await fetch(`${API_BASE}/api/catering/check-date`, {
                     method: 'POST',
@@ -694,20 +920,16 @@
                     body: JSON.stringify({ date })
                 });
                 const data = await res.json();
-                statusDiv.style.display = 'flex';
+                statusDiv.style.display = 'block';
                 if (data.available) {
-                    statusDiv.className = 'date-status available';
                     statusDiv.innerHTML = '🟢 This date is available!';
                     statusDiv.style.background = '#d4edda';
                     statusDiv.style.padding = '12px';
                     statusDiv.style.borderRadius = '10px';
                     confirmBtn.disabled = false;
                 } else {
-                    statusDiv.className = 'date-status unavailable';
                     statusDiv.innerHTML = '🔴 This date is NOT available';
                     statusDiv.style.background = '#f8d7da';
-                    statusDiv.style.padding = '12px';
-                    statusDiv.style.borderRadius = '10px';
                     confirmBtn.disabled = true;
                 }
             } catch(err) { alert('Date check failed'); }
@@ -717,12 +939,10 @@
             const date = document.getElementById('serviceDate').value;
             if (!date) { alert('Select date'); return; }
             cart.date = date;
-            
             const total = (cart.servingStaff.qty * cart.servingStaff.pricePerUnit) +
                          (cart.cleaningStaff.qty * cart.cleaningStaff.pricePerUnit) +
                          (cart.cookingStaff.qty * cart.cookingStaff.pricePerUnit) +
                          (cart.tent ? cart.tent.price : 0);
-            
             const bookingData = {
                 customerName: "Guest User",
                 phone: "0000000000",
@@ -734,7 +954,6 @@
                 urgentBooking: cart.isUrgent,
                 totalPrice: total
             };
-            
             try {
                 const res = await fetch(`${API_BASE}/api/catering/book`, {
                     method: 'POST',
@@ -745,7 +964,6 @@
                 if (data.success) {
                     alert('✅ Catering Service Booked Successfully!');
                     closeModal('dateModal');
-                    // Reset cart
                     cart = { servingStaff: { qty: 0, pricePerUnit: 500 }, cleaningStaff: { qty: 0, pricePerUnit: 400 }, cookingStaff: { qty: 0, pricePerUnit: 800 }, tent: null, date: null, isUrgent: false };
                     updateCart();
                 } else {
@@ -755,16 +973,17 @@
         }
         
         function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
-        function toggleCart() { document.getElementById('cartDrawer').classList.toggle('active'); }
+        function toggleCart() { 
+            const drawer = document.getElementById('cartDrawer');
+            drawer.classList.toggle('active');
+        }
         
         function updateCart() {
             const cartItemsDiv = document.getElementById('cartItems');
             const cartTotalDiv = document.getElementById('cartTotal');
             const cartCountSpan = document.getElementById('cartCount');
             const proceedBtn = document.getElementById('proceedBtn');
-            
             let items = [], totalCount = 0, totalPrice = 0;
-            
             if (cart.servingStaff.qty > 0) {
                 const price = cart.servingStaff.qty * cart.servingStaff.pricePerUnit;
                 items.push({ name: 'Serving Staff', qty: cart.servingStaff.qty, price: cart.servingStaff.pricePerUnit, total: price });
@@ -788,18 +1007,16 @@
                 totalCount += 1;
                 totalPrice += cart.tent.price;
             }
-            
             if (items.length === 0) {
                 cartItemsDiv.innerHTML = '<p style="color:#999;text-align:center;">No items yet</p>';
             } else {
                 cartItemsDiv.innerHTML = items.map((item, idx) => `
                     <div class="cart-item">
                         <div><strong>${item.name}</strong>${item.qty > 1 ? ` × ${item.qty}` : ''}<br><small>₹${item.price} each</small></div>
-                        <div><span>₹${item.total}</span><button class="remove-item" onclick="removeCartItem(${idx})" style="background:none;border:none;color:#ccc;cursor:pointer;margin-left:10px;">×</button></div>
+                        <div><span>₹${item.total}</span><button class="remove-item" onclick="removeCartItem(${idx})">×</button></div>
                     </div>
                 `).join('');
             }
-            
             cartTotalDiv.textContent = `Total: ₹${totalPrice.toLocaleString()}`;
             cartCountSpan.textContent = totalCount;
             proceedBtn.disabled = totalCount === 0;
@@ -820,8 +1037,7 @@
         }
         
         document.getElementById('serviceDate')?.addEventListener('change', checkDateAvailability);
-        
-        // Initialize
+        initCartCloseOnOutsideClick();
         loadServices();
         updateCart();
     </script>
