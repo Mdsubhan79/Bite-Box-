@@ -530,53 +530,57 @@
         .remove-item:hover { color: #e74c3c; }
         .date-status { margin: 15px 0; text-align: center; font-weight: 600; }
         .tent-package-card{
-    background:#ffffff;
-    border-radius:20px;
-    padding:20px;
-    box-shadow:0 5px 20px rgba(0,0,0,0.08);
-    border:2px solid #f0f0f0;
-    text-align:center;
-}
-
-.tent-package-card h3{
-    font-size:22px;
-    margin-bottom:10px;
-    color:#0e2b28;
-}
-
-.tent-package-card h2{
-    color:#ff5722;
-    margin-bottom:15px;
-}
-
-.tent-items{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    justify-content:center;
-    margin-bottom:20px;
-}
-
-.tent-item{
-    background:#fff3e0;
-    color:#ff5722;
-    padding:8px 14px;
-    border-radius:30px;
-    font-size:13px;
-    font-weight:700;
-}
-
-.select-tent-btn{
-    width:100%;
-    border:none;
-    background:#0e2b28;
-    color:white;
-    padding:14px;
-    border-radius:12px;
-    font-size:15px;
-    font-weight:700;
-    cursor:pointer;
-}
+            background:#ffffff;
+            border-radius:20px;
+            padding:20px;
+            box-shadow:0 5px 20px rgba(0,0,0,0.08);
+            border:2px solid #f0f0f0;
+            text-align:center;
+        }
+        .tent-package-card h3{
+            font-size:22px;
+            margin-bottom:10px;
+            color:#0e2b28;
+        }
+        .tent-package-card h2{
+            color:#ff5722;
+            margin-bottom:15px;
+        }
+        .tent-items{
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
+            justify-content:center;
+            margin-bottom:20px;
+        }
+        .tent-item{
+            background:#fff3e0;
+            color:#ff5722;
+            padding:8px 14px;
+            border-radius:30px;
+            font-size:13px;
+            font-weight:700;
+        }
+        .select-tent-btn{
+            margin-top:15px;
+            padding:10px 18px;
+            border:none;
+            border-radius:10px;
+            background:#ff9800;
+            color:white;
+            font-weight:bold;
+            cursor:pointer;
+        }
+        .tent-option{
+            cursor:pointer;
+            transition:0.3s;
+        }
+        .tent-option:hover{
+            transform:translateY(-3px);
+            border:2px solid #ff9800;
+        }
+        .tent-image { font-size: 3rem; margin-bottom: 10px; }
+        .small { font-size: 0.85rem; color: #666; margin-top: 8px; }
     </style>
 </head>
 <body>
@@ -658,30 +662,26 @@
         let tempTentSelection = null;
         let currentStaffPrice = 500;
         
-        // ========== CLICK ANYWHERE TO CLOSE CART (with proper handling) ==========
+        // ========== CLICK ANYWHERE TO CLOSE CART ==========
         function initCartCloseOnOutsideClick() {
             const cartDrawer = document.getElementById('cartDrawer');
             const cartToggleBtn = document.getElementById('cartToggleBtn');
             
-            // Close cart when clicking anywhere on document EXCEPT cart drawer and toggle button
             document.addEventListener('click', function(event) {
                 const isCartDrawer = cartDrawer && cartDrawer.contains(event.target);
                 const isToggleBtn = cartToggleBtn && cartToggleBtn.contains(event.target);
                 const isCartActive = cartDrawer && cartDrawer.classList.contains('active');
                 
-                // If cart is open and click is outside both drawer & toggle button, close it
                 if (isCartActive && !isCartDrawer && !isToggleBtn) {
                     cartDrawer.classList.remove('active');
                 }
             });
             
-            // Prevent click inside cart drawer from closing (bubbling handled by parent)
             if (cartDrawer) {
                 cartDrawer.addEventListener('click', function(e) {
                     e.stopPropagation();
                 });
             }
-            // Prevent toggle button click from propagating to document close handler
             if (cartToggleBtn) {
                 cartToggleBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -741,35 +741,15 @@
                             </div>
                         `;
                     } else if(service.category === 'tent'){
-
-    html += `
-
-    <div class="service-card"
-    onclick='openTentModalFromService(${JSON.stringify(service).replace(/'/g,"&#39;")})'>
-
-        <span class="icon">
-            ${service.icon || '🎪'}
-        </span>
-
-        <h3>
-            ${service.title}
-        </h3>
-
-        <p class="tagline">
-            ${service.tagline || ''}
-        </p>
-
-        <span class="badge">
-            View Tent Packages
-        </span>
-
-    </div>
-
-    `;
-
-}
-                    
-                    else if (service.category === 'package') {
+                        html += `
+                            <div class="service-card" onclick='openTentModalFromService(${JSON.stringify(service).replace(/'/g,"&#39;")})'>
+                                <span class="icon">${service.icon || '🎪'}</span>
+                                <h3>${escapeHtml(service.title)}</h3>
+                                <p class="tagline">${escapeHtml(service.tagline || '')}</p>
+                                <span class="badge">View Tent Packages</span>
+                            </div>
+                        `;
+                    } else if (service.category === 'package') {
                         const pkgStr = JSON.stringify(escapeHtmlObj(service)).replace(/"/g, '&quot;');
                         html += `
                             <div class="package-card" onclick="selectFullPackageFromService(${pkgStr})">
@@ -855,24 +835,31 @@
             
             if (service.sizes && service.sizes.length) {
                 service.sizes.forEach(size => {
-                    const itemsStr = size.items ? size.items.join(', ') : 'Complete setup';
+                    const itemsStr = (size.items && size.items.length) ? size.items.join(", ") : "Complete tent setup";
+                    const sizeName = size.size || (size.name || "Standard");
+                    const sizePrice = size.price || 5000;
                     html += `
-                        <div class="tent-option" onclick="selectTent('${size.size}', ${size.price}, '${escapeHtml(itemsStr)}')">
-                            <div style="background:#f0f0f0;height:80px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2rem;">🎪</div>
-                            <div class="tent-size"><strong>${size.size} ft</strong></div>
-                            <div class="tent-price">₹${size.price}</div>
+                        <div class="tent-option" onclick="selectTentCard(this)" data-size="${escapeHtml(sizeName)}" data-price="${sizePrice}" data-items="${escapeHtml(itemsStr)}">
+                            <div class="tent-image">🎪</div>
+                            <h3>${escapeHtml(sizeName)}</h3>
+                            <p><strong>₹${sizePrice}</strong></p>
                             <div class="tent-items small">${escapeHtml(itemsStr)}</div>
+                            <button class="select-tent-btn">Select Tent</button>
                         </div>
                     `;
                 });
             } else {
                 const itemsList = service.items ? service.items.join(', ') : 'Complete decoration';
-                html += `<div class="tent-option" onclick="selectTent('Standard', ${service.price}, '${escapeHtml(itemsList)}')">
-                            <div style="background:#f0f0f0;height:80px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2rem;">🎪</div>
-                            <div><strong>Standard Tent</strong></div>
-                            <div>₹${service.price}</div>
-                            <div class="small">${escapeHtml(itemsList)}</div>
-                        </div>`;
+                const defaultPrice = service.price || 5000;
+                html += `
+                    <div class="tent-option" onclick="selectTentCard(this)" data-size="Standard" data-price="${defaultPrice}" data-items="${escapeHtml(itemsList)}">
+                        <div class="tent-image">🎪</div>
+                        <h3>Standard Tent</h3>
+                        <p><strong>₹${defaultPrice}</strong></p>
+                        <div class="tent-items small">${escapeHtml(itemsList)}</div>
+                        <button class="select-tent-btn">Select Tent</button>
+                    </div>
+                `;
             }
             
             html += `
@@ -902,22 +889,32 @@
             document.getElementById('tentModal').classList.add('active');
         }
         
-        function selectTent(size, price, items) {
-            tempTentSelection = { size, price, items, isCustom: false };
-            document.querySelectorAll('.tent-option').forEach(el => el.classList.remove('selected'));
-            if(event && event.target) {
-                const targetEl = event.target.closest('.tent-option');
-                if(targetEl) targetEl.classList.add('selected');
-            }
-            const infoBox = document.getElementById('selectedTentInfo');
-            infoBox.style.display = 'block';
+        function selectTentCard(element) {
+            const size = element.getAttribute('data-size');
+            const price = parseFloat(element.getAttribute('data-price'));
+            const items = element.getAttribute('data-items') || '';
+            
+            tempTentSelection = {
+                size: size,
+                price: price,
+                items: items,
+                isCustom: false
+            };
+            
+            document.querySelectorAll("#tentOptions .tent-option").forEach(el => {
+                el.classList.remove("selected");
+            });
+            element.classList.add("selected");
+            
+            const infoBox = document.getElementById("selectedTentInfo");
+            infoBox.style.display = "block";
             infoBox.innerHTML = `
                 <div class="selected-tent-box">
-                    <strong>Selected Tent:</strong><br><br>
-                    <span class="selected-size">${size} ft</span><br>
-                    <span class="selected-price">₹${price}</span><br><br>
-                    <small>${items}</small><br><br>
-                    <button class="btn btn-primary confirm-tent-btn" onclick="confirmTentSelection()">Confirm & Add</button>
+                    <strong>Selected Tent</strong><br><br>
+                    <span style="font-size:1.1rem;">${escapeHtml(size)}</span><br>
+                    <span style="font-size:1.3rem;color:#e74c3c;">₹${price}</span><br><br>
+                    <small>${escapeHtml(items.substring(0, 100))}</small><br><br>
+                    <button class="btn btn-primary" onclick="confirmTentSelection()">Confirm & Add</button>
                 </div>
             `;
         }
@@ -945,7 +942,7 @@
                 return;
             }
             const customTent = {
-                size: width + "x" + height + " ft",
+                size: width + "x" + height + " ft (" + tentType + ")",
                 price: Number(width) * Number(height) * 5 * Number(quantity),
                 items: items || "Custom decoration package",
                 quantity: quantity,
@@ -1079,7 +1076,7 @@
             } else {
                 cartItemsDiv.innerHTML = items.map((item, idx) => `
                     <div class="cart-item">
-                        <div><strong>${item.name}</strong>${item.qty > 1 ? ` × ${item.qty}` : ''}<br><small>₹${item.price} each</small></div>
+                        <div><strong>${escapeHtml(item.name)}</strong>${item.qty > 1 ? ` × ${item.qty}` : ''}<br><small>₹${item.price} each</small></div>
                         <div><span>₹${item.total}</span><button class="remove-item" onclick="removeCartItem(${idx})">×</button></div>
                     </div>
                 `).join('');
