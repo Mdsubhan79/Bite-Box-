@@ -377,7 +377,7 @@ function showAddCateringForm() {
     const content =
     document.getElementById("content");
 
-    contentBody.innerHTML = `
+    content.innerHTML = `
 
     <div style="max-width:600px;margin:0 auto;">
 
