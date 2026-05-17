@@ -370,6 +370,174 @@ function deleteNonVeg(id) {
     .catch(() => alert("Failed to delete veg item"));
 }
 
+function loadCateringServices() {
+
+    const content =
+    document.getElementById("contentBody");
+
+    content.innerHTML = `
+
+    <div
+    style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+    ">
+
+        <h2>🍽 Catering Services</h2>
+
+        <button
+        onclick="showAddCateringForm()"
+        style="
+        background:#10332F;
+        color:white;
+        border:none;
+        padding:10px 20px;
+        border-radius:10px;
+        cursor:pointer;
+        ">
+
+            + Add Service
+
+        </button>
+
+    </div>
+
+    <div id="cateringServicesList">
+
+        Loading services...
+
+    </div>
+
+    `;
+
+    fetch(`${API_BASE}/api/catering/services`, {
+
+        headers: {
+            Authorization:
+            "Bearer " +
+            localStorage.getItem("adminToken")
+        }
+
+    })
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        const services =
+        data.services || [];
+
+        let html = "";
+
+        if(services.length === 0){
+
+            html = `
+            <p>No Catering Services Found</p>
+            `;
+
+        } else {
+
+            services.forEach(service => {
+
+                html += `
+
+                <div
+                style="
+                background:white;
+                padding:20px;
+                border-radius:15px;
+                margin-bottom:15px;
+                box-shadow:0 2px 10px rgba(0,0,0,0.1);
+                ">
+
+                    <h3>
+                        ${service.icon || "🍽️"}
+                        ${service.title}
+                    </h3>
+
+                    <p>
+                        ${service.tagline || ""}
+                    </p>
+
+                    <h4>
+                        ₹${service.price || 0}
+                    </h4>
+
+                    <p>
+                        Category:
+                        ${service.category}
+                    </p>
+
+                    <div
+                    style="
+                    display:flex;
+                    gap:10px;
+                    margin-top:15px;
+                    ">
+
+                        <button
+                        onclick="editCateringService('${service._id}')"
+                        style="
+                        background:#f39c12;
+                        color:white;
+                        border:none;
+                        padding:10px 15px;
+                        border-radius:8px;
+                        cursor:pointer;
+                        ">
+
+                            Edit
+
+                        </button>
+
+                        <button
+                        onclick="deleteCateringService('${service._id}')"
+                        style="
+                        background:#e74c3c;
+                        color:white;
+                        border:none;
+                        padding:10px 15px;
+                        border-radius:8px;
+                        cursor:pointer;
+                        ">
+
+                            Delete
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                `;
+
+            });
+
+        }
+
+        document.getElementById(
+            "cateringServicesList"
+        ).innerHTML = html;
+
+    })
+
+    .catch(err => {
+
+        console.log(err);
+
+        document.getElementById(
+            "cateringServicesList"
+        ).innerHTML = `
+        <p>Failed to load services</p>
+        `;
+
+    });
+
+}
+
+
 /* ========= CATERING SERVICES ========= */
 
 function showAddCateringForm() {
