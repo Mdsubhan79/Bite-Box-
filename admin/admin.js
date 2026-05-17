@@ -500,7 +500,7 @@ style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
                     <option value="package">Full Package</option>
                 </select>
             </div>
-            
+            <div id="normalServiceFields">
             <div style="margin-bottom: 15px;">
                 <label>Title *</label>
                 <input type="text" id="cateringTitle" placeholder="e.g., Professional Serving Staff" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
@@ -570,33 +570,48 @@ style="display:none;">
                 <label>Icon (emoji)</label>
                 <input type="text" id="cateringIcon" placeholder="🍽️" value="🍽️" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
             </div>
-            
+           </div>
             <div style="display: flex; gap: 10px;">
                 <button onclick="addCateringService()" style="background: #27ae60; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">Save Service</button>
                 <button onclick="loadCateringServices()" style="background: #95a5a6; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">Cancel</button>
             </div>
         </div>
     `;
-}
+    setTimeout(() => {
 
-function toggleTentSection(){
+    toggleCateringFields();
+
+}, 100);
+}
+function toggleCateringFields(){
 
     const category =
     document.getElementById(
         "cateringCategory"
     ).value;
 
+    const normalFields =
+    document.getElementById(
+        "normalServiceFields"
+    );
+
     const tentSection =
     document.getElementById(
-        "tentSizesSection"
+        "tentSizesContainer"
     );
 
     if(category === "tent"){
+
+        normalFields.style.display =
+        "none";
 
         tentSection.style.display =
         "block";
 
     }else{
+
+        normalFields.style.display =
+        "block";
 
         tentSection.style.display =
         "none";
@@ -818,7 +833,7 @@ function editCateringService(id) {
                 
                 <div style="margin-bottom: 15px;">
                     <label>Category</label>
-                    <select id="cateringCategory" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                    <select id="cateringCategory" onchange="toggleCateringFields()" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
                         <option value="serving" ${service.category === 'serving' ? 'selected' : ''}>Serving Staff</option>
                         <option value="cleaning" ${service.category === 'cleaning' ? 'selected' : ''}>Cleaning Staff</option>
                         <option value="cooking" ${service.category === 'cooking' ? 'selected' : ''}>Cooking Staff</option>
