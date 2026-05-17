@@ -13,7 +13,7 @@ if (!token || token === "undefined") {
 }
 
 function loadPage(page) {
-  const content = document.getElementById("content");
+  const content = document.getElementById("contentBody");
 
   switch (page) {
     case "dashboard":
@@ -89,7 +89,7 @@ function makeTableMobileResponsive(tableId) {
 /* ========= DASHBOARD */
 
 function loadDashboard() {
-  const content = document.getElementById("content");
+  const content = document.getElementById("contentBody");
   content.innerHTML = "<h2>Loading dashboard...</h2>";
 
   fetch(`${API_BASE}/api/admin/dashboard-stats`, {
@@ -122,7 +122,7 @@ function loadDashboard() {
 
 /* ========= VEG MENU MANAGEMENT ========= */
 function loadVegMenu() {
-  const content = document.getElementById("content");
+  const content = document.getElementById("contentBody");
 
   content.innerHTML = "<h2>Loading Veg Menu...</h2>";
 
@@ -166,7 +166,7 @@ function loadVegMenu() {
 
 /* ========= ADD VEG ITEM ========= */
 function showAddVegForm() {
-  document.getElementById("content").innerHTML = `
+  document.getElementById("contentBody").innerHTML = `
     <h2>Add Veg Item</h2>
     <input id="vegName" placeholder="Item Name">
     <input id="vegPrice" type="number" placeholder="Price">
@@ -252,7 +252,7 @@ window.onload = () => {
 
 /* ========= ADD NON-VEG ITEM ========= */
 function loadNonVegMenu() {
-  const content = document.getElementById("content");
+  const content = document.getElementById("contentBody");
 
   content.innerHTML = "<h2>Loading Non-Veg Menu...</h2>";
 
@@ -294,7 +294,7 @@ function loadNonVegMenu() {
   });
 }
 function showAddNonVegForm() {
-  document.getElementById("content").innerHTML = `
+  document.getElementById("contentBody").innerHTML = `
     <h2>Add Non-Veg Item</h2>
 
     <input id="nonvegName" placeholder="Item Name">
@@ -375,7 +375,7 @@ function deleteNonVeg(id) {
 function showAddCateringForm() {
 
     const contentBody =
-    document.getElementById("content");
+    document.getElementById("contentBody");
 
     contentBody.innerHTML = `
 
@@ -798,7 +798,7 @@ function editCateringService(id) {
             return;
         }
         
-        const contentBody = document.getElementById("content");
+        const contentBody = document.getElementById("contentBody");
         contentBody.innerHTML = `
             <div style="max-width: 600px; margin: 0 auto;">
                 <h2>Edit Catering Service</h2>
@@ -981,7 +981,7 @@ function escapeHtml(text) {
 
 
 function loadTiffinBookings() {
-  const content = document.getElementById("content");
+  const content = document.getElementById("contentBody");
   content.innerHTML = "<h2>Loading Tiffin Bookings...</h2>";
 
   fetch(`${API_BASE}/api/admin/tiffin-bookings`, {
@@ -1167,7 +1167,7 @@ fetch(`${API_BASE}/api/admin/tiffin-bookings/${id}`, {
 
 
 function loadTiffins() {
-  const content = document.getElementById("content");
+  const content = document.getElementById("contentBody");
   content.innerHTML = "<h2>Loading Tiffin Plans...</h2>";
 
   fetch(`${API_BASE}/api/admin/tiffins`, {
@@ -1230,7 +1230,7 @@ function deleteTiffin(id) {
 }
 
 function showAddTiffinForm() {
-  document.getElementById("content").innerHTML = `
+  document.getElementById("contentBody").innerHTML = `
     <h2>Add Tiffin Plan</h2>
 
     <input id="planName" placeholder="Plan Name">
@@ -1294,7 +1294,7 @@ function addTiffin() {
 
 function loadDefaultMenu() {
 
-  const content = document.getElementById("content");
+  const content = document.getElementById("contentBody");
 
   content.innerHTML = `
     <h2>Set Weekly Tiffin Menu</h2>
@@ -1433,7 +1433,7 @@ function loadExistingDefaultMenu() {
 
 /* ========= USERS LIST ========= */
 function loadUsers() {
-  const content = document.getElementById("content");
+  const content = document.getElementById("contentBody");
   content.innerHTML = "<h2>Loading users...</h2>";
 
   fetch(`${API_BASE}/api/admin/users`, {
@@ -1550,7 +1550,7 @@ function showAdminNotification(message) {
 
 
 function loadOrders() {
-    const content = document.getElementById("content");
+    const content = document.getElementById("contentBody");
     
 
     content.innerHTML = `
@@ -1595,7 +1595,7 @@ function loadOrders() {
 
 
 function displayOrders(orders, stats) {
-    const content = document.getElementById("content");
+    const content = document.getElementById("contentBody");
     
     if (!orders || orders.length === 0) {
         content.innerHTML = `
