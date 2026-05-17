@@ -372,203 +372,199 @@ function deleteNonVeg(id) {
 
 /* ========= CATERING SERVICES ========= */
 
-// Add this function to your admin.js file, replacing the existing catering functions
-
-function loadCateringServices() {
-    const contentBody = document.getElementById("content");
-    if (!contentBody) return;
-    
-    contentBody.innerHTML = `
-        <div class="catering-admin-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
-            <h2 style="margin:0;">🍽️ Catering Services Management</h2>
-            <button onclick="showAddCateringForm()" style="background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
-                + Add New Service
-            </button>
-        </div>
-        <div id="cateringServicesList" style="display: grid; gap: 20px;">
-            <div style="text-align: center; padding: 40px;">Loading catering services...</div>
-        </div>
-    `;
-
-    fetch(`${API_BASE}/api/catering/services`, {
-        headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
-        }
-    })
-    .then(res => res.json())
-    .then(data => {
-        console.log("Catering services data:", data);
-        
-        let services = [];
-        if (data.services && Array.isArray(data.services)) {
-            services = data.services;
-        } else if (data.success && data.services) {
-            services = data.services;
-        } else if (Array.isArray(data)) {
-            services = data;
-        }
-        
-        let html = "";
-        
-        if (services.length === 0) {
-            html = `<div style="text-align: center; padding: 60px; background: #f8f9fa; border-radius: 16px;">
-                        <i class="fas fa-concierge-bell" style="font-size: 48px; color: #ccc;"></i>
-                        <h3>No Catering Services Found</h3>
-                        <p>Click "Add New Service" to create your first catering service.</p>
-                    </div>`;
-        } else {
-            services.forEach(service => {
-                html += `
-                    <div style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                        <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 10px;">
-                            <div>
-                                <h3 style="margin: 0 0 5px 0; color: #2c3e50;">${escapeHtml(service.title)}</h3>
-                                <p style="margin: 0 0 5px 0; color: #7f8c8d;">${escapeHtml(service.tagline || '')}</p>
-                                <span style="display: inline-block; background: ${getCategoryColor(service.category)}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px;">
-                                    ${escapeHtml(service.category)}
-                                </span>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="font-size: 24px; font-weight: bold; color: #e74c3c;">₹${service.price}</div>
-                                ${service.unit ? `<small style="color: #666;">per ${service.unit}</small>` : ''}
-                            </div>
-                        </div>
-                        
-                        ${service.items && service.items.length ? `
-                            <div style="margin-top: 15px;">
-                                <strong>Includes:</strong>
-                                <ul style="margin: 8px 0 0 20px; color: #555;">
-                                    ${service.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
-                                </ul>
-                            </div>
-                        ` : ''}
-                        
-                        ${service.sizes && service.sizes.length ? `
-                            <div style="margin-top: 15px;">
-                                <strong>Tent Sizes:</strong>
-                                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px;">
-                                    ${service.sizes.map(size => `
-                                        <span style="background: #f0f0f0; padding: 4px 12px; border-radius: 20px;">${escapeHtml(size.size)} - ₹${size.price}</span>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        ` : ''}
-                        
-                        <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
-                            <button onclick="editCateringService('${service._id}')" style="background: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button onclick="deleteCateringService('${service._id}')" style="background: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-        
-        document.getElementById("cateringServicesList").innerHTML = html;
-    })
-    .catch(err => {
-        console.error("Error loading catering services:", err);
-        document.getElementById("cateringServicesList").innerHTML = `
-            <div style="text-align: center; padding: 40px; color: red;">
-                Failed to load catering services. Please check your connection.
-                <br><button onclick="loadCateringServices()" style="margin-top: 10px; padding: 8px 16px;">Retry</button>
-            </div>
-        `;
-    });
-}
-
 function showAddCateringForm() {
-    const contentBody = document.getElementById("content");
-    
+
+    const contentBody =
+    document.getElementById("content");
+
     contentBody.innerHTML = `
-        <div style="max-width: 600px; margin: 0 auto;">
-            <h2>Add New Catering Service</h2>
-            
-            <div style="margin-bottom: 15px;">
-                <label>Category *</label>
-                <select
-id="cateringCategory"
-onchange="toggleTentSection()"
-style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
-                    <option value="serving">Serving Staff</option>
-                    <option value="cleaning">Cleaning Staff</option>
-                    <option value="cooking">Cooking Staff</option>
-                    <option value="tent">Tent & Decoration</option>
-                    <option value="package">Full Package</option>
-                </select>
-            </div>
-            
-            <div style="margin-bottom: 15px;">
-                <label>Title *</label>
-                <input type="text" id="cateringTitle" placeholder="e.g., Professional Serving Staff" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
-            </div>
-            
-            <div style="margin-bottom: 15px;">
-                <label>Tagline</label>
-                <input type="text" id="cateringTagline" placeholder="Short description" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
-            </div>
-            
-            
-         <div
-id="tentSizesSection"
-style="display:none;">
 
-    <div id="tentSizesContainer">
+    <div style="max-width:600px;margin:0 auto;">
 
-        <h3>Tent Sizes</h3>
+        <h2>Add New Catering Service</h2>
 
-        <div class="tent-size-box">
+        <div style="margin-bottom:15px;">
 
-            <input
-                type="text"
-                class="tentSize"
-                placeholder="Size Example 40x50"
-            >
+            <label>Category *</label>
+
+            <select
+            id="cateringCategory"
+            onchange="toggleTentSection()"
+            style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;">
+
+                <option value="serving">
+                    Serving Staff
+                </option>
+
+                <option value="cleaning">
+                    Cleaning Staff
+                </option>
+
+                <option value="cooking">
+                    Cooking Staff
+                </option>
+
+                <option value="tent">
+                    Tent & Decoration
+                </option>
+
+                <option value="package">
+                    Full Package
+                </option>
+
+            </select>
+
+        </div>
+
+        <div style="margin-bottom:15px;">
+
+            <label>Title *</label>
 
             <input
+            type="text"
+            id="cateringTitle"
+            placeholder="Service title"
+            style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;">
+
+        </div>
+
+        <div style="margin-bottom:15px;">
+
+            <label>Tagline</label>
+
+            <input
+            type="text"
+            id="cateringTagline"
+            placeholder="Short description"
+            style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;">
+
+        </div>
+
+        <!-- NORMAL FIELDS -->
+
+        <div id="normalFields">
+
+            <div style="margin-bottom:15px;">
+
+                <label>Price *</label>
+
+                <input
                 type="number"
-                class="tentPrice"
+                id="cateringPrice"
                 placeholder="Price"
-            >
+                style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;">
 
-            <textarea
-                class="tentItems"
-                placeholder="Items comma separated"
-            ></textarea>
+            </div>
+
+            <div style="margin-bottom:15px;">
+
+                <label>Unit</label>
+
+                <input
+                type="text"
+                id="cateringUnit"
+                placeholder="staff / item"
+                style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;">
+
+            </div>
+
+            <div style="margin-bottom:15px;">
+
+                <label>Items Included</label>
+
+                <textarea
+                id="cateringItems"
+                placeholder="comma separated"
+                style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;"></textarea>
+
+            </div>
+
+        </div>
+
+        <!-- TENT SECTION -->
+
+        <div
+        id="tentSizesSection"
+        style="display:none;">
+
+            <div id="tentSizesContainer">
+
+                <h3>Tent Sizes</h3>
+
+                <div class="tent-size-box">
+
+                    <input
+                    type="text"
+                    class="tentSize"
+                    placeholder="40x50">
+
+                    <input
+                    type="number"
+                    class="tentPrice"
+                    placeholder="Price">
+
+                    <textarea
+                    class="tentItems"
+                    placeholder="Items"></textarea>
+
+                </div>
+
+            </div>
+
+            <button
+            type="button"
+            onclick="addTentSizeField()">
+
+                + Add More Tent Size
+
+            </button>
+
+        </div>
+
+        <div style="margin-bottom:15px;">
+
+            <label>Icon</label>
+
+            <input
+            type="text"
+            id="cateringIcon"
+            value="🍽️"
+            style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;">
+
+        </div>
+
+        <div style="display:flex;gap:10px;">
+
+            <button
+            onclick="addCateringService()"
+            style="background:#27ae60;color:white;border:none;padding:12px 24px;border-radius:8px;">
+
+                Save Service
+
+            </button>
+
+            <button
+            onclick="loadCateringServices()"
+            style="background:#95a5a6;color:white;border:none;padding:12px 24px;border-radius:8px;">
+
+                Cancel
+
+            </button>
 
         </div>
 
     </div>
 
-    <button
-    type="button"
-    onclick="addTentSizeField()">
-
-        + Add More Tent Size
-
-    </button>
-
-</div>
-            
-            
-            
-            
-            
-            <div style="margin-bottom: 15px;">
-                <label>Icon (emoji)</label>
-                <input type="text" id="cateringIcon" placeholder="🍽️" value="🍽️" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
-            </div>
-            
-            <div style="display: flex; gap: 10px;">
-                <button onclick="addCateringService()" style="background: #27ae60; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">Save Service</button>
-                <button onclick="loadCateringServices()" style="background: #95a5a6; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">Cancel</button>
-            </div>
-        </div>
     `;
+
+    setTimeout(() => {
+
+        toggleTentSection();
+
+    },100);
+
 }
+
 
 function toggleTentSection(){
 
