@@ -511,10 +511,7 @@ style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
                 <input type="text" id="cateringTagline" placeholder="Short description" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
             </div>
             
-            <div style="margin-bottom: 15px;">
-                <label>Price *</label>
-                <input type="number" id="cateringPrice" placeholder="Price in INR" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
-            </div>
+            
          <div
 id="tentSizesSection"
 style="display:none;">
@@ -556,15 +553,9 @@ style="display:none;">
 
 </div>
             
-            <div style="margin-bottom: 15px;">
-                <label>Unit (e.g., staff, item)</label>
-                <input type="text" id="cateringUnit" placeholder="staff / item / package" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
-            </div>
             
-            <div style="margin-bottom: 15px;">
-                <label>Items Included (comma separated)</label>
-                <textarea id="cateringItems" placeholder="e.g., Professional Training, Uniform, Equipment" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;"></textarea>
-            </div>
+            
+            
             
             <div style="margin-bottom: 15px;">
                 <label>Icon (emoji)</label>
@@ -796,7 +787,7 @@ function deleteCateringService(id) {
 }
 
 function editCateringService(id) {
-    // Fetch the service and populate edit form
+   
     fetch(`${API_BASE}/api/catering/services`, {
         headers: {
             'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
@@ -818,7 +809,7 @@ function editCateringService(id) {
                 
                 <div style="margin-bottom: 15px;">
                     <label>Category</label>
-                    <select id="cateringCategory" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                    <select id="cateringCategory" onchange="toggleTentSection()" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
                         <option value="serving" ${service.category === 'serving' ? 'selected' : ''}>Serving Staff</option>
                         <option value="cleaning" ${service.category === 'cleaning' ? 'selected' : ''}>Cleaning Staff</option>
                         <option value="cooking" ${service.category === 'cooking' ? 'selected' : ''}>Cooking Staff</option>
@@ -836,28 +827,108 @@ function editCateringService(id) {
                     <label>Tagline</label>
                     <input type="text" id="cateringTagline" value="${escapeHtml(service.tagline || '')}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
                 </div>
+                <div
+      <div
+id="tentSizesSection"
+style="
+${service.category === 'tent'
+? 'display:block;'
+: 'display:none;'}
+">
+
+    <div id="tentSizesContainer">
+
+        <h3>Tent Sizes</h3>
+
+        ${
+            service.sizes &&
+            service.sizes.length
+
+            ?
+
+            service.sizes.map(size => `
+
+            <div class="tent-size-box">
+
+                <input
+                    type="text"
+                    class="tentSize"
+                    value="${size.size || ''}"
+                    placeholder="Size Example 40x50"
+                >
+
+                <input
+                    type="number"
+                    class="tentPrice"
+                    value="${size.price || ''}"
+                    placeholder="Price"
+                >
+
+                <textarea
+                    class="tentItems"
+                    placeholder="Items comma separated"
+                >${size.items ? size.items.join(", ") : ""}</textarea>
+
+            </div>
+
+            `).join("")
+
+            :
+
+            `
+
+            <div class="tent-size-box">
+
+                <input
+                    type="text"
+                    class="tentSize"
+                    placeholder="Size Example 40x50"
+                >
+
+                <input
+                    type="number"
+                    class="tentPrice"
+                    placeholder="Price"
+                >
+
+                <textarea
+                    class="tentItems"
+                    placeholder="Items comma separated"
+                ></textarea>
+
+            </div>
+
+            `
+        }
+
+    </div>
+
+    <button
+    type="button"
+    onclick="addTentSizeField()">
+
+        + Add More Tent Size
+
+    </button>
+
+</div>    
                 
-                <div style="margin-bottom: 15px;">
-                    <label>Price</label>
-                    <input type="number" id="cateringPrice" value="${service.price}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
-                </div>
                 
-                <div style="margin-bottom: 15px;">
-                    <label>Unit</label>
-                    <input type="text" id="cateringUnit" value="${escapeHtml(service.unit || 'staff')}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
-                </div>
                 
-                <div style="margin-bottom: 15px;">
-                    <label>Items (comma separated)</label>
-                    <textarea id="cateringItems" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">${service.items ? service.items.join(', ') : ''}</textarea>
-                </div>
+                
                 
                 <div style="display: flex; gap: 10px;">
                     <button onclick="updateCateringService('${id}')" style="background: #27ae60; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">Update Service</button>
                     <button onclick="loadCateringServices()" style="background: #95a5a6; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">Cancel</button>
                 </div>
             </div>
+            
         `;
+        setTimeout(() => {
+
+    toggleTentSection();
+
+}, 100);
     });
 }
 
