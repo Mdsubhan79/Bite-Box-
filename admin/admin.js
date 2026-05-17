@@ -374,10 +374,10 @@ function deleteNonVeg(id) {
 
 function showAddCateringForm() {
 
-    const content =
+    const contentBody =
     document.getElementById("content");
 
-    content.innerHTML = `
+    contentBody.innerHTML = `
 
     <div style="max-width:600px;margin:0 auto;">
 
@@ -440,7 +440,7 @@ function showAddCateringForm() {
 
         </div>
 
-        <!-- NORMAL FIELDS -->
+      
 
         <div id="normalFields">
 
@@ -481,7 +481,7 @@ function showAddCateringForm() {
 
         </div>
 
-        <!-- TENT SECTION -->
+        
 
         <div
         id="tentSizesSection"
