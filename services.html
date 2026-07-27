@@ -7,8 +7,9 @@
   <link rel="stylesheet" href="tracker.css">
   <link rel="icon" type="image/x-icon" href="briobite.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Playball&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <link rel="canonical" href="https://briobite11.netlify.app/services.html">
 
@@ -24,7 +25,22 @@
 <meta property="og:type" content="website">
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --deep: #092724;
+      --panel: #0c2f2c;
+      --card: #10332f;
+      --card-hover: #092724;
+      --gold: #f7c948;
+      --gold-light: #ffd87c;
+      --gold-deep: #e6b42b;
+      --gold-deep2: #d19f14;
+      --coral: #ff6b6b;
+      --coral-deep: #e05555;
+      --text-soft: #ddd;
+      --text-mute: #bfbfbf;
+      --ease: cubic-bezier(.22,1,.36,1);
+    }
 
     * {
       box-sizing: border-box;
@@ -33,458 +49,504 @@
       font-family: 'Poppins', sans-serif;
     }
 
+    html { scroll-behavior: smooth; }
+
     body {
-      background-color: #fff;
+      background-color: #fdfcfa;
+      color: #1c1c1c;
     }
 
-    /* Navbar Styles */
+    /* ===== NAVBAR ===== */
     .navbar {
-  background-color: #0c2f2c;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  position: relative;
-}
+      background: var(--panel);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.1rem 1.6rem;
+      position: relative;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+      z-index: 50;
+    }
 
-.logo-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
 
-.nav-logo {
-  font-family: 'Lucida Handwriting', cursive;
-  font-size: 1.8rem;
-  color: #fff;
-  text-decoration: none;
-}
+    .nav-logo {
+      font-family: 'Playball', cursive;
+      font-size: 2rem;
+      color: #fff;
+      text-decoration: none;
+      line-height: 1;
+    }
 
-.nav-tagline {
-  font-family: 'Lucida Handwriting', cursive;
-  font-size: 0.9rem;
-  color: #f7c948;
-  margin-top: 2px;
-  font-weight: 500;
-}
+    .nav-tagline {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: 0.78rem;
+      color: var(--gold-light);
+      margin-top: 4px;
+      letter-spacing: 0.2px;
+    }
 
-/* Hamburger icon */
-.menu-toggle {
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
+    /* Hamburger icon */
+    .menu-toggle {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 6px;
+    }
 
-.menu-line {
-  width: 25px;
-  height: 3px;
-  background-color: white;
-}
-
+    .menu-line {
+      width: 24px;
+      height: 2px;
+      background-color: white;
+      border-radius: 2px;
+      transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
+    }
 
     .dropdown-menu {
       display: none;
       flex-direction: column;
       position: absolute;
-      top: 99%;
-      right: 0rem;
-      background-color: #0c2f2c;
-      padding: 1rem;
-      border-radius: 2px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+      top: 100%;
+      right: 0.1rem;
+      background-color: var(--panel);
+      padding: 0.6rem;
+      border-radius: 10px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.45);
       z-index: 100;
+      min-width: 190px;
+      border: 1px solid rgba(255,216,124,0.12);
     }
 
     .dropdown-menu a {
-      color: white;
+      color: #eee;
       text-decoration: none;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid #1e4642;
+      padding: 0.6rem 0.7rem;
+      border-radius: 7px;
+      font-size: 0.92rem;
+      transition: background 0.25s var(--ease), color 0.25s var(--ease), padding-left 0.25s var(--ease);
     }
 
-    .dropdown-menu a:last-child {
-      border-bottom: none;
+    .dropdown-menu a:hover {
+      background: rgba(247, 201, 72, 0.10);
+      color: var(--gold-light);
+      padding-left: 1rem;
     }
 
-    .dropdown-menu.active {
-      display: flex;
-    }
+    .dropdown-menu.active { display: flex; }
 
     @media (min-width: 768px) {
-      .menu-toggle {
-        display: none;
-      }
+      .menu-toggle { display: none; }
 
       .dropdown-menu {
         display: flex !important;
         position: static;
         flex-direction: row;
-        gap: 1.5rem;
+        gap: 0.3rem;
         background: none;
         box-shadow: none;
         padding: 0;
+        border: none;
       }
 
-      .dropdown-menu a {
-        border-bottom: none;
-        padding: 0;
-      }
+      .dropdown-menu a { padding: 0.5rem 0.85rem; }
+      .dropdown-menu a:hover { padding-left: 0.85rem; background: rgba(247, 201, 72, 0.12); }
     }
 
+    /* ===== PAGE HEADER ===== */
+    .page-head {
+      background:
+        radial-gradient(900px 380px at 15% -20%, rgba(247,201,72,0.10), transparent 60%),
+        var(--deep);
+      color: #fff;
+      padding: 42px 20px 54px;
+      text-align: center;
+    }
+
+    .page-head h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 1.9rem;
+      color: var(--gold-light);
+      max-width: 760px;
+      margin: 0 auto 14px;
+      line-height: 1.3;
+    }
+
+    .seo-text {
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .seo-text p {
+      font-size: 0.92rem;
+      color: var(--text-soft);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ===== CONTAINER / SERVICE GRID ===== */
     .container {
       max-width: 1000px;
-      margin: 0.1rem auto;
-      padding: 1rem;
+      margin: -30px auto 0;
+      padding: 0 20px 20px;
+      position: relative;
+      z-index: 2;
     }
-.container h1{
-  font-size: 23px;
-}
+
+    .intro-line {
+      text-align: center;
+      color: #10332F;
+      font-size: 0.95rem;
+      margin: 26px 0 22px;
+      font-weight: 500;
+    }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 22px;
+      margin-bottom: 20px;
+    }
+
     .service-button {
       position: relative;
-      display: inline-block;
-      width: 220px;
-      height: auto;
-      margin: 1rem;
-      padding: 1rem 1.2rem;
-      background-color: #10332F;
-      color: #f7c948;
-      border: none;
-      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      width: 100%;
+      padding: 26px 22px;
+      background: linear-gradient(160deg, var(--card), var(--deep));
+      color: var(--gold);
+      border: 1px solid rgba(247,201,72,0.14);
+      border-radius: 14px;
       cursor: pointer;
       text-align: left;
       font-family: 'Poppins', sans-serif;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      transition: background-color 0.3s;
+      box-shadow: 0 12px 30px rgba(9,39,35,0.18);
+      transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s var(--ease);
+    }
+
+    .service-button .icon-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(247, 201, 72, 0.12);
+      color: var(--gold-light);
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+      transition: transform 0.35s var(--ease), background 0.35s var(--ease);
     }
 
     .service-button:hover {
-      background-color: #092724;
+      transform: translateY(-6px);
+      box-shadow: 0 22px 42px rgba(9,39,35,0.30);
+      border-color: rgba(247,201,72,0.4);
     }
+
+    .service-button:hover .icon-badge {
+      background: var(--gold-light);
+      color: #0c2f2c;
+      transform: scale(1.08) rotate(-4deg);
+    }
+
+    .service-button:active { transform: translateY(-2px) scale(0.99); }
 
     .button-title {
       font-weight: 600;
-      font-size: 16px;
-      margin-bottom: 4px;
+      font-size: 17px;
       display: block;
+      color: var(--gold-light);
     }
 
     .button-tagline {
       font-size: 13px;
-      font-weight: 400;
-      color: white;
-      line-height: 1.3;
+      font-weight: 300;
+      color: #cfd8d5;
+      line-height: 1.45;
       display: block;
     }
 
+    .service-button .go-arrow {
+      margin-top: 6px;
+      font-size: 0.78rem;
+      color: var(--gold);
+      opacity: 0.75;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: gap 0.3s var(--ease);
+    }
+
+    .service-button:hover .go-arrow { gap: 10px; }
+
+    /* ===== FOOTER ===== */
     footer {
-      background-color: #222;
-      color: white;
-      padding: 40px 20px 20px;
-      margin-top: 50px;
+      background:  #0e0e0e;
+      color: #eee;
+      padding: 46px 20px 22px;
+      margin-top: 55px;
     }
 
     .footer-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
+      gap: 28px;
       max-width: 1200px;
       margin: auto;
     }
 
     .footer-section h3 {
       color: #ff6b6b;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      font-weight: 600;
+      font-size: 1.02rem;
     }
 
-    #footerAboutTitle {
-      font-family: 'Lucida Handwriting', cursive;
-    }
+    #footerAboutTitle { font-family: 'Playball', cursive; font-size: 1.6rem; }
 
-    .footer-section ul {
-      list-style: none;
-      padding: 0;
-    }
+    #footerAboutText { color: #c7cfcc; font-size: 0.9rem; line-height: 1.65; font-weight: 300; }
 
-    .footer-section ul li {
-      margin-bottom: 8px;
-    }
+    .footer-section ul { list-style: none; padding: 0; }
 
-    .footer-section ul li i {
-      margin-right: 8px;
-    }
+    .footer-section ul li { margin-bottom: 9px; }
+
+    .footer-section ul li i { margin-right: 8px; color: #ffffff; width: 14px; text-align: center; }
 
     .footer-section ul li a {
-      color: #ccc;
+      color: #cfd6d3;
       text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.25s var(--ease), padding-left 0.25s var(--ease);
     }
 
-    .footer-section ul li a:hover {
-      text-decoration: underline;
-    }
+    .footer-section ul li a:hover { color: var(--gold-light); padding-left: 3px; }
+
+    .social-links { margin-top: 14px; display: flex; gap: 10px; }
 
     .social-links a {
       color: white;
-      margin-right: 10px;
-      font-size: 1.2rem;
-      transition: color 0.3s ease;
+     
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem;
+      transition: transform 0.3s var(--ease), background 0.3s var(--ease);
     }
 
-    .social-links a:hover {
-      color: #ff6b6b;
-    }
+    .social-links a:hover { transform: translateY(-3px); background: #ff6b6b; }
 
-    footer form {
-      display: flex;
-      flex-direction: column;
-    }
+    footer form { display: flex; flex-direction: column; margin-top: 6px; }
 
     footer input[type="email"] {
-      padding: 10px;
+      padding: 11px 12px;
       margin-bottom: 10px;
-      border-radius: 5px;
-      border: none;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      font-size: 0.88rem;
+      transition: border-color 0.25s var(--ease), background 0.25s var(--ease);
     }
+
+    footer input[type="email"]::placeholder { color: #9fada9; }
+    footer input[type="email"]:focus { outline: none; border-color: var(--gold-light); background: rgba(255,255,255,0.09); }
 
     footer button {
-      background-color: #ff6b6b;
-      color: white;
-      padding: 10px;
+      background: #ff6b6b;
+      color: #ffffff;
+      padding: 11px;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
     }
 
-    footer button:hover {
-      background-color: #e05555;
-    }
+    footer button:hover { transform: translateY(-2px); box-shadow: 0 10px 22px -6px rgba(241, 45, 45, 0.5); }
 
     .copyright {
       text-align: center;
-      margin-top: 30px;
-      font-size: 0.9rem;
-      color: #bbb;
+      margin-top: 34px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.82rem;
+      color: #9caaa6;
     }
 
     @media (max-width: 768px) {
-      .footer-section {
-        text-align: center;
-      }
-
-      .service-button {
-        width: 90%;
-        font-size: 1rem;
-      }
+      .footer-section { text-align: center; }
+      .social-links { justify-content: center; }
     }
 
+    /* ===== BACK BUTTON ===== */
     .back-btn {
       position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background-color: #ff6b6b;
+      bottom: 22px;
+      left: 22px;
+      background: var(--coral);
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
+      width: 46px;
+      height: 30px;
+      border-radius: 20%;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
-      transition: all 0.3s ease;
+      justify-content: center;
+      box-shadow: 0 10px 26px -6px rgba(255,107,107,0.6);
+      transition: all 0.3s var(--ease);
       text-decoration: none;
+      z-index: 40;
     }
 
-    .back-btn:hover {
-      background-color: #ff5252;
-      transform: translateX(-3px);
-    }
+    .back-btn:hover { background: var(--coral-deep); transform: translateX(-4px) scale(1.05); }
 
-
-
-    /* pop up */
+    /* ===== MEAL MODAL ===== */
     .modal {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-}
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(9, 39, 35, 0.68);
+      backdrop-filter: blur(3px);
+      animation: fadeInModal 0.25s var(--ease);
+    }
 
-.modal-content {
-  background-color: #ffffff;
-  margin: 15% auto;
-  padding: 30px;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
-  position: relative;
-}
+    @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
 
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 24px;
-  color: #aaa;
-  cursor: pointer;
-}
+    .modal-content {
+      background-color: #ffffff;
+      margin: 15% auto;
+      padding: 34px 30px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.35);
+      animation: popIn 0.3s var(--ease);
+    }
 
-.close-btn:hover {
-  color: #000;
-}
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(16px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
 
-.btn-group {
-  margin-top: 20px;
-}
+    .modal-content h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.3rem;
+      color: var(--panel);
+      margin-bottom: 8px;
+    }
 
-.meal-btn {
-  padding: 12px 25px;
-  margin: 10px;
-  font-size: 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
+    .modal-content p { color: #666; font-size: 0.9rem; }
 
-.meal-btn.veg {
-  background-color:  #10332F;
-  color: white;
-}
+    .close-btn {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-size: 22px;
+      color: #aaa;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.25s var(--ease), transform 0.25s var(--ease);
+    }
 
-.meal-btn.nonveg {
-  background-color:  #10332F;
-  color: white;
-}
-@media (max-width: 320px) {
-  .service-button {
-    width: 100%;
-    padding: 0.8rem;
-    font-size: 14px;
-  }
+    .close-btn:hover { color: #222; transform: rotate(90deg); }
 
-  .navbar {
-    padding: 0.5rem 1rem;
-  }
+    .btn-group {
+      margin-top: 22px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
 
-  .nav-logo {
-    font-size: 1.4rem;
-  }
+    .meal-btn {
+      flex: 1;
+      padding: 13px 10px;
+      font-size: 15px;
+      border: none;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--card), var(--deep));
+      color: var(--gold-light);
+      transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+    }
 
-  .nav-tagline {
-    font-size: 0.75rem;
-  }
+    .meal-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 24px -8px rgba(9,39,35,0.5); }
 
-  .modal-content {
-    margin: 30% auto;
-    padding: 20px;
-  }
-}
-@media (max-width: 576px) {
-  .footer-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
+    /* ===== FOOTER DROPDOWN ===== */
+    .footer-dropdown-header {
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      align-items: center;
+      cursor: pointer;
+      color: var(--gold-light);
+      margin-bottom: 10px;
+      transition: color 0.3s var(--ease);
+    }
 
-  .footer-section {
-    margin-bottom: 20px;
-  }
+    .footer-dropdown-header:hover { color: var(--gold); }
+    .footer-dropdown-header i { transition: transform 0.3s var(--ease); }
 
-  .footer-section ul {
-    padding-left: 0;
-  }
+    .footer-dropdown-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.4s var(--ease);
+    }
 
-  .footer-section ul li {
-    margin-bottom: 6px;
-  }
+    .footer-dropdown-list.active { max-height: 600px; }
+    .footer-dropdown-header.active i { transform: rotate(180deg); }
 
-  footer form {
-    width: 100%;
-    max-width: 300px;
-    margin: 0 auto;
-  }
+    @media (min-width: 768px) {
+      .footer-dropdown-list { max-height: none !important; }
+      .footer-dropdown-header { cursor: default; }
+      .footer-dropdown-header i { display: none; }
+    }
 
-  footer input[type="email"] {
-    width: 100%;
-  }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    }
 
-  footer button {
-    width: 100%;
-  }
-}
-.footer-dropdown-header {
-  display: flex;
-  justify-content: center;
-  gap: 7px;
-  align-items: center;
-  cursor: pointer;
-  color: #ff6b6b;
-  margin-bottom: 10px;
-  transition: color 0.3s ease;
-}
-.seo-text {
-  max-width: 400px;
-  margin: 3px auto 5px;
-  text-align: left;
-  margin-left: 2px;
+    /* ===== SMALL SCREEN ===== */
+    @media (max-width: 480px) {
+      .navbar { padding: 0.7rem 1rem; }
+      .nav-logo { font-size: 1.5rem; }
+      .nav-tagline { font-size: 0.68rem; }
+      .page-head { padding: 34px 16px 46px; }
+      .page-head h1 { font-size: 1.28rem; }
+      .container { margin-top: -22px; }
+      .modal-content { margin: 30% auto; padding: 26px 20px; }
+      .back-btn { width: 42px; height: 42px; bottom: 16px; left: 16px; }
+    }
 
-}
-
-.seo-text p {
-  font-size: 13px;
-  color: #000000;
-  line-height: 1.4;
-}
-.footer-dropdown-header:hover {
-  color: #ffa6a6;
-}
-
-.footer-dropdown-header i {
-  transition: transform 0.3s ease;
-}
-
-
-.footer-dropdown-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height 0.4s ease;
-}
-
-
-.footer-dropdown-list.active {
-  max-height: 600px; 
-}
-
-
-.footer-dropdown-header.active i {
-  transform: rotate(180deg);
-}
-
-
-@media (min-width: 768px) {
-  .footer-dropdown-list {
-    max-height: none !important;
-  }
-
-  .footer-dropdown-header {
-    cursor: default;
-  }
-
-  .footer-dropdown-header i {
-    display: none;
-  }
-}
-
-
+    @media (max-width: 576px) {
+      .footer-container { display: flex; flex-direction: column; align-items: center; text-align: center; }
+      .footer-section { margin-bottom: 8px; }
+      .footer-section ul { padding-left: 0; }
+      footer form { width: 100%; max-width: 300px; margin: 0 auto; }
+      footer input[type="email"] { width: 100%; }
+      footer button { width: 100%; }
+    }
 
   </style>
   <script type="application/ld+json">
@@ -512,7 +574,6 @@
 </head>
 <body>
 
-
   <nav class="navbar">
     <div class="logo-container">
       <a href="index.html" class="nav-logo">Brio Bite</a>
@@ -529,47 +590,58 @@
       <a href="aboutus.html">About Us</a>
       <a href="terms&privay.html">Terms & Policy</a>
       <a href="contactus.html">Contact Us</a>
-  
     </div>
   </nav>
 
-  
-  <div class="container">
-     <h1>Our Tiffin Services, Catering & Daily Meal Delivery</h1>
-
-<div class="seo-text">
-  <p>
-    Brio Bite offers tiffin services, daily meals, catering, and high-protein food plans with fresh and affordable delivery.
-  </p>
-</div>
-
-<p>Choose a service below to proceed :</p>
-
-    <button class="service-button" onclick="bookTiffin()">
-      <span class="button-title">Tiffin Service</span>
-      <span class="button-tagline">Delicious home-cooked meals delivered daily</span>
-    </button>
-
-    <button class="service-button" onclick="orderDailyMeal()">
-      <span class="button-title">Daily Meals</span>
-      <span class="button-tagline">Fresh meals delivered when you want , your choice , your time</span>
-    </button>
-
-    <button class="service-button" onclick="bookCatering()">
-      <span class="button-title">Catering Services</span>
-      <span class="button-tagline">For parties, weddings & special events</span>
-    </button>
-
-    <button class="service-button" onclick="bookCorporateMeals()">
-      <span class="button-title">High-Protein Meals</span>
-      <span class="button-tagline">Engineered nutrition for fit lifestyles</span>
-    </button>
+  <div class="page-head">
+    <h1>Our Tiffin Services, Catering & Daily Meal Delivery</h1>
+    <div class="seo-text">
+      <p>
+        Brio Bite offers tiffin services, daily meals, catering, and high-protein food plans with fresh and affordable delivery.
+      </p>
+    </div>
   </div>
+
+  <div class="container">
+
+    <p class="intro-line">Choose a service below to proceed</p>
+
+    <div class="service-grid">
+      <button class="service-button" onclick="bookTiffin()">
+        <span class="icon-badge"><i class="fas fa-utensils"></i></span>
+        <span class="button-title">Tiffin Service</span>
+        <span class="button-tagline">Delicious home-cooked meals delivered daily</span>
+        <span class="go-arrow">Explore <i class="fas fa-arrow-right"></i></span>
+      </button>
+
+      <button class="service-button" onclick="orderDailyMeal()">
+        <span class="icon-badge"><i class="fas fa-clock"></i></span>
+        <span class="button-title">Daily Meals</span>
+        <span class="button-tagline">Fresh meals delivered when you want, your choice, your time</span>
+        <span class="go-arrow">Explore <i class="fas fa-arrow-right"></i></span>
+      </button>
+
+      <button class="service-button" onclick="bookCatering()">
+        <span class="icon-badge"><i class="fas fa-champagne-glasses"></i></span>
+        <span class="button-title">Catering Services</span>
+        <span class="button-tagline">For parties, weddings & special events</span>
+        <span class="go-arrow">Explore <i class="fas fa-arrow-right"></i></span>
+      </button>
+
+      <button class="service-button" onclick="bookCorporateMeals()">
+        <span class="icon-badge"><i class="fas fa-dumbbell"></i></span>
+        <span class="button-title">High-Protein Meals</span>
+        <span class="button-tagline">Engineered nutrition for fit lifestyles</span>
+        <span class="go-arrow">Explore <i class="fas fa-arrow-right"></i></span>
+      </button>
+    </div>
+  </div>
+
   <!-- Footer -->
-<footer id="mainFooter">
+  <footer id="mainFooter">
     <div class="footer-container">
       <div class="footer-section">
-        <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Brio Bite</h3>
+        <h3 id="footerAboutTitle" data-translate="footerAboutTitle">Brio Bite</h3>
         <p id="footerAboutText" data-translate="footerAboutText">
           Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.
         </p>
@@ -580,43 +652,43 @@
           <a href="#"><i class="fab fa-whatsapp"></i></a>
         </div>
       </div>
-       <div class="footer-section">
+
+      <div class="footer-section">
         <h3 id="footerContactTitle" data-translate="footerContactTitle">Contact Info</h3>
         <ul>
           <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress" data-translate="footerAddress">Clement Town, Dehradun</span></li>
           <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91 9627024287</span></li>
           <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.briobite@gmail.com</span></li>
-           <li>
-  <i class="fas fa-clock"></i> 
-  <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span> 
-  <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span>
-</li>
+          <li>
+            <i class="fas fa-clock"></i>
+            <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span>
+            <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span>
+          </li>
         </ul>
       </div>
-      
+
       <div class="footer-section">
         <div class="footer-section quick-links">
-  <h3 id="footerLinksTitle" data-translate="footerLinksTitle" class="footer-dropdown-header">
-    Quick Links <i class="fas fa-chevron-down"></i>
-  </h3>
-  <ul class="footer-dropdown-list">
-    <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
-    <li><a href="services.html" id="footerServicesLink" data-translate="footerServicesLink">Our Services</a></li>
-    <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
-    <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
-    <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
-    <li><a href="catering.html" id="footerCateringServicesLink" data-translate="footerCateringServicesLink">Catering Services</a></li>
-    <li><a href="highprotien.html" id="footerHighprotienLink" data-translate="footerHighProtienLink">High-Protein Meals</a></li>
-    <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
-    <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
-    <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
-    <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
-    <li><a href="#" id="logoutBtn">Close your BrioBite Account</a></li>
-  </ul>
-</div>
-      
-     
-      
+          <h3 id="footerLinksTitle" data-translate="footerLinksTitle" class="footer-dropdown-header">
+            Quick Links <i class="fas fa-chevron-down"></i>
+          </h3>
+          <ul class="footer-dropdown-list">
+            <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
+            <li><a href="services.html" id="footerServicesLink" data-translate="footerServicesLink">Our Services</a></li>
+            <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
+            <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
+            <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
+            <li><a href="catering.html" id="footerCateringServicesLink" data-translate="footerCateringServicesLink">Catering Services</a></li>
+            <li><a href="highprotien.html" id="footerHighprotienLink" data-translate="footerHighProtienLink">High-Protein Meals</a></li>
+            <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
+            <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+            <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
+            <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
+            <li><a href="#" id="logoutBtn">Close your BrioBite Account</a></li>
+          </ul>
+        </div>
+      </div>
+
       <div class="footer-section">
         <h3 id="footerNewsletterTitle" data-translate="footerNewsletterTitle">Newsletter</h3>
         <p id="footerNewsletterText" data-translate="footerNewsletterText">Subscribe for updates and special offers!</p>
@@ -626,50 +698,45 @@
         </form>
       </div>
     </div>
-    
+
     <div class="copyright">
       <p id="copyrightText" data-translate="copyrightText">&copy; 2026 Brio Bite. All Rights Reserved.</p>
     </div>
   </footer>
 
-  <!--pop up-->
-
-<div id="mealModal" class="modal" style="display: none;">
-  <div class="modal-content">
-    <span class="close-btn" onclick="closeMealModal()">&times;</span>
-    <h2>Choose Your Meal Preference</h2>
-    <p>Please select your preferred type of daily meal to continue.</p>
-    <div class="btn-group">
-      <button class="meal-btn veg" onclick="selectMeal('veg')">🥗 Veg</button>
-      <button class="meal-btn nonveg" onclick="selectMeal('nonveg')">🍖 Non-Veg</button>
+  <!-- Meal preference popup -->
+  <div id="mealModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeMealModal()">&times;</span>
+      <h2>Choose Your Meal Preference</h2>
+      <p>Please select your preferred type of daily meal to continue.</p>
+      <div class="btn-group">
+        <button class="meal-btn veg" onclick="selectMeal('veg')">🥗 Veg</button>
+        <button class="meal-btn nonveg" onclick="selectMeal('nonveg')">🍖 Non-Veg</button>
+      </div>
     </div>
   </div>
-</div>
 
-
-
- 
-  <button onclick="goback()" class="back-btn">
+  <button onclick="goback()" class="back-btn" aria-label="Go back">
     <i class="fas fa-arrow-left"></i>
   </button>
 
-
   <script>
-   function orderDailyMeal() {
-  document.getElementById('mealModal').style.display = 'block';
-}
+    function orderDailyMeal() {
+      document.getElementById('mealModal').style.display = 'block';
+    }
 
-function closeMealModal() {
-  document.getElementById('mealModal').style.display = 'none';
-}
+    function closeMealModal() {
+      document.getElementById('mealModal').style.display = 'none';
+    }
 
-function selectMeal(type) {
-  if (type === 'veg') {
-    window.location.href = 'veg.html';
-  } else if (type === 'nonveg') {
-    window.location.href = 'non-veg.html'; 
-  }
-}
+    function selectMeal(type) {
+      if (type === 'veg') {
+        window.location.href = 'veg.html';
+      } else if (type === 'nonveg') {
+        window.location.href = 'non-veg.html';
+      }
+    }
   </script>
 
   <script>
@@ -680,7 +747,6 @@ function selectMeal(type) {
     function bookTiffin() {
       window.location.href = 'tiffinservice.html';
     }
-
 
     function bookCatering() {
       window.location.href = 'catering.html';
@@ -713,20 +779,20 @@ function selectMeal(type) {
       const isOpen = hour >= 7 && hour < 22;
       const statusElement = document.getElementById("openStatus");
       statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
-      statusElement.style.color = isOpen ? "green" : "red";
+      statusElement.style.color = isOpen ? "#1f8a3f" : "#c53a34";
     });
   </script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const logoutBtn = document.getElementById("logoutBtn");
-  
+
   if (logoutBtn) {
     logoutBtn.addEventListener("click", function(e) {
       e.preventDefault();
       if (confirm("Are you sure you want to log out?")) {
-   
+
         localStorage.removeItem("biteboxUser");
-      
+
         window.location.href = "login.html";
       }
     });
@@ -742,7 +808,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (dropdownHeader && dropdownList) {
     dropdownHeader.addEventListener("click", () => {
-    
+
       if (window.innerWidth < 768) {
         dropdownList.classList.toggle("active");
         dropdownHeader.classList.toggle("active");
@@ -758,7 +824,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 });
-</script> 
+</script>
 
 <script src="tracker-unified.js"></script>
 </body>

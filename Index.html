@@ -9,7 +9,10 @@
   <link rel="icon" type="image/x-icon" href="briobite.png">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<meta name="google-site-verification" content="Y_Us6j_hlL8ALszFcGcIEWYWMQrnx4E7jakaPN_qdbI" /> 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="google-site-verification" content="Y_Us6j_hlL8ALszFcGcIEWYWMQrnx4E7jakaPN_qdbI" />
 <meta name="description" content="Brio Bite offers daily food delivery, tiffin subscription, catering services and high protein meals. Fresh, healthy and affordable meals for students and professionals.">
 <meta property="og:title" content="Brio Bite - Tiffin & Food Delivery Service">
 <meta property="og:description" content="Fresh veg & non-veg meals, tiffin subscription and catering services for students and professionals.">
@@ -18,696 +21,689 @@
 <meta property="og:image" content="https://briobite11.netlify.app/briobite.png">
 <meta property="og:type" content="website">
   <style>
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
+
+    /* ============ RESET & TOKENS ============ */
+    *{
+      margin:0; padding:0; box-sizing:border-box;
     }
 
-body {
-  background-color: #092724;
-  min-height: 100vh;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;   
-}
-.hero {
-  margin-top: 10px;
-  margin-bottom: 0;
-}
-
-.seo-container {
-  padding-top: 5px;
-  margin-top: 0;  
-}
-    .overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: rgba(0, 0, 0, 0.55);
-      z-index: 1;
+    :root{
+      --bg-deep:#061c19;
+      --bg-teal:#092724;
+      --bg-panel:#0c322e;
+      --gold-bright:#ffd87c;
+      --gold-mid:#f7c948;
+      --gold-deep:#e6b42b;
+      --green-cta:#004d26;
+      --green-cta-hover:#049e28;
+      --danger:#c51f19;
+      --danger-hover:#ad221d;
+      --text-ivory:#f6f2e8;
+      --text-muted:#b9c4bf;
+      --line:rgba(255,216,124,0.14);
+      --ease:cubic-bezier(.22,.68,.32,1);
+      --font-display:'Fraunces', Georgia, serif;
+      --font-body:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 30px;
-      z-index: 2;
-    }
-.logo-small {
-  font-size: 1.7rem;
-  color: #ffd87c;
-  font-family: 'Lucida Handwriting', cursive;
-}
-    .nav-buttons .btn {
-      background-color: #004d26;
-      border: none;
-      color: white;
-      padding: 8px 18px;
-      margin-left: 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: background 0.3s, transform 0.2s;
+    @media (prefers-reduced-motion: reduce){
+      *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
     }
 
-    .nav-buttons .btn:hover {
-      background-color: #008b3e;
-      transform: scale(1.05);
+    html{ scroll-behavior:smooth; }
+
+    body{
+      font-family:var(--font-body);
+      background:
+        radial-gradient(1100px 600px at 15% -10%, rgba(255,216,124,0.08), transparent 60%),
+        radial-gradient(900px 500px at 100% 10%, rgba(247,201,72,0.06), transparent 55%),
+        linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-teal) 45%, var(--bg-deep) 100%);
+      min-height:100vh;
+      color:var(--text-ivory);
+      display:flex;
+      flex-direction:column;
+      position:relative;
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
     }
 
-    .hero {
-      text-align: center;
-      z-index: 2;
-      animation: fadeIn 1.2s ease-in-out;
-      margin-top: 50px;
+    ::selection{ background:var(--gold-mid); color:#0c2f2c; }
+
+    a{ color:inherit; }
+
+    :focus-visible{
+      outline:2px solid var(--gold-bright);
+      outline-offset:3px;
+      border-radius:4px;
     }
-    .hadd{
-      margin-bottom: 5px;
+
+    main{ flex:1; display:flex; flex-direction:column; }
+
+    img{ max-width:100%; display:block; }
+
+    .overlay{
+      position:absolute; inset:0; pointer-events:none;
+      background:radial-gradient(1200px 700px at 50% 0%, rgba(0,0,0,0.15), rgba(0,0,0,0.55) 75%);
+      z-index:1;
     }
-    .logo {
+
+    /* ============ NAVBAR ============ */
+    .navbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:16px 32px;
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:rgba(6,28,25,0.55);
+      backdrop-filter:blur(14px) saturate(140%);
+      -webkit-backdrop-filter:blur(14px) saturate(140%);
+      border-bottom:1px solid var(--line);
+    }
+
+    .logo-small{
       font-family:  'Lucida Handwriting', cursive;
-      font-size: 4rem;
-      color: #ffd87c;
-      text-shadow: 0 0 16px #ffa600, 0 0 25px #ff7700;
-      animation: glow 2s infinite alternate;
-      
+      font-style:italic;
+      font-weight:600;
+      font-size:1.6rem;
+      color:var(--gold-bright);
+      letter-spacing:0.3px;
     }
 
-    .tagline {
-      margin-top: 10px;
-      font-size: 1.2rem;
-      color: #ffdd99;
-      text-shadow: 0 0 10px #000;
-      
+    .profile-icon{
+      width:42px; height:42px;
+      border-radius:50%;
+      border:2px solid var(--gold-bright);
+      cursor:pointer;
+      padding:2px;
+      background:rgba(255,216,124,0.08);
+      transition:transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s var(--ease);
+    }
+    .profile-icon:hover{
+      transform:scale(1.08) rotate(-4deg);
+      box-shadow:0 0 0 6px rgba(255,216,124,0.12), 0 8px 22px rgba(0,0,0,0.4);
     }
 
-    .menu-btn {
-      margin-top: 40px;
-      margin-bottom: 20px;
-      background: #e4bf3c;
-      border: none;
-      box-shadow: 0 1px 8px rgb(199, 188, 37);
-      padding: 12px 28px;
-      border-top-left-radius: 25px;
-      border-bottom-left-radius: 25px;
-      border-bottom-right-radius: 20px;
-      color: #041a10;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.3s ease, background 0.3s ease;
+    /* ============ HERO ============ */
+    .hero{
+      position:relative;
+      z-index:2;
+      text-align:center;
+      padding:64px 20px 40px;
+      max-width:880px;
+      margin:0 auto;
     }
 
-    .menu-btn:hover {
-      transform: scale(1.1);
-      
-      background: linear-gradient(90deg, #917513,#8d7210);
+    .hero-eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:0.78rem;
+      letter-spacing:2.2px;
+      text-transform:uppercase;
+      color:var(--gold-mid);
+      background:rgba(247,201,72,0.08);
+      border:1px solid var(--line);
+      padding:7px 16px;
+      border-radius:999px;
+      opacity:0;
+      animation:fadeUp .8s var(--ease) forwards;
+      animation-delay:.1s;
     }
 
-    footer {
-      margin-top: 0;
-      padding-top: 10px;
-      text-align: center;
-      padding: 15px;
-      font-size: 0.9rem;
-      background: rgba(0, 0, 0, 0.973);
-      z-index: 2;
-    }
-.footer-links {
-  display: flex;
-  justify-content: center;
-  flex-wrap: nowrap;
-  gap: 8px;
-  margin-bottom: 5px;
-}
-
-.footer-links a {
-  font-size: 0.65rem;
-  color: #aaa;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-
-    @keyframes glow {
-      from {
-        text-shadow: 0 0 10px #ff7b00, 0 0 20px #ff9e00;
-      }
-      to {
-        text-shadow: 0 0 20px #ffb347, 0 0 30px #ffcc33;
-      }
+    .hero-eyebrow .dot{
+      width:6px; height:6px; border-radius:50%;
+      background:var(--gold-bright);
+      box-shadow:0 0 8px var(--gold-bright);
     }
 
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .dabba-wrap{
+      width:96px;
+      margin:26px auto 6px;
+      opacity:0;
+      animation:fadeUp .9s var(--ease) forwards;
+      animation-delay:.25s;
     }
 
-    @media (max-width: 600px) {
-      .logo {
-        font-size: 4.5rem;
-      }
-      .tagline {
-        font-size: 1.2rem;
-      }
+    .steam{
+      transform-origin:center bottom;
+      stroke:var(--gold-bright);
+      opacity:0.55;
+      animation:steamRise 3.6s ease-in-out infinite;
+    }
+    .steam.s2{ animation-delay:.6s; opacity:.4; }
+    .steam.s3{ animation-delay:1.2s; opacity:.3; }
+
+    @keyframes steamRise{
+      0%   { transform:translateY(4px) scaleY(0.8); opacity:0; }
+      25%  { opacity:.55; }
+      70%  { opacity:.15; }
+      100% { transform:translateY(-14px) scaleY(1.15); opacity:0; }
     }
 
-    @keyframes fadeUp {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .hero-title{
+      font-family:var(--font-display);
+      font-weight:600;
+      font-size:clamp(2.1rem, 5vw, 3.4rem);
+      line-height:1.12;
+      color:var(--gold-bright);
+      text-shadow:0 0 30px rgba(255,166,0,0.18);
+      margin-bottom:16px;
+      opacity:0;
+      animation:fadeUp .9s var(--ease) forwards;
+      animation-delay:.4s;
     }
 
-    .hero .logo {
-      animation: fadeUp 1s ease-out forwards;
-      animation-delay: 0.3s;
-      opacity: 0;
+    .hero-title em{
+      font-style:italic;
+      color:var(--gold-mid);
     }
 
-    .hero .tagline {
-      animation: fadeUp 1s ease-out forwards;
-      animation-delay: 0.8s;
-      opacity: 0;
+    .hero-desc{
+      font-size:1.05rem;
+      color:var(--text-muted);
+      max-width:560px;
+      margin:0 auto;
+      opacity:0;
+      animation:fadeUp .9s var(--ease) forwards;
+      animation-delay:.55s;
     }
 
-    .hero .menu-btn {
-      animation: fadeUp 1s ease-out forwards;
-      animation-delay: 1.5s;
-      opacity: 0;
+    .hero-actions{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-top:34px;
+      opacity:0;
+      animation:fadeUp .9s var(--ease) forwards;
+      animation-delay:.75s;
     }
 
-    .profile-container {
-      position: relative;
-      
+    .menu-btn{
+      background:linear-gradient(135deg, var(--gold-mid), var(--gold-deep));
+      border:none;
+      box-shadow:0 10px 26px rgba(230,180,43,0.25);
+      padding:14px 30px;
+      border-radius:999px;
+      color:#0c2f2c;
+      font-family:var(--font-body);
+      font-size:1rem;
+      font-weight:600;
+      cursor:pointer;
+      transition:transform .3s var(--ease), box-shadow .3s var(--ease), background .3s var(--ease);
+    }
+    .menu-btn:hover{
+      transform:translateY(-3px);
+      box-shadow:0 14px 32px rgba(230,180,43,0.38);
+    }
+    .menu-btn:active{ transform:translateY(0) scale(.98); }
+
+    .hero-secondary{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:14px 26px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--text-ivory);
+      font-weight:600;
+      font-size:0.95rem;
+      text-decoration:none;
+      background:rgba(255,255,255,0.03);
+      transition:border-color .3s var(--ease), background .3s var(--ease), transform .3s var(--ease);
+    }
+    .hero-secondary:hover{
+      border-color:var(--gold-bright);
+      background:rgba(255,216,124,0.06);
+      transform:translateY(-2px);
     }
 
-    .profile-icon {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      border: 2px solid #ffd87c;
-      cursor: pointer;
-      transition: transform 0.3s;
+    @keyframes fadeUp{
+      0%{ opacity:0; transform:translateY(18px); }
+      100%{ opacity:1; transform:translateY(0); }
     }
 
-    .profile-icon:hover {
-      transform: scale(1.1);
+    /* ============ FEATURES ============ */
+    .section-wrap{
+      position:relative;
+      z-index:2;
+      max-width:1080px;
+      margin:0 auto;
+      padding:26px 20px 10px;
+      width:100%;
     }
 
-.profile-panel {
-  position: fixed;
-  top: 0;
-  left: -100%;
-  width: 80%;             
-  max-width: 320px;     
-  height: 100vh;
-  background: rgba(10, 40, 35, 0.98);
-  box-shadow: 3px 0 15px rgba(0,0,0,0.5);
-  color: white;
-  padding: 15px;
-  transition: left 0.3s ease;
-  z-index: 10;
-
-  overflow-y: auto;       
-  overflow-x: hidden;     
-}
-    .close-btn {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: none;
-      border: none;
-      font-size: 18px;
-      color: #ffd87c;
-      cursor: pointer;
-    }
-    .profile-panel.active {
-      left: 0;
+    .section-head{
+      text-align:center;
+      max-width:560px;
+      margin:38px auto 26px;
     }
 
-    .profile-panel h3 {
-      color: #ffd87c;
-      font-family: 'Lucida Handwriting', cursive;
+    .section-head .kicker{
+      display:block;
+      font-size:0.72rem;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      color:var(--gold-mid);
+      margin-bottom:8px;
     }
 
-    .profile-info p {
-      margin: 10px 0;
-      font-size: 1rem;
+    .section-head h2{
+      font-family:var(--font-display);
+      font-weight:600;
+      font-size:clamp(1.5rem, 3vw, 2rem);
+      color:var(--gold-bright);
+      margin-bottom:8px;
     }
 
-    .logout-btn {
-      margin-top: 25px;
-      width: 100%;
-      background-color: #c51f19;
-      border: none;
-      color: white;
-      padding: 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.3s;
+    .section-head p{
+      color:var(--text-muted);
+      font-size:0.95rem;
     }
 
-    .logout-btn:hover {
-      background-color: #ad221d;
+    .feature-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+      gap:18px;
+      margin-top:6px;
     }
 
-    .subscription-section {
-      margin-top: 25px;
-      padding: 15px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      border: 1px solid #f7c948;
+    .seo-box{
+      background:linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:26px 22px;
+      backdrop-filter:blur(6px);
+      transition:transform .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
+    }
+    .seo-box:hover{
+      transform:translateY(-5px);
+      border-color:rgba(255,216,124,0.4);
+      box-shadow:0 16px 32px rgba(0,0,0,0.35);
     }
 
-    .subscription-section h4 {
-      color: #f7c948;
-      margin-bottom: 15px;
-      font-size: 1.1rem;
-      text-align: center;
+    .seo-box .icon-badge{
+      width:44px; height:44px;
+      border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      background:rgba(255,216,124,0.1);
+      color: #ff6b6b;
+      font-size:1.1rem;
+      margin-bottom:14px;
     }
 
-    .subscription-details {
-      background: rgba(0, 0, 0, 0.3);
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 15px;
+    .seo-box h2{
+      font-family:var(--font-display);
+      color:var(--gold-bright);
+      margin-bottom:8px;
+      font-size:1.15rem;
+      font-weight:600;
     }
 
-    .subscription-details p {
-      margin: 8px 0;
-      font-size: 0.9rem;
+    .seo-box p{
+      color:var(--text-muted);
+      line-height:1.65;
+      font-size:0.92rem;
     }
 
-    .subscription-status {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
+    .why-list{
+      list-style:none;
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(210px,1fr));
+      gap:14px;
+      margin-top:6px;
+    }
+    .why-list li{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      font-size:0.9rem;
+      color:var(--text-muted);
+      padding:14px 16px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:rgba(255,255,255,0.02);
+    }
+    .why-list i{ color:var(--gold-bright); margin-top:2px; }
+
+    .cta-band{
+      max-width:1080px;
+      margin:44px auto 8px;
+      padding:34px 28px;
+      border-radius:20px;
+      text-align:center;
+      background:linear-gradient(135deg, rgba(255,216,124,0.1), rgba(230,180,43,0.04));
+      border:1px solid var(--line);
+    }
+    .cta-band h3{
+      font-family:var(--font-display);
+      color:var(--gold-bright);
+      font-size:1.4rem;
+      margin-bottom:8px;
+    }
+    .cta-band p{
+      color:var(--text-muted);
+      font-size:0.92rem;
+      margin-bottom:18px;
     }
 
-    .status-active {
-      background: #28a745;
-      color: white;
+    /* ============ FOOTER ============ */
+    footer{
+      margin-top:50px;
+      position:relative;
+      z-index:2;
+      background: #0e0e0e;
+      border-top:1px solid var(--line);
+      backdrop-filter:blur(10px);
     }
 
-    .status-pending {
-      background: #ffc107;
-      color: black;
+    .footer-inner{
+      max-width:1080px;
+      margin:0 auto;
+      padding:34px 24px 18px;
+      display:grid;
+      grid-template-columns:1.3fr 1fr 1fr;
+      gap:24px;
     }
 
-    .status-inactive {
-      background: #dc3545;
-      color: white;
+    .footer-brand{
+      font-family:  'Lucida Handwriting', cursive;
+      font-style:italic;
+      color: #ff6b6b;
+      font-size:1.3rem;
+      margin-bottom:8px;
+    }
+    .footer-tag{
+      color:var(--text-muted);
+      font-size:0.85rem;
+      max-width:260px;
     }
 
-    .no-subscription {
-      text-align: center;
-      color: #ccc;
-      font-style: italic;
-      padding: 20px 0;
-    }
-    
-    .manage-subscription-btn {
-      width: 100%;
-      background: #f7c948;
-      color: #0c2f2c;
-      border: none;
-      padding: 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s;
-      margin-top: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-size: 0.9rem;
+    .footer-col h4{
+      font-size:0.78rem;
+      letter-spacing:1.5px;
+      text-transform:uppercase;
+      color: #ff6b6b;
+      margin-bottom:12px;
     }
 
-    .manage-subscription-btn:hover {
-      background: #e4b732;
-      transform: translateY(-2px);
+    .footer-links{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-bottom:0;
     }
 
-    .manage-subscription-btn:first-of-type {
-      background: #049e28;
-      color: white;
+    .footer-links a{
+      font-size:0.85rem;
+      color:var(--text-muted);
+      text-decoration:none;
+      white-space:nowrap;
+      width:fit-content;
+      position:relative;
+      transition:color .25s var(--ease);
+    }
+    .footer-links a::after{
+      content:'';
+      position:absolute;
+      left:0; bottom:-2px;
+      width:0; height:1px;
+      background:var(--gold-bright);
+      transition:width .3s var(--ease);
+    }
+    .footer-links a:hover{ color:var(--gold-bright); }
+    .footer-links a:hover::after{ width:100%; }
+
+    .footer-bottom{
+      text-align:center;
+      padding:14px;
+      font-size:0.75rem;
+      color:var(--text-muted);
+      border-top:1px solid var(--line);
     }
 
-    .manage-subscription-btn:first-of-type:hover {
-      background: #218838;
+    /* ============ PROFILE PANEL ============ */
+    .profile-container{ position:relative; }
+
+    .profile-overlay{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.55);
+      backdrop-filter:blur(2px);
+      z-index:9;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .35s var(--ease);
+    }
+    .profile-overlay.active{ opacity:1; pointer-events:auto; }
+
+    .profile-panel{
+      position:fixed;
+      top:0; left:-100%;
+      width:80%;
+      max-width:340px;
+      height:100vh;
+      background:linear-gradient(165deg, rgba(12,50,46,0.98), rgba(6,28,25,0.98));
+      box-shadow:8px 0 40px rgba(0,0,0,0.5);
+      color:var(--text-ivory);
+      padding:22px 20px;
+      transition:left .4s var(--ease);
+      z-index:10;
+      overflow-y:auto;
+      overflow-x:hidden;
+      border-right:1px solid var(--line);
+    }
+    .profile-panel.active{ left:0; }
+
+    .profile-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:18px;
+      padding-bottom:14px;
+      border-bottom:1px solid var(--line);
     }
 
-   
-    .subscription-section button {
-      margin-bottom: 8px;
-    }
-    .profile-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 9;
-      display: none;
+    .profile-panel h3{
+      color:var(--gold-bright);
+      font-family:var(--font-display);
+      font-style:italic;
+      font-size:1.3rem;
     }
 
-    .profile-overlay.active {
-      display: block;
+    .close-btn{
+      background:rgba(255,255,255,0.06);
+      border:none;
+      width:30px; height:30px;
+      border-radius:50%;
+      font-size:16px;
+      color:var(--gold-bright);
+      cursor:pointer;
+      transition:background .25s var(--ease), transform .25s var(--ease);
+    }
+    .close-btn:hover{ background:rgba(255,216,124,0.15); transform:rotate(90deg); }
+
+    .profile-info p{
+      margin:9px 0;
+      font-size:0.92rem;
+      color:var(--text-muted);
+    }
+    .profile-info p strong{ color:var(--text-ivory); }
+
+    .subscription-section{
+      margin-top:22px;
+      padding:16px;
+      background:rgba(255,255,255,0.04);
+      border-radius:14px;
+      border:1px solid rgba(247,201,72,0.35);
     }
 
-    /* ===== TIFFIN MENU BUTTON ===== */
-
-    .tiffin-menu-btn {
-      display: inline-block;
-      background: linear-gradient(135deg, #e6b42b, #d19f14);
-      color: #0c2f2c;
-      padding: 14px 22px;
-      font-size: 16px;
-      font-weight: 600;
-      text-decoration: none;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-     
-      margin-top: 15px;
+    .subscription-section h4{
+      color:var(--gold-mid);
+      margin-bottom:14px;
+      font-size:1.02rem;
+      text-align:center;
+      font-weight:600;
     }
 
-    .tiffin-menu-btn:hover {
-      transform: translateY(-3px);
-      background: linear-gradient(135deg,#af8616, #cc980a);
+    .subscription-details{
+      background:rgba(0,0,0,0.32);
+      padding:13px;
+      border-radius:10px;
+      margin-bottom:12px;
+      width:100%;
+    }
+    .subscription-details p{
+      margin:7px 0;
+      font-size:0.86rem;
+      color:var(--text-muted);
+    }
+    .subscription-details p strong{ color:var(--text-ivory); }
+
+    .subscription-status{
+      display:inline-block;
+      padding:4px 12px;
+      border-radius:20px;
+      font-size:0.75rem;
+      font-weight:600;
+    }
+    .status-active{ background:#28a745; color:#fff; }
+    .status-pending{ background:#ffc107; color:#1a1a1a; }
+    .status-inactive{ background:#dc3545; color:#fff; }
+
+    .no-subscription{
+      text-align:center;
+      color:var(--text-muted);
+      font-style:italic;
+      padding:18px 0;
+      font-size:0.9rem;
     }
 
-    .tiffin-menu-btn:active {
-      transform: scale(0.97);
+    .manage-subscription-btn,
+    .tiffin-menu-btn,
+    .logout-btn{
+      width:100%;
+      padding:11px 12px;
+      font-size:0.86rem;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      font-weight:600;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      transition:transform .25s var(--ease), background .25s var(--ease), box-shadow .25s var(--ease);
+      margin-bottom:9px;
     }
 
-
-
-    .ai-agent-container {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        z-index: 1000;
+    .manage-subscription-btn{
+      background:var(--green-cta);
+      color:#fff;
+    }
+    .manage-subscription-btn:hover{
+      background:var(--green-cta-hover);
+      transform:translateY(-2px);
+      box-shadow:0 10px 22px rgba(4,158,40,0.25);
     }
 
-    .agent-bubble {
-        background: #f7c948;
-        color: #0c2f2c;
-        padding: 12px 20px;
-        border-radius: 20px;
-        margin-bottom: 12px;
-        position: relative;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-        max-width: 250px;
-        font-size: 14px;
+    .tiffin-menu-btn{
+      background:linear-gradient(135deg, var(--gold-mid), var(--gold-deep));
+      color:#0c2f2c;
+    }
+    .tiffin-menu-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 10px 22px rgba(230,180,43,0.3);
+    }
+    .tiffin-menu-btn:active{ transform:scale(0.97); }
+
+    .logout-btn{
+      margin-top:16px;
+      background:var(--danger);
+      color:#fff;
+    }
+    .logout-btn:hover{
+      background:var(--danger-hover);
+      transform:translateY(-2px);
+      box-shadow:0 10px 22px rgba(197,31,25,0.3);
     }
 
-    .agent-bubble::after {
-        content: '';
-        position: absolute;
-        bottom: -8px;
-        right: 25px;
-        width: 0;
-        height: 0;
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-top: 10px solid #f7c948;
+    /* ============ AI AGENT (kept hidden, structure preserved) ============ */
+    .ai-agent-container{
+      position:fixed; bottom:30px; right:30px; z-index:1000;
+    }
+    .agent-bubble{
+      background:var(--gold-mid);
+      color:#0c2f2c;
+      padding:12px 20px;
+      border-radius:20px;
+      margin-bottom:12px;
+      position:relative;
+      box-shadow:0 5px 20px rgba(0,0,0,0.2);
+      max-width:250px;
+      font-size:14px;
+    }
+    .agent-bubble::after{
+      content:'';
+      position:absolute;
+      bottom:-8px; right:25px;
+      width:0; height:0;
+      border-left:10px solid transparent;
+      border-right:10px solid transparent;
+      border-top:10px solid var(--gold-mid);
+    }
+    .ai-agent-button{
+      display:flex; align-items:center;
+      background:var(--gold-mid);
+      padding:10px 20px;
+      border-radius:50px;
+      text-decoration:none;
+      color:#0c2f2c;
+      font-weight:600;
+      box-shadow:0 5px 15px rgba(247,201,72,0.4);
+      transition:transform .2s var(--ease);
+      border:2px solid var(--gold-bright);
+    }
+    .ai-agent-button:hover{ transform:scale(1.05); }
+    .agent-avatar{ width:35px; height:35px; margin-right:10px; }
+    .agent-avatar img{ width:100%; height:100%; border-radius:50%; background:#fff; padding:3px; }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width:900px){
+      .footer-inner{ grid-template-columns:1fr 1fr; }
+      .footer-brand-col{ grid-column:1 / -1; }
     }
 
-    .ai-agent-button {
-        display: flex;
-        align-items: center;
-        background: #f7c948;
-        padding: 10px 20px;
-        border-radius: 50px;
-        text-decoration: none;
-        color: #0c2f2c;
-        font-weight: 600;
-        box-shadow: 0 5px 15px rgba(247, 201, 72, 0.4);
-        transition: transform 0.2s;
-        border: 2px solid #ffd87c;
+    @media (max-width:600px){
+      .profile-panel{ width:75%; }
+      .tiffin-menu-btn{ width:100%; text-align:center; font-size:15px; padding:12px; }
+      .footer-inner{ grid-template-columns:1fr; text-align:center; }
+      .footer-links{ align-items:center; }
+      .why-list{ grid-template-columns:1fr; }
     }
 
-    .ai-agent-button:hover {
-        transform: scale(1.05);
+    @media (max-width:768px){
+      .ai-agent-container{ bottom:20px; right:20px; }
+      .agent-bubble{ display:none; }
     }
 
-    .agent-avatar {
-        width: 35px;
-        height: 35px;
-        margin-right: 10px;
+    @media (max-width:400px){
+      body{ overflow-x:hidden; }
+      .navbar{ padding:10px 14px; }
+      .logo-small{ font-size:1.25rem; }
+      .profile-icon{ width:34px; height:34px; }
+      .hero{ padding:40px 14px 24px; }
+      .hero-title{ font-size:1.5rem; line-height:1.35; padding:0 6px; }
+      .hero-desc{ font-size:0.85rem; padding:0 4px; }
+      .hero-actions{ flex-direction:column; width:100%; }
+      .menu-btn, .hero-secondary{ width:100%; text-align:center; justify-content:center; font-size:0.85rem; padding:12px; }
+      .section-head h2{ font-size:1.25rem; }
+      .seo-box{ padding:18px; }
+      .footer-links{ gap:8px; }
+      .footer-links a{ font-size:0.78rem; }
     }
-
-    .agent-avatar img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        background: white;
-        padding: 3px;
-    }
-
-
- .hero-title {
-  font-size: 2rem;
-  color: #ffd87c;
-  margin-bottom: 5px;
-  font-family: 'Courier New', Courier, monospace;
-}
-
-.hero-desc {
-  font-size: 1rem;
-  color: #ddd;
-  max-width: 600px;
-  font-family: 'Courier New', Courier, monospace;
-  margin: auto;
-}   
-
-.seo-container {
-   padding: 20px 20px 0; 
-  margin-bottom: 0;
-  text-align: center;
-   position: relative;
-  z-index: 2;
-  padding-top: 10px;
-  
-}
-
-.seo-box {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 25px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-  backdrop-filter: blur(6px);
-}
-.hero {
-  margin-bottom: 5px;
-}
-
-
-.seo-box h2 {
-  color: #ffd87c;
-  margin-bottom: 10px;
-  font-size: 1.5rem;
-}
-
-.seo-box p {
-  color: #ccc;
-  line-height: 1.6;
-  font-size: 0.95rem;
-}
-
-
-
-.seo-links a:hover {
-  text-decoration: underline;
-}
-
-
-@media (max-width: 400px) {
-
- 
-  body {
-    overflow-x: hidden;
-  }
-
-
-  .navbar {
-    padding: 8px 10px;
-  }
-
-  .logo-small {
-    font-size: 1.1rem;
-  }
-
-  .profile-icon {
-    width: 32px;
-    height: 32px;
-  }
-
-  
-  .hero-title {
-    font-size: 1rem;
-    line-height: 1.4;
-    padding: 0 7px;
-  }
-
-  .hero-desc {
-    font-size: 0.7rem;
-    padding: 0 4px;
-    line-height: 1.4;
-  }
-
-
-  .seo-container {
-    padding: 20px auto;
-  }
-
-
-  .seo-box {
-    margin: 12px auto;
-    padding: 12px;
-    width: 100%;
-    border-radius: 10px;
-  }
-
-  .seo-box h2 {
-    font-size: 0.95rem;
-  }
-
-  .seo-box p {
-    font-size: 0.7rem;
-    line-height: 1.4;
-  }
-
-  
-  .menu-btn {
-    width: 85%;
-    font-size: 0.75rem;
-    padding: 10px;
-    margin-top: 15px;
-  }
-
-  .footer-links {
-    display: flex;
-    justify-content: center;
-    flex-wrap: nowrap; 
-    
-    gap: 1px;
-  }
-
-  .footer-links a {
-    font-size: 0.5rem;
-    flex-shrink: 0;
-  }
-}
-
-  footer p {
-    font-size: 0.65rem;
-    
-  }
-
-@media (max-width: 600px) {
-  .profile-panel {
-    width: 75%;
-  }
-}
-
-    @media (max-width: 600px) {
-      .tiffin-menu-btn {
-        width: 100%;
-        text-align: center;
-        font-size: 15px;
-        padding: 12px;
-      }
-    }
-    @media (max-width: 768px) {
-        .ai-agent-container {
-            bottom: 20px;
-            right: 20px;
-        }
-        .agent-bubble {
-            display: none;
-        }
-    }
-
-
-.profile-panel p,
-.profile-panel h3,
-.subscription-details p {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-
-.profile-panel * {
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.manage-subscription-btn,
-.tiffin-menu-btn,
-.logout-btn {
-  width: 100%;
-  padding: 8px 10px;
-  font-size: 0.8rem;
-  border-radius: 6px;
-}
-
-
-.subscription-details {
-  width: 100%;
-  padding: 10px;
-}
-
-
-@media (max-width: 600px) {
-  .profile-panel {
-    width: 75%;
-    padding: 15px;
-  }
-
-  .profile-info p {
-    font-size: 0.85rem;
-  }
-
-  .subscription-section h4 {
-    font-size: 0.9rem;
-  }
-
-  .subscription-details p {
-    font-size: 0.8rem;
-  }
-}
   </style>
 <script type="application/ld+json">
 {
@@ -732,61 +728,129 @@ main {
 <div class="overlay"></div>
 
 <nav class="navbar">
- 
+
   <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
        id="profileIcon"
        alt="User profile icon"
        class="profile-icon"
        onclick="handleProfileClick()">
 
- 
   <h1 class="logo-small">Brio Bite</h1>
 </nav>
-<main class="hero">
-  <div class="hadd">
 
-    <h1 class="hero-title">
-      Daily Food Delivery, Tiffin & Catering Services
-    </h1>
+<main>
+  <section class="hero">
+    <span class="hero-eyebrow"><span class="dot"></span> Fresh &middot; Homestyle &middot; Delivered Daily</span>
+
+    <div class="dabba-wrap" aria-hidden="true">
+      <svg viewBox="0 0 100 120" width="100%" height="100%">
+        <line class="steam s1" x1="35" y1="18" x2="35" y2="4" stroke-width="2.5" stroke-linecap="round"/>
+        <line class="steam s2" x1="50" y1="18" x2="50" y2="2" stroke-width="2.5" stroke-linecap="round"/>
+        <line class="steam s3" x1="65" y1="18" x2="65" y2="4" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="20" y="24" width="60" height="26" rx="6" fill="#0c322e" stroke="#ffd87c" stroke-width="2"/>
+        <rect x="20" y="52" width="60" height="26" rx="6" fill="#0c322e" stroke="#f7c948" stroke-width="2"/>
+        <rect x="20" y="80" width="60" height="26" rx="6" fill="#0c322e" stroke="#e6b42b" stroke-width="2"/>
+        <path d="M42 24 V16 Q50 8 58 16 V24" fill="none" stroke="#ffd87c" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <h1 class="hero-title">Daily Food Delivery,<br><em>Tiffin</em> &amp; Catering, Done Right</h1>
 
     <p class="hero-desc">
-      Brio Bite provides fresh, healthy and affordable meals for students and professionals.
+      Brio Bite provides fresh, healthy and affordable meals for students and professionals &mdash; cooked like home, delivered on time.
     </p>
 
-  </div>
+    <div class="hero-actions">
+      <button class="menu-btn" onclick="handleMenuClick()">
+        <i class="fas fa-utensils" style="margin-right:8px;"></i>Check Our Menu
+      </button>
+      
+    </div>
+  </section>
 
- 
+  <div class="section-wrap">
+    <div class="section-head">
+      <span class="kicker">What We Offer</span>
+      <h2>Our Food Services</h2>
+      <p>Everything from a single meal to a full month of tiffins, cooked fresh and delivered on schedule.</p>
+    </div>
+
+    <div class="feature-grid">
+      <div class="seo-box">
+        <div class="icon-badge"><i class="fas fa-motorcycle"></i></div>
+        <h2>Daily Delivery</h2>
+        <p>Veg and non-veg meals delivered fresh to your door, every single day.</p>
+      </div>
+      <div class="seo-box">
+        <div class="icon-badge"><i class="fas fa-box"></i></div>
+        <h2>Tiffin Subscription</h2>
+        <p>Flexible weekly and monthly tiffin plans built around your routine.</p>
+      </div>
+      <div class="seo-box">
+        <div class="icon-badge"><i class="fas fa-users"></i></div>
+        <h2>Catering</h2>
+        <p>Reliable catering for events, gatherings and celebrations of any size.</p>
+      </div>
+      <div class="seo-box">
+        <div class="icon-badge"><i class="fas fa-dumbbell"></i></div>
+        <h2>High Protein Meals</h2>
+        <p>Balanced, protein-rich meals designed for fitness and active lifestyles.</p>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:52px;">
+      <span class="kicker">The Brio Bite Difference</span>
+      <h2>Why Choose Brio Bite?</h2>
+      <p>Reliable delivery, quality ingredients and delicious home-style food &mdash; built for convenience and nutrition.</p>
+    </div>
+
+    <ul class="why-list">
+      <li><i class="fas fa-check-circle"></i> On-time delivery, every meal</li>
+      <li><i class="fas fa-check-circle"></i> Fresh, quality ingredients</li>
+      <li><i class="fas fa-check-circle"></i> Home-style Indian cooking</li>
+      <li><i class="fas fa-check-circle"></i> Plans built for students &amp; professionals</li>
+    </ul>
+
+    <div class="cta-band">
+      <h3>Hungry already?</h3>
+      <p>Browse today's menu and get a fresh food on its way.</p>
+      <button class="menu-btn" onclick="handleMenuClick()">
+        <i class="fas fa-utensils" style="margin-right:8px;"></i>Check Our Menu
+      </button>
+    </div>
+  </div>
 </main>
-<div class="seo-container">
 
-<div class="seo-box">
-  <h2>Our Food Services</h2>
-  <p>
-    We offer veg and non-veg daily food delivery, flexible tiffin subscription plans,
-    catering services for events and high protein meals for fitness needs.
-  </p>
-</div>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand-col">
+      <div class="footer-brand">Brio Bite</div>
+      <p class="footer-tag">Fresh, homestyle meals &mdash; tiffins, daily delivery and catering services.</p>
+    </div>
 
-  <div class="seo-box">
-    <h2>Why Choose Brio Bite?</h2>
-    <p>
-      We offer reliable delivery, quality ingredients and delicious home-style food.
-      Our services are designed for convenience and nutrition.
-    </p>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <div class="footer-links">
+        <a href="services.html">Our Services</a>
+        <a href="veg.html">Veg Menu</a>
+        <a href="non-veg.html">Non Veg Menu</a>
+        <a href="tiffinservice.html">Tiffin Plan</a>
+        <a href="catering.html">Catering Plan</a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Get In Touch</h4>
+      <div class="footer-links">
+        <a href="https://wa.me/919627024287" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> +91 96270 24287</a>
+        <a href="mailto:Official.briobite@gmail.com"><i class="fas fa-envelope"></i> Official.briobite@gmail.com</a>
+      </div>
+    </div>
   </div>
 
- <button class="menu-btn" onclick="handleMenuClick()">Check Our Menu</button>
-
-</div>
-<footer>
-<div class="footer-links">
-  <a href="services.html">Our Services</a>
-  <a href="veg.html">Veg Menu</a>
-  <a href="non-veg.html">Non Veg Menu</a>
-  <a href="tiffinservice.html">Tiffin Plan </a>
-  <a href="catering.html">Catering plan </a>
-</div>
-  <p>© 2026 Brio Bite. All rights reserved.</p>
+  <div class="footer-bottom">
+    <p>&copy; 2026 Brio Bite. All rights reserved.</p>
+  </div>
 </footer>
 
 <!-- PROFILE PANEL -->
@@ -868,7 +932,7 @@ function goToTiffin() {
 // ========== SUBSCRIPTION LOADING ==========
 async function loadSubscriptions() {
     if (!isLoggedIn()) return;
-    
+
     try {
         const user = getCurrentUser();
         const res = await fetch("https://bbbackend-bng2.onrender.com/api/tiffin-bookings");
@@ -887,7 +951,7 @@ async function loadSubscriptions() {
                 <p><strong>Plan:</strong> ${b.planName}</p>
                 <p><strong>Price:</strong> ₹${b.price}</p>
                 ${b.startDate ? `<p><strong>Start Date:</strong> ${new Date(b.startDate).toLocaleDateString()}</p>` : `<p><strong>Start Date:</strong> Not Started Yet</p>`}
-                <p><strong>Status:</strong> 
+                <p><strong>Status:</strong>
                     <span class="subscription-status status-${b.status}">
                         ${b.status}
                     </span>
@@ -904,7 +968,7 @@ async function loadSubscriptions() {
 // ========== TIFFIN SUBSCRIPTION CHECK ==========
 async function checkTiffinSubscription() {
     if (!isLoggedIn()) return;
-    
+
     try {
         const user = getCurrentUser();
         const res = await fetch(`${API_BASE}/api/tiffin-bookings`);
@@ -927,13 +991,13 @@ async function checkTiffinSubscription() {
 
 // ========== INITIALIZE PAGE ==========
 document.addEventListener('DOMContentLoaded', function() {
-   
+
     initAuthUI();
-    
-  
+
+
     checkLoginRedirect();
-    
-   
+
+
     if (isLoggedIn()) {
         loadSubscriptions();
         checkTiffinSubscription();
@@ -941,7 +1005,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script>
- 
+
 function handleMenuClick() {
     if (!isLoggedIn()) {
         sessionStorage.setItem("intendedAction", "menu");
@@ -966,7 +1030,7 @@ let refreshTimer;
 function startAutoRefresh() {
     refreshTimer = setInterval(() => {
         console.log("🔄 Auto refreshing page...");
-      
+
     }, refreshInterval);
 }
 
