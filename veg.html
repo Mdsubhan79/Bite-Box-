@@ -7,14 +7,143 @@
   <link rel="icon" type="image/x-icon" href="briobite.png">
   <link rel="stylesheet" href="tracker.css">
   <link rel="stylesheet" href="veg.css">
-
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Playball&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-  html { scroll-behavior: smooth; }
+   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+footer {
+    background-color: #222;
+    color: white;
+    padding: 40px 20px 20px;
+    margin-top: 50px;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.footer-section h3 {
+    color: #ff6b6b;
+    margin-bottom: 10px;
+}
+#footerAboutTitle{
+  font-family: 'Lucida Handwriting', cursive;
+}
+
+
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 8px;
+}
+
+.footer-section ul li i {
+    margin-right: 8px;
+}
+
+.footer-section ul li a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+.footer-section ul li a:hover {
+    text-decoration: underline;
+}
+
+.social-links a {
+    color: white;
+    margin-right: 10px;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #ff6b6b;
+}
+
+footer form {
+    display: flex;
+    flex-direction: column;
+}
+
+footer input[type="email"] {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+footer button {
+    background-color: #ff6b6b;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+footer button:hover {
+    background-color: #e05555;
+}
+
+.copyright {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 0.9rem;
+    color: #bbb;
+}
+
+        @media (max-width: 768px) {
+            .login-container {
+                width: 90%;
+                margin: 20px auto;
+            }
+            
+            .footer-section {
+                text-align: center;
+            }
+        }
+  .back-btn {
+      position: fixed;
+      bottom: 22px;
+      left: 22px;
+      background: var(--ember-400);
+      color: white;
+      border: none;
+      width: 46px;
+      height: 30px;
+      border-radius: 20%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 26px -6px rgba(255,107,107,0.6);
+      transition: all 0.3s var(--ease);
+      text-decoration: none;
+      z-index: 40;
+    }
+
+.back-btn:hover {
+    background-color: #ff5252;
+    transform: translateX(-3px);
+}
+
 </style>
 </head>
 <body data-page="veg">
@@ -26,33 +155,41 @@
     </div>
 
     <div class="cart-icon" onclick="window.location.href='cartpage.html'">
-      <i class="fas fa-shopping-cart"></i>
-      <span class="cart-count" id="cart-count">0</span>
-    </div>
+  <i class="fas fa-shopping-cart"></i>
+  <span class="cart-count" id="cart-count">0</span>
+</div>
+
   </nav>
+  
 
-  <section class="menu-section">
-    <h2 id="vegMenuTitle" data-translate="vegMenuTitle">🥗</h2>
-    <div class="food-items" id="vegFoodItems">
-
-    </div>
-  </section>
-
-  <a>
+    
+    <section class="menu-section">
+      <h2 id="vegMenuTitle" data-translate="vegMenuTitle">🥗</h2>
+      <div class="food-items" id="vegFoodItems">
+      
+      </div>
+    
+    </section>
+    
+    <a>
+        
     <button onclick="goback()" class="back-btn"> <i class="fas fa-arrow-left"></i><span id="backTextVeg" data-translate="backToMain"></span></button>
-  </a>
-  <script>
-    function goback(){
-        window.history.back();
-    }
-  </script>
+    
+    
+    </a>
+    <script>
+        function goback(){
+            window.history.back();
+        }
+    </script>
+  </div>
 
   <div id="subscribeModal" class="modal hidden">
     <div class="modal-content">
       <span class="close-btn">&times;</span>
       <h2 id="subscribeTitle" data-translate="subscribeTitle">Subscribe to Plan</h2>
       <form id="subscriptionForm">
-
+   
       </form>
     </div>
   </div>
@@ -75,16 +212,20 @@
         <h3 id="footerContactTitle" data-translate="footerContactTitle">Contact Info</h3>
         <ul>
           <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress" data-translate="footerAddress">Clement Town, Dehradun</span></li>
-          <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91 9627024287</span></li>
-          <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.briobite@gmail.com</span></li>
            <li>
-  <i class="fas fa-clock"></i>
-  <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span>
+            <a href="https://wa.me/919627024287" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> +91 96270 24287</a>
+          </li>
+          <li>
+            <a href="mailto:Official.briobite@gmail.com"><i class="fas fa-envelope"></i> Official.briobite@gmail.com</a>
+          </li>
+           <li>
+  <i class="fas fa-clock"></i> 
+  <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span> 
   <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span>
 </li>
         </ul>
       </div>
-
+      
       <div class="footer-section">
         <div class="footer-section quick-links">
   <h3 id="footerLinksTitle" data-translate="footerLinksTitle" class="footer-dropdown-header">
@@ -105,7 +246,9 @@
     <li><a href="#" id="logoutBtn">Close your Brio Bite Account</a></li>
   </ul>
 </div>
-
+      
+     
+      
       <div class="footer-section">
         <h3 id="footerNewsletterTitle" data-translate="footerNewsletterTitle">Newsletter</h3>
         <p id="footerNewsletterText" data-translate="footerNewsletterText">Subscribe for updates and special offers!</p>
@@ -115,7 +258,7 @@
         </form>
       </div>
     </div>
-
+    
     <div class="copyright">
       <p id="copyrightText" data-translate="copyrightText">&copy; 2026 Brio Bite. All Rights Reserved.</p>
     </div>
@@ -126,19 +269,26 @@
     const now = new Date();
     const hour = now.getHours();
 
+    
     const isOpen = hour >= 7 && hour < 22;
 
     const statusElement = document.getElementById("openStatus");
     statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
-    statusElement.style.color = isOpen ? "#1f8a3f" : "#c53a34";
+    statusElement.style.color = isOpen ? "green" : "red";
   }
 
+  
   updateOpenStatus();
 </script>
 
+ 
+
+
+
+
 <script>
   document.getElementById('newsletterForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+    e.preventDefault(); 
     const emailInput = document.getElementById('newsletterEmail');
     const email = emailInput.value.trim();
 
@@ -147,6 +297,7 @@
       return;
     }
 
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       alert('Please enter a valid email address.');
@@ -154,21 +305,21 @@
     }
 
     alert('Thank you for subscribing!');
-    emailInput.value = '';
+    emailInput.value = ''; 
   });
 </script>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const logoutBtn = document.getElementById("logoutBtn");
-
+  
   if (logoutBtn) {
     logoutBtn.addEventListener("click", function(e) {
       e.preventDefault();
       if (confirm("Are you sure you want to log out?")) {
-
+   
         localStorage.removeItem("biteboxUser");
-
+      
         window.location.href = "login.html";
       }
     });

@@ -2338,6 +2338,98 @@ function deleteOrder(orderId, btn) {
     });
 }
 
+async function viewOrderDetails(orderId) {
+
+    try {
+
+        const res = await fetch(`${API_BASE}/api/orders/${orderId}`);
+
+        if (!res.ok) {
+            throw new Error("Order not found");
+        }
+
+        const order = await res.json();
+
+        let itemsHtml = "";
+
+        order.items.forEach(item => {
+
+            itemsHtml += `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.quantity}</td>
+                    <td>₹${item.price}</td>
+                    <td>₹${item.price * item.quantity}</td>
+                </tr>
+            `;
+        });
+
+        const popup = document.createElement("div");
+        popup.className = "order-details-popup";
+
+        popup.innerHTML = `
+            <div class="order-details-card">
+
+                <div class="popup-header">
+                    <h2>Order Details</h2>
+
+                    <button onclick="this.closest('.order-details-popup').remove()">
+                        ✖
+                    </button>
+                </div>
+
+                <h3>Customer Information</h3>
+
+                <p><b>Name:</b> ${order.customerDetails.name}</p>
+                <p><b>Phone:</b> ${order.customerDetails.phone}</p>
+                <p><b>Address:</b> ${order.customerDetails.address}</p>
+                <p><b>Landmark:</b> ${order.customerDetails.landmark || "-"}</p>
+
+                <hr>
+
+                <h3>Ordered Items</h3>
+
+                <table class="popup-table">
+
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        ${itemsHtml}
+                    </tbody>
+
+                </table>
+
+                <hr>
+
+                <p><b>Total Amount:</b> ₹${order.totalAmount}</p>
+                <p><b>Payment:</b> ${order.paymentStatus}</p>
+                <p><b>Status:</b> ${order.orderStatus}</p>
+                <p><b>Order Time:</b> ${new Date(order.orderTime).toLocaleString()}</p>
+                <p><b>Delivery Estimate:</b> ${order.deliveryEstimate}</p>
+                <p><b>Admin Notes:</b> ${order.adminNotes || "-"}</p>
+
+            </div>
+        `;
+
+        document.body.appendChild(popup);
+
+    } catch (err) {
+
+        alert(err.message);
+
+    }
+
+}
+
+
+
 //functions global
 window.loadOrders = loadOrders;
 window.viewOrderDetails = viewOrderDetails;

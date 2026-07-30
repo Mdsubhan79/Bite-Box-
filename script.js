@@ -108,13 +108,13 @@ function showNotification(message, type = 'success') {
     notification.style.cssText = `
         position: fixed;
         top: 20px;
-        right: 41px;
+        right: 51px;
         background: ${colors[type] || colors.success};
         color: white;
         padding: 12px 24px;
         border-radius: 10px;
         z-index: 9999;
-        animation: slideIn 0.3s ease;
+        animation: slideIn 0.2s ease;
         box-shadow: 0 3px 10px rgba(0,0,0,0.2);
     `;
     
