@@ -333,7 +333,7 @@ function hideTracker() {
     }
 }
 
-// Make tracker draggable
+// Make tracker draggable (smooth, rAF-batched, matches tracker-unified.js)
 function makeDraggable(element) {
     if (!element) return;
     
@@ -341,6 +341,8 @@ function makeDraggable(element) {
     document.addEventListener('mousemove', drag);
     document.addEventListener('mouseup', dragEnd);
 }
+
+let dragAnimationFrameId = null;
 
 function dragStart(e) {
     const element = document.getElementById('floatingTracker');
@@ -350,6 +352,9 @@ function dragStart(e) {
     initialY = e.clientY - yOffset;
     isDragging = true;
     element.style.cursor = 'grabbing';
+    // Pause the CSS transition while dragging so movement tracks the
+    // pointer 1:1 instead of easing behind it.
+    element.style.transition = 'none';
     e.preventDefault();
 }
 
@@ -359,6 +364,8 @@ function dragEnd() {
     
     isDragging = false;
     element.style.cursor = 'grab';
+    // Hand control back to the stylesheet's transition (hover, breathe, etc.)
+    element.style.transition = '';
 }
 
 function drag(e) {
@@ -371,7 +378,10 @@ function drag(e) {
     xOffset = currentX;
     yOffset = currentY;
     
-    element.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+    if (dragAnimationFrameId) cancelAnimationFrame(dragAnimationFrameId);
+    dragAnimationFrameId = requestAnimationFrame(() => {
+        element.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+    });
 }
 
 // Cleanup function

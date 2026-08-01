@@ -21,10 +21,10 @@ document.getElementById("adminLoginForm").addEventListener("submit", async (e) =
       return;
     }
 
-    // ✅ SAVE TOKEN (IMPORTANT)
+  
     localStorage.setItem("adminToken", data.token);
 
-    // ✅ REDIRECT
+    
     window.location.href = "index.html";
 
   } catch (err) {

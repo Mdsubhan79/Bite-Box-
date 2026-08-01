@@ -1,135 +1,607 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Make Your Tiffin Menu | Brio Bite</title>
 <link rel="icon" type="image/x-icon" href="briobite.png">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="tracker.css">
-
-<title>Make Tiffin Menu</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-
-/* ========= GLOBAL ========= */
-
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f9;
-  margin: 0;
-  padding: 20px;
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.container {
-  max-width: 900px;
-  margin: auto;
-}
-
-/* ========= DAY CARD ========= */
-
-.day-card {
-  background: white;
-  margin-bottom: 15px;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-  overflow: hidden;
-}
-
-.day-header {
-  padding: 15px;
-  background: #0c2f2c;
-  color: white;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.day-content {
-  display: none;
-  padding: 15px;
-}
-
-.day-content.active {
-  display: block;
-}
-
-/* ========= FORM ========= */
-
-.meal-section {
-  margin-bottom: 20px;
-}
-
-.meal-section h4 {
-  margin-bottom: 5px;
-}
-
-select, input {
-  width: 100%;
-  padding: 8px;
-  margin: 5px 0 10px 0;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-button {
-  padding: 12px 20px;
-  background: #e0a500;
-  color: #0c2f2c;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-button:hover {
-  background: #ffbb00;
-}
-.error-field {
-  border: 2px solid red !important;
-  background: #fff5f5;
-}
-
-@media (min-width: 768px) {
-
-  .meal-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
   }
 
-}
+  body {
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+  }
 
+  /* ========= NAVBAR (matches site) ========= */
+  .navbar {
+    background-color: #10332F;
+    color: wheat;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .logo-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nav-logo {
+    font-family: 'Lucida Handwriting', cursive;
+    font-size: 1.8rem;
+    color: #FFFBE6;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .nav-tagline {
+    font-family: 'Lucida Handwriting', cursive;
+    font-size: 0.85rem;
+    color: #F4C873;
+  }
+
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+  }
+
+  .menu-line {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 4px 0;
+  }
+
+  .dropdown-menu {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    position: static;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .dropdown-menu a {
+    color: #FFDFAF;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 10px;
+    transition: color 0.3s;
+  }
+
+  .dropdown-menu a:hover {
+    color: #ff6b6b;
+  }
+
+  @media (max-width: 768px) {
+    .menu-toggle { display: flex; }
+
+    .dropdown-menu {
+      display: none;
+      flex-direction: column;
+      background-color: #0c2f2c;
+      position: absolute;
+      top: 100%;
+      right: 15px;
+      width: 200px;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .dropdown-menu.active { display: flex; }
+
+    .dropdown-menu a { width: 100%; padding: 10px 0; }
+  }
+
+  /* ========= PAGE HERO ========= */
+  .page-hero {
+    text-align: center;
+    padding: 40px 20px 10px;
+  }
+
+  .page-hero h1 {
+    color: #10332F;
+    font-size: 2rem;
+  }
+
+  .page-hero p {
+    color: #666;
+    margin-top: 8px;
+    font-size: 0.95rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+  }
+
+  /* ========= DAY CARD ========= */
+  .day-card {
+    background: white;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 1px solid #e7e2d3;
+  }
+
+  .day-header {
+    padding: 16px 20px;
+    background: #10332F;
+    color: #F4C873;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.05rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s ease;
+  }
+
+  .day-header:hover {
+    background: #0c2f2c;
+  }
+
+  .day-header::after {
+    content: '\f078';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 0.85rem;
+    color: #F4C873;
+  }
+
+  .day-content {
+    display: none;
+    padding: 20px;
+    background: #fffdf7;
+    border-top: 3px solid #F4C873;
+  }
+
+  .day-content.active {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  @media (min-width: 700px) {
+    .day-content.active {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* ========= MEAL SECTION ========= */
+
+  .meal-section {
+    background: #fff;
+    border: 1px solid #eee0bb;
+    border-radius: 10px;
+    padding: 14px;
+  }
+
+  .meal-section h4 {
+    color: #10332F;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .meal-section h4 i {
+    color: #e6b42b;
+  }
+
+  .meal-section label {
+    display: block;
+    font-size: 0.8rem;
+    color: #777;
+    margin-bottom: 4px;
+    margin-top: 8px;
+  }
+
+  select, input[type="text"] {
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 6px;
+    border: 1.5px solid #ddd;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.25s ease;
+    background: #fff;
+    color: #333;
+  }
+
+  select:focus, input[type="text"]:focus {
+    border-color: #10332F;
+    box-shadow: 0 0 0 2px rgba(16, 51, 47, 0.12);
+  }
+
+  .error-field {
+    border: 2px solid #e05555 !important;
+    background: #fff5f5;
+  }
+
+  /* ========= ACTIONS ========= */
+  .action-row {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .book-now,
+  #saveMenuBtn,
+  #remakeBtn {
+    background: #F4C873;
+    color: #10332F;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 6px;
+  }
+
+  #saveMenuBtn:hover,
+  #remakeBtn:hover {
+    background: #e0b354;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(230, 179, 84, 0.4);
+  }
+
+  /* ========= SUMMARY ========= */
+  #summaryBox h2 {
+    color: #10332F;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  #summaryBox > div {
+    background: #fff;
+    border-left: 5px solid #F4C873;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  }
+
+  /* ========= FOOTER (matches site, unchanged) ========= */
+  footer {
+    background-color: #0e0e0e;
+    color: white;
+    padding: 40px 20px 20px;
+    margin-top: 50px;
+  }
+
+  .footer-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  .footer-section h3 { color: #ff6b6b; margin-bottom: 10px; }
+  #footerAboutTitle { font-family: 'Lucida Handwriting', cursive; }
+  .footer-section ul { list-style: none; padding: 0; }
+  .footer-section ul li { margin-bottom: 8px; }
+  .footer-section ul li i { margin-right: 8px; }
+  .footer-section ul li a { color: #ccc; text-decoration: none; }
+  .footer-section ul li a:hover { text-decoration: underline; }
+
+  .social-links a {
+    color: white;
+    margin-right: 10px;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+  }
+  .social-links a:hover { color: #ff6b6b; }
+
+  footer form { display: flex; flex-direction: column; }
+  footer input[type="email"] {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: none;
+  }
+  footer button {
+    background-color: #ff6b6b;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  footer button:hover { background-color: #e05555; }
+
+  .copyright {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 0.9rem;
+    color: #bbb;
+  }
+
+  @media (max-width: 768px) {
+    .footer-section { text-align: center; }
+  }
+
+  .back-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .back-btn:hover {
+    background-color: #ff5252;
+    transform: translateX(-3px);
+  }
+
+  .footer-dropdown-header {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    align-items: center;
+    cursor: pointer;
+    color: #ff6b6b;
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
+  }
+
+  .footer-dropdown-header:hover { color: #ffa6a6; }
+  .footer-dropdown-header i { transition: transform 0.3s ease; }
+
+  .footer-dropdown-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s ease;
+  }
+
+  .footer-dropdown-list.active { max-height: 600px; }
+  .footer-dropdown-header.active i { transform: rotate(180deg); }
+
+  @media (min-width: 768px) {
+    .footer-dropdown-list { max-height: none !important; }
+    .footer-dropdown-header { cursor: default; }
+    .footer-dropdown-header i { display: none; }
+  }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-<h1>Make Your Tiffin Menu As You Wish</h1>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo-container">
+      <a href="index.html" class="nav-logo">Brio Bite</a>
+      <div class="nav-tagline">Where Every Bite is a Flavor Bomb</div>
+    </div>
+    <div class="menu-toggle" id="menuToggle">
+      <div class="menu-line"></div>
+      <div class="menu-line"></div>
+      <div class="menu-line"></div>
+    </div>
+    <div class="dropdown-menu" id="dropdownMenu">
+      <a href="index.html">Home</a>
+      <a href="veg.html">Vegetarian</a>
+      <a href="non-veg.html">Non-Vegetarian</a>
+      <a href="tiffin.html">Tiffin Service</a>
+      <a href="catering.html">Catering Services</a>
+      <a href="highprotien.html">High-Protein Meals</a>
+      <a href="cartpage.html">Cart</a>
+      <a href="aboutus.html">About Us</a>
+      <a href="contactus.html">Contact Us</a>
+      <a href="terms&privay.html">Terms & Policy</a>
+    </div>
+  </nav>
 
+  <div class="page-hero">
+    <h1>Build Your Weekly Tiffin Menu</h1>
+    <p>Pick your breakfast, lunch and dinner for each day — just the way you like it.</p>
+  </div>
 
-<div id="summarySection" style="display:none;">
-  <div id="summaryBox"></div>
-</div>
+  <div class="container">
 
-<div id="menuSection" style="display:none;">
-  <div id="menuContainer"></div>
- <div style="text-align: center; margin-top: 20px;">
-  <button id="saveMenuBtn">Save Menu</button>
- </div>
-</div>
+    <div id="summarySection" style="display:none;">
+      <div id="summaryBox"></div>
+      <div class="action-row">
+        <button id="remakeBtn" style="display:none;">
+          <i class="fas fa-redo-alt"></i> Reset Menu
+        </button>
+      </div>
+    </div>
 
-<button id="remakeBtn" style="display:none;">
-  Reset Menu
-</button>
+    <div id="menuSection" style="display:none;">
+      <div id="menuContainer"></div>
+      <div class="action-row">
+        <button id="saveMenuBtn">
+          <i class="fas fa-check"></i> Save Menu
+        </button>
+      </div>
+    </div>
 
-<script src="maketiffinmenu.js"></script>
+  </div>
 
+  <!-- Footer -->
+  <footer id="mainFooter">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3 id="footerAboutTitle" data-translate="footerAboutTitle">About Brio Bite</h3>
+        <p id="footerAboutText" data-translate="footerAboutText">
+          Delivering delicious meals with explosive flavors. Our mission is to make every bite a memorable experience.
+        </p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3 id="footerContactTitle" data-translate="footerContactTitle">Contact Info</h3>
+        <ul>
+          <li><i class="fas fa-map-marker-alt"></i> <span id="footerAddress" data-translate="footerAddress">Clement Town, Dehradun</span></li>
+          <li><i class="fas fa-phone"></i> <span id="footerPhone" data-translate="footerPhone">+91 9627024287</span></li>
+          <li><i class="fas fa-envelope"></i> <span id="footerEmail" data-translate="footerEmail">Official.briobite@gmail.com</span></li>
+          <li>
+            <i class="fas fa-clock"></i>
+            <span id="footerHours" data-translate="footerHours">07:00 AM - 10:00 PM</span>
+            <span id="openStatus" style="font-weight: bold; margin-left: 8px;"></span>
+          </li>
+        </ul>
+      </div>
 
-<script src="tracker-unified.js"></script>
+      <div class="footer-section">
+        <div class="footer-section quick-links">
+          <h3 id="footerLinksTitle" data-translate="footerLinksTitle" class="footer-dropdown-header">
+            Quick Links <i class="fas fa-chevron-down"></i>
+          </h3>
+          <ul class="footer-dropdown-list">
+            <li><a href="index.html" id="footerHomeLink" data-translate="footerHomeLink">Home</a></li>
+            <li><a href="services.html" id="footerServicesLink" data-translate="footerServicesLink">Our Services</a></li>
+            <li><a href="veg.html" id="footerVegLink" data-translate="footerVegLink">Vegetarian</a></li>
+            <li><a href="non-veg.html" id="footerNonVegLink" data-translate="footerNonVegLink">Non-Vegetarian</a></li>
+            <li><a href="tiffin.html" id="footerTiffinLink" data-translate="footerTiffinLink">Tiffin Service</a></li>
+            <li><a href="catering.html" id="footerCateringServicesLink" data-translate="footerCateringServicesLink">Catering Services</a></li>
+            <li><a href="highprotien.html" id="footerHighprotienLink" data-translate="footerHighProtienLink">High-Protein Meals</a></li>
+            <li><a href="cartpage.html" id="footerCartLink" data-translate="footerCartLink">Cart</a></li>
+            <li><a href="aboutus.html" id="footerAboutLink" data-translate="footerAboutLink">About Us</a></li>
+            <li><a href="contactus.html" id="footerContactLink" data-translate="footerContactLink">Contact Us</a></li>
+            <li><a href="terms&privay.html" id="footerTerms&PolicyLink" data-translate="footerTerms&PolicyLink">Terms & Policy</a></li>
+            <li><a href="#" id="logoutBtn">Close your BrioBite Account</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3 id="footerNewsletterTitle" data-translate="footerNewsletterTitle">Newsletter</h3>
+        <p id="footerNewsletterText" data-translate="footerNewsletterText">Subscribe for updates and special offers!</p>
+        <form id="newsletterForm">
+          <input type="email" id="newsletterEmail" placeholder="Enter your email" data-translate-placeholder="newsletterPlaceholder" required>
+          <button type="submit" id="newsletterSubmit" data-translate="subscribeBtn">Subscribe</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="copyright">
+      <p id="copyrightText" data-translate="copyrightText">&copy; 2026 Brio Bite. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <button onclick="goback()" class="back-btn">
+    <i class="fas fa-arrow-left"></i>
+  </button>
+
+  <script>
+    function goback() {
+      window.history.back();
+    }
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const menuToggle = document.getElementById("menuToggle");
+      const dropdownMenu = document.getElementById("dropdownMenu");
+      menuToggle.addEventListener("click", () => {
+        dropdownMenu.classList.toggle("active");
+      });
+
+      document.addEventListener('click', function(e) {
+        const sidebar = document.getElementById('dropdownMenu');
+        const toggle = document.getElementById('menuToggle');
+        if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+          sidebar.classList.remove('active');
+        }
+      });
+
+      const now = new Date();
+      const hour = now.getHours();
+      const isOpen = hour >= 7 && hour < 22;
+      const statusElement = document.getElementById("openStatus");
+      statusElement.textContent = isOpen ? "(Open)" : "(Closed)";
+      statusElement.style.color = isOpen ? "green" : "red";
+    });
+  </script>
+
+  <script>
+    document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById('newsletterEmail');
+      const email = emailInput.value.trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+      alert('Thank you for subscribing!');
+      emailInput.value = '';
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", function(e) {
+          e.preventDefault();
+          if (confirm("Are you sure you want to log out?")) {
+            localStorage.removeItem("biteboxUser");
+            window.location.href = "login.html";
+          }
+        });
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const dropdownHeader = document.querySelector(".footer-dropdown-header");
+      const dropdownList = document.querySelector(".footer-dropdown-list");
+      if (dropdownHeader && dropdownList) {
+        dropdownHeader.addEventListener("click", () => {
+          if (window.innerWidth < 768) {
+            dropdownList.classList.toggle("active");
+            dropdownHeader.classList.toggle("active");
+          }
+        });
+      }
+    });
+  </script>
+
+  <!-- Page logic (unchanged, drives the day cards / meal selects above) -->
+  <script src="maketiffinmenu.js"></script>
+
+  <script src="tracker-unified.js"></script>
 
 </body>
 </html>

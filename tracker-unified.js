@@ -448,6 +448,8 @@ function dragStart(e) {
     initialY = clientY - yOffset;
 
     element.style.cursor = "grabbing";
+    // Pause the CSS transition while dragging so movement tracks the
+    // pointer 1:1 instead of easing behind it.
     element.style.transition = "none";
 }
 let animationFrameId = null;
@@ -482,7 +484,8 @@ function dragEnd() {
 
     isDragging = false;
     element.style.cursor = "grab";
-    element.style.transition = "transform 0.2s ease";
+    // Hand control back to the stylesheet's transition (hover, breathe, etc.)
+    element.style.transition = "";
 
     localStorage.setItem('trackerPosition', JSON.stringify({
         x: xOffset,

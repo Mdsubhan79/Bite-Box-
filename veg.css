@@ -450,7 +450,7 @@ body {
 }
 
 .back-btn:hover {
-  background-color: var(--coral-deep);
+  
   transform: translateX(-4px);
   box-shadow: 0 14px 30px -6px rgba(255, 107, 107, 0.65);
 }
