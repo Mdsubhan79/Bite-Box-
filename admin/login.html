@@ -2,157 +2,198 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="icon" type="image/x-icon" href="briobite.png">
-  <title>Admin-Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <link rel="icon" type="image/x-icon" href="briobite.png">
+  <title>Admin Login — Brio Bite</title>
   <style>
-/* ============ RESET ============ */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+    :root {
+      --pine-900: #0b201d;
+      --pine-800: #10332F;
+      --pine-700: #164941;
+      --gold-400: #F4C873;
+      --gold-300: #E4C873;
+      --cream: #FFFBE6;
+      --danger: #e05c5c;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
 
-/* ============ GLOBAL ============ */
-body {
-  font-family: Arial, sans-serif;
-  background: #ffffff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  margin: 0;
-  padding: 10px;
-}
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
 
-/* ============ FORM ============ */
-#adminLoginForm {
-  background-color: #0c2f2c;
-  width: 100%;
-  max-width: 420px;
-  padding: 36px 28px;
-  border-radius: 12px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
-  text-align: center;
-}
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: radial-gradient(circle at 20% 20%, #123a34, var(--pine-900) 70%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 16px;
+    }
 
+    #adminLoginForm {
+      background: linear-gradient(160deg, var(--pine-800), var(--pine-900));
+      width: 100%;
+      max-width: 400px;
+      padding: clamp(20px, 6vw, 40px) clamp(16px, 5vw, 32px);
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(244, 200, 115, 0.1);
+      text-align: center;
+      animation: cardIn 0.4s var(--ease);
+    }
 
-#adminLoginForm h2 {
- 
-  margin-bottom: 24px;
-  color: #f7c948;
-  font-size: 24px;
-}
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-#adminLoginForm input {
-  width: 100%;
-  padding: 12px 14px;
-  margin-bottom: 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 16px;
-  transition: 0.25s ease;
-}
+    .login-icon {
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      background: rgba(244, 200, 115, 0.12);
+      border: 1px solid rgba(244, 200, 115, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(20px, 6vw, 26px);
+      color: var(--gold-400);
+    }
 
-#adminLoginForm input:focus {
-  border-color: #ffd87c;
-  box-shadow: 0 0 6px rgba(255, 241, 49, 0.45);
-  outline: none;
-}
+    #adminLoginForm h2 {
+      margin-bottom: clamp(16px, 5vw, 26px);
+      color: var(--gold-400);
+      font-size: clamp(17px, 5vw, 24px);
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
 
+    #adminLoginForm .field-label {
+      display: block;
+      text-align: left;
+      font-size: 12.5px;
+      color: var(--gold-300);
+      margin-bottom: 4px;
+      opacity: 0.85;
+    }
 
-#adminLoginForm button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 6px;
-  background-color: #ffd87c;
-  color: #000000;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
+    #adminLoginForm input {
+      width: 100%;
+      padding: clamp(9px, 3vw, 12px) clamp(10px, 3vw, 14px);
+      margin-bottom: clamp(12px, 4vw, 16px);
+      border: 1px solid rgba(244, 200, 115, 0.25);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--cream);
+      border-radius: 8px;
+      font-size: clamp(13px, 3.6vw, 16px);
+      transition: border-color 0.25s var(--ease), background 0.25s var(--ease), box-shadow 0.25s var(--ease);
+    }
 
-#adminLoginForm button:hover {
-  background-color: #dbac3d;
-}
+    #adminLoginForm input::placeholder {
+      color: rgba(255, 251, 230, 0.45);
+    }
 
+    #adminLoginForm input:focus {
+      border-color: var(--gold-400);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 0 3px rgba(244, 200, 115, 0.18);
+      outline: none;
+    }
 
-#error {
-  margin-top: 14px;
-  font-size: 14px;
-  color: #c93333;
-}
+    #adminLoginForm button {
+      width: 100%;
+      padding: clamp(10px, 3.4vw, 13px);
+      margin-top: 4px;
+      background: linear-gradient(135deg, var(--gold-400), var(--gold-300));
+      color: var(--pine-900);
+      border: none;
+      border-radius: 8px;
+      font-size: clamp(13px, 3.6vw, 16px);
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+    }
 
+    #adminLoginForm button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(244, 200, 115, 0.35);
+    }
 
-@media (max-width: 320px) {
-  #adminLoginForm {
-    padding: 22px 16px;
-  }
+    #adminLoginForm button:active {
+      transform: translateY(0);
+    }
 
-  #adminLoginForm h2 {
-    font-size: 18px;
-    margin-bottom: 18px;
-  }
+    #error {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--danger);
+      min-height: 16px;
+    }
 
-  #adminLoginForm input,
-  #adminLoginForm button {
-    font-size: 13px;
-    padding: 9px;
-  }
-}
+    .login-footnote {
+      margin-top: 18px;
+      font-size: 11.5px;
+      color: rgba(255, 251, 230, 0.4);
+    }
 
+    @media (max-width: 320px) {
+      #adminLoginForm {
+        padding: 18px 14px;
+        border-radius: 12px;
+      }
+    }
 
-@media (max-width: 480px) {
-  #adminLoginForm {
-    padding: 28px 20px;
-  }
+    @media (max-width: 260px) {
+      body {
+        padding: 8px;
+      }
 
-  #adminLoginForm h2 {
-    font-size: 20px;
-  }
+      #adminLoginForm {
+        padding: 14px 10px;
+      }
 
-  #adminLoginForm input,
-  #adminLoginForm button {
-    font-size: 14px;
-    padding: 10px;
-  }
-}
+      .login-icon {
+        width: 42px;
+        height: 42px;
+        margin-bottom: 10px;
+      }
 
+      #adminLoginForm input,
+      #adminLoginForm button {
+        padding: 8px;
+        font-size: 12px;
+      }
+    }
 
-@media (min-width: 481px) and (max-width: 768px) {
-  #adminLoginForm h2 {
-    font-size: 22px;
-  }
-}
-
-
-@media (min-width: 769px) {
-  #adminLoginForm {
-    padding: 44px 36px;
-  }
-
-  #adminLoginForm h2 {
-    font-size: 26px;
-  }
-}
-
-
-</style>
+    @media (min-width: 769px) {
+      #adminLoginForm {
+        max-width: 420px;
+      }
+    }
+  </style>
 </head>
 <body>
   <form id="adminLoginForm">
-  <h2> BB Admin Login</h2>
+    <div class="login-icon"><i class="fas fa-lock"></i></div>
+    <h2>Brio Bite Admin</h2>
 
-  <input type="email" id="email" placeholder="Admin Email" required>
-  <input type="password" id="password" placeholder="Password" required>
+    <label class="field-label" for="email">Email</label>
+    <input type="email" id="email" placeholder="admin@briobite.com" required autocomplete="username">
 
-  <button type="submit">Login</button>
-  <p id="error" style="color:red;"></p>
-</form>
+    <label class="field-label" for="password">Password</label>
+    <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
 
-<script src="login.js"></script>
+    <button type="submit">Sign In</button>
+    <p id="error"></p>
+    <p class="login-footnote">Authorized personnel only</p>
+  </form>
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="login.js"></script>
 </body>
 </html>
